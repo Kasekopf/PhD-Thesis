@@ -1,5 +1,5 @@
 \section{An Introduction to Tensors and Tensor Networks}
-\label{sec:tensors}
+\label{sec:tensors:tensors}
 In this section, we introduce tensors and tensor networks and discuss prior work on the optimization of tensor-network contraction. To aid in exposition, along the way we build an analogy between the language of databases \cite{SG88}, the language of factor graphs \cite{KFL01,dechter99,darwiche01b}, and the language of tensors: see Table \ref{table:db-tensor-analogy}.
 
 \begin{table}[t]
@@ -32,9 +32,9 @@ We now define tensors as multidimensional arrays of values, indexed by assignmen
 
 The \emph{rank} of a tensor $A$ is the cardinality of $\tdim{A}$. The memory to store a tensor (in a dense way) is exponential in the rank. For example, a scalar is a rank 0 tensor, a vector is a rank 1 tensor, and a matrix is a rank 2 tensor. An example of a higher-rank tensor is the \emph{copy tensor} on a set of indices $I$, which is the tensor $\copyt_I: \domain{I} \rightarrow \mathbb{C}$ such that, for all $\tau \in \domain{I}$, $\copyt_I(\tau) \equiv 1$ if $\tau$ is a constant function on $I$ and $\copyt_I(\tau) \equiv 0$ otherwise \cite{BCJ11}.
 
-It is common to consider sets of tensors closed under contraction (see Section \ref{sec:tensors:tensor-networks}), e.g. tensors with entries in $\mathbb{R}$ as in Section \ref{sec:wmc}. Database tables under bag-semantics \cite{CV93}, i.e., multirelations, are tensors with entries in $\mathbb{N}$. Probabilistic database tables \cite{CP87} are tensors with entries in $[0, 1]$ that sum to 1.
+It is common to consider sets of tensors closed under contraction (see Section \ref{sec:tensors:tensors:tensor-networks}), e.g. tensors with entries in $\mathbb{R}$ as in Section \ref{sec:tensors:wmc}. Database tables under bag-semantics \cite{CV93}, i.e., multirelations, are tensors with entries in $\mathbb{N}$. Probabilistic database tables \cite{CP87} are tensors with entries in $[0, 1]$ that sum to 1.
 
-Many tools exist (e.g. \pkg{numpy} \cite{numpy}) to efficiently manipulate tensors. In Section \ref{sec:experiments}, we use these tools to implement tensor-network contraction, defined next.
+Many tools exist (e.g. \pkg{numpy} \cite{numpy}) to efficiently manipulate tensors. In Section \ref{sec:tensors:experiments}, we use these tools to implement tensor-network contraction, defined next.
 
 % We abuse notation and allow for two tensors to be treated as distinct even if they are equal as functions.
 
@@ -46,7 +46,7 @@ Many tools exist (e.g. \pkg{numpy} \cite{numpy}) to efficiently manipulate tenso
 % For example, given two matrices represented as rank 2 tensors with a single index in common, the contraction of the two tensors is equivalent to matrix multiplication. The contraction of two copy tensors $\copyt_I$ and $\copyt_J$ (with $I \cap J \neq \emptyset$) is the copy tensor $\copyt_{I \oplus J}$.
 
 \subsection{Tensor Networks}
-\label{sec:tensors:tensor-networks}
+\label{sec:tensors:tensors:tensor-networks}
 A \emph{tensor network} defines a complex tensor by combining a set of simpler tensors in a principled way. This is analogous to how a database query defines a resulting table in terms of a computation across many tables.
 
 \begin{definition}[Tensor Network]

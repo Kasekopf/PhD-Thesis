@@ -1,4 +1,4 @@
-\section{Implementation and Evaluation} \label{sec:experiments}
+\section{Implementation and Evaluation} \label{sec:tensors:experiments}
 We are interested in the following experimental research questions:
 \begin{enumerate}
     \item[RQ1.] Are tensor-network-based approaches competitive with existing state-of-the-art unweighted model counters?
@@ -6,18 +6,18 @@ We are interested in the following experimental research questions:
     \item[RQ3.] What are the structural properties of benchmarks for which the tensor-network-based approaches perform well?
 \end{enumerate}
 
-To answer these questions, we implement Algorithm 2 in \tool{TensorOrder}, a new tool for weighted model counting using tensor networks. \tool{TensorOrder} can be configured to find contraction trees using existing methods \cite{KCMR18}-- \textbf{greedy} (using a greedy algorithm), \textbf{metis} (using graph partitioning), and \textbf{GN} (using community structure detection)-- or methods presented in this paper-- \textbf{LG} (Section \ref{sec:contraction-theory}) and \textbf{FT} (Section \ref{sec:preprocessing}). Implementation details appear in Section \ref{sec:experiments:implementation}.
+To answer these questions, we implement Algorithm 2 in \tool{TensorOrder}, a new tool for weighted model counting using tensor networks. \tool{TensorOrder} can be configured to find contraction trees using existing methods \cite{KCMR18}-- \textbf{greedy} (using a greedy algorithm), \textbf{metis} (using graph partitioning), and \textbf{GN} (using community structure detection)-- or methods presented in this paper-- \textbf{LG} (Section \ref{sec:tensors:contraction-theory}) and \textbf{FT} (Section \ref{sec:tensors:preprocessing}). Implementation details appear in Section \ref{sec:tensors:experiments:implementation}.
 
-To answer RQ1, in Section \ref{sec:experiments:cubic} we compare \tool{TensorOrder} with existing state-of-the-art tools for unweighted model counting (\tool{dynQBF} \cite{CW16}, \tool{dynasp} \cite{FHMW17}, \tool{SharpSAT} \cite{Thurley2006}, \tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) on formulas that count the number of vertex covers of randomly-generated cubic graphs \cite{KCMR18}. Note \tool{dynQBF} and \tool{dynasp} are solvers from related domains (that can be used as model counters) that also use tree decompositions.
+To answer RQ1, in Section \ref{sec:tensors:experiments:cubic} we compare \tool{TensorOrder} with existing state-of-the-art tools for unweighted model counting (\tool{dynQBF} \cite{CW16}, \tool{dynasp} \cite{FHMW17}, \tool{SharpSAT} \cite{Thurley2006}, \tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) on formulas that count the number of vertex covers of randomly-generated cubic graphs \cite{KCMR18}. Note \tool{dynQBF} and \tool{dynasp} are solvers from related domains (that can be used as model counters) that also use tree decompositions.
 
-To answer RQ2, in Section \ref{sec:experiments:cachet} we compare \tool{TensorOrder} with existing state-of-the-art tools for weighted model counting (\tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) on formulas whose weighted count corresponds to exact inference on Bayesian networks \cite{SBK05}. Note that the other tools (\tool{dynQBF}, \tool{dynasp}, and \tool{SharpSAT}) cannot perform weighted model counting.
+To answer RQ2, in Section \ref{sec:tensors:experiments:cachet} we compare \tool{TensorOrder} with existing state-of-the-art tools for weighted model counting (\tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) on formulas whose weighted count corresponds to exact inference on Bayesian networks \cite{SBK05}. Note that the other tools (\tool{dynQBF}, \tool{dynasp}, and \tool{SharpSAT}) cannot perform weighted model counting.
 
 % We use \tool{TensorOrder} to compare tensor-based methods with existing state-of-the-art tools for weighted model counting: \tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}. %Note that \tool{d4} requires a d-DNNF reasoner to perform weighted model counting; we use \cite{CDLL18}. 
 % We also compare with \tool{dynQBF} \cite{CW16}, \tool{dynasp} \cite{FHMW17} and \tool{SharpSAT} \cite{Thurley2006} when the benchmarks are unweighted. Note \tool{dynQBF} and \tool{dynasp} are solvers from related domains (that can be used as model counters) that also use tree decompositions.
 
 % We then compare our tensor-based algorithms for weighted model counting against state-of-the-art weighted model counters and against existing tensor-based algorithms. We demonstrate that our tensor-based algorithms are useful as part of a portfolio of weighted model counters. 
 
-% We compare \tool{TensorOrder} on two sets of existing benchmarks. First, in Section \ref{sec:experiments:cubic} we compare on formulas that count the number of vertex covers of randomly-generated cubic graphs \cite{KCMR18}. Second, in Section \ref{sec:experiments:cachet} we compare 
+% We compare \tool{TensorOrder} on two sets of existing benchmarks. First, in Section \ref{sec:tensors:experiments:cubic} we compare on formulas that count the number of vertex covers of randomly-generated cubic graphs \cite{KCMR18}. Second, in Section \ref{sec:tensors:experiments:cachet} we compare 
 To answer RQ3, we compute upper bounds on the treewidth and carving width of these benchmarks. We run each of three heuristic tree decomposition solvers (\pkg{Tamaki} \cite{Tamaki17}, \pkg{FlowCutter} \cite{HS18}, and \pkg{htd} \cite{AMW17}) on each benchmark with a timeout of 1000 seconds: once on the structure graph $G$ corresponding to the benchmark, and once on $\Line{G}$. The minimal width of all produced tree decompositions for $G$ (resp. $\Line{G}$) is an upper bound for the treewidth of $G$ (resp. $\Line{G}$). The minimal max-rank of the contraction trees produced by running \textbf{LG} (resp. \textbf{FT}) on each tree decomposition of $\Line{G}$ (resp. $G$) is an upper bound for the carving width of $G$ (resp. $G$ after \text{FT}-preprocessing).
 
 Each experiment was run in a high-performance cluster (Linux kernel 2.6.32) using a single 2.80 GHz core of an Intel Xeon X5660 CPU and 48 GB RAM. We provide all code, benchmarks, and detailed data of benchmark runs at \url{https://github.com/vardigroup/TensorOrder}.
@@ -51,7 +51,7 @@ Each experiment was run in a high-performance cluster (Linux kernel 2.6.32) usin
 \end{figure}
 
 \subsection{Implementation Details of \tool{TensorOrder}}
-\label{sec:experiments:implementation}
+\label{sec:tensors:experiments:implementation}
 \tool{TensorOrder} is implemented in Python 3.6. All tensor contractions are performed using \pkg{numpy} 1.15 and 64-bit double precision floats. \tool{TensorOrder} also supports infinite-precision integer arithmetic, but the performance is significantly degraded by limited \pkg{numpy} support. Note that \pkg{numpy} is able to leverage SIMD parallelism for tensor contraction.
 
 Both \textbf{LG} and \textbf{FT} require first finding a tree decomposition. To do this, we leverage three heuristic tree-decomposition solvers: \pkg{Tamaki} \cite{Tamaki17}, \pkg{FlowCutter} \cite{HS18}, and \pkg{htd} \cite{AMW17}. \tool{TensorOrder} therefore has three implementations of \textbf{LG} (using \textbf{LG+Tamaki}, \textbf{LG+Flow}, and \textbf{LG+htd}) and three implementations of \textbf{FT} (using \textbf{FT+Tamaki}, \textbf{FT+Flow}, and \textbf{FT+htd}) for different choices of solver.
@@ -77,7 +77,7 @@ All the tree-decomposition solvers we consider are online solvers and so each im
 %\end{figure}
 
 \subsection{Unweighted Model Counting: Vertex Covers of Cubic Graphs}
-\label{sec:experiments:cubic}
+\label{sec:tensors:experiments:cubic}
 
 % (i.e., the number of sets of vertices where every edge of the graph is incident to at least one vertex) 
 We first compare on benchmarks that count the number of vertex covers of randomly-generated cubic graphs \cite{KCMR18}. For each number of vertices $n \in \{50, 60, 70, \cdots, 250\}$ we randomly sample 100 connected cubic graphs using a Monte Carlo procedure \cite{VL05}. These benchmarks are monotone 2-CNF formulas in which every variable appears 3 times. We run each tool once on each benchmark with a timeout of 1000 seconds and record the wall-clock time taken. 
@@ -106,7 +106,7 @@ For most large graphs $G$, we observe that the carving width of $G$ is smaller t
 \end{figure}
 
 \subsection{Weighted Model Counting: Exact Inference}
-\label{sec:experiments:cachet}
+\label{sec:tensors:experiments:cachet}
 We next compare on a set of weighted model counting benchmarks from Sang, Beame, and Kautz \shortcite{SBK05}. These 1091 benchmarks are formulas whose weighted model count corresponds to exact inference on Bayesian networks. We compare against the weighted model counters \tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}. Since these benchmarks are weighted, we cannot compare against tools that can only perform unweighted model counting (\tool{dynQBF} \cite{CW16}, \tool{dynasp} \cite{FHMW17} and \tool{SharpSAT} \cite{Thurley2006}). We run each tool once on each benchmark with a timeout of 1000 seconds and record the wall-clock time taken.
 
 We first evaluate numerical accuracy, since our approach uses 64-bit double precision floats: on all benchmarks that \tool{miniC2D} also finishes, the weighted model count returned by our approaches agrees within $10^{-3}$.
@@ -121,7 +121,7 @@ We next evaluate runtime performance. Results on these benchmarks are summarized
 	\caption{\label{fig:solver-analysis} The number of probabilistic-inference benchmarks (out of 1091) for which \textbf{FT+Tamaki}, \textbf{FT+Flow}, and \textbf{FT+htd} were able to find a contraction tree whose max-rank was no larger than (top) 30, (middle) 25, or (bottom) 20 within the indicated time.}
 \end{figure}
 
-The existing tensor-based methods (\textbf{LG}, \textbf{greedy}, \textbf{metis}, and \textbf{GN}) that do not perform factoring were only able to count a single benchmark from this set within 1000 seconds. We observe that most of these benchmarks have a variable that appears many times, which significantly hinders tensor-based methods that do not perform factoring. This justifies our motivation for \textbf{FT} in Section \ref{sec:preprocessing}.
+The existing tensor-based methods (\textbf{LG}, \textbf{greedy}, \textbf{metis}, and \textbf{GN}) that do not perform factoring were only able to count a single benchmark from this set within 1000 seconds. We observe that most of these benchmarks have a variable that appears many times, which significantly hinders tensor-based methods that do not perform factoring. This justifies our motivation for \textbf{FT} in Section \ref{sec:tensors:preprocessing}.
 
 We next evaluate the structural properties of benchmarks for which \textbf{FT} outperforms other approaches. In Figure \ref{fig:cachet-carving-cactus}, we organize the number of benchmarks completed for each tool by carving width after \textbf{FT}-preprocessing. We observe that all tensor-based methods perform best on benchmarks with small carving width. In particular, \textbf{FT+Tamaki} was able to solve almost all benchmarks whose width is below 27. On the other hand, existing tools do not heavily rely on structural properties and so solve fewer low-width benchmarks than \textbf{FT+Tamaki} but significantly more high-width benchmarks. We conclude that tensor-network-based approaches perform well on benchmark instances of low carving width (after  \textbf{FT}-preprocessing).
 
@@ -132,6 +132,6 @@ Results of this experiment are summarized in Figure \ref{fig:solver-analysis}.
 
 % Moreover, we observe that the quality of the discovered contraction trees does not significantly improve on most benchmarks after 4 seconds for \textbf{FT+Flow}, 20 seconds for \textbf{FT+htd}, and 500 seconds for \textbf{FT+Tamaki}. This suggests that these methods are not likely to discover significantly better contract
 
-We conclude from the experiments in Section \ref{sec:experiments:cubic} and Section \ref{sec:experiments:cachet} that both \textbf{LG} and \textbf{FT} are useful as part of a portfolio of model counters.
+We conclude from the experiments in Section \ref{sec:tensors:experiments:cubic} and Section \ref{sec:tensors:experiments:cachet} that both \textbf{LG} and \textbf{FT} are useful as part of a portfolio of model counters.
 
 % Although \pkg{Tamaki} placed above \pkg{FlowCutter} in the PACE 2017 competition, our implementations based on \pkg{FlowCutter} outperformed our implementations based on \pkg{Tamaki} on both sets of benchmarks. This suggests that tensor-based methods might be improved by developing specialized decomposition solvers.

@@ -1,16 +1,16 @@
 \section{A Comparison of Treewidth and Carving Width}
-\label{sec:experiments:graph_analysis}
+\label{sec:tensors:experiments:graph_analysis}
 
-In this section, we present additional graphs on the structural properties of the model counting benchmarks in Section \ref{sec:experiments}.
+In this section, we present additional graphs on the structural properties of the model counting benchmarks in Section \ref{sec:tensors:experiments}.
 
 % \subsection{Experimental Setup}
 % On each incidence graph $G$, we ran each of the three heuristic tree decomposition solvers integrated with \tool{TensorOrder}-- \tool{Tamaki}, \tool{FlowCutter}, and \tool{htd}-- for 1000 seconds on $G$ and $\Line{G}$ and recorded the width of the best tree decomposition found amongst all tree-decomposition solvers. On each tree decomposition for $\Line{G}$ found by the solvers, we used \textbf{LG} to compute the corresponding carving decomposition of $G$ and recorded the smallest width found amongst all decompositions. Similarly, on each tree decomposition for $G$ found by the solvers, we used \textbf{FT} to compute the corresponding carving decomposition of the preprocessed graph and recorded the smallest width found amongst all decompositions. 
 
-% Unlike the runtime experiments in Section \ref{sec:experiments}, we do not estimate the time to contract each potential contraction tree. Instead, we run each tree-decomposition solver for the full 1000 seconds on each benchmark. This allows us to more fully estimate the treewidth and carving width of these benchmarks and so more fully evaluate the potential of decomposition solvers. Each experiment was run in a high-performance cluster (Linux kernel 2.6.32) using a single 2.80 GHz core of an Intel Xeon X5660 CPU and 48 GB RAM.
+% Unlike the runtime experiments in Section \ref{sec:tensors:experiments}, we do not estimate the time to contract each potential contraction tree. Instead, we run each tree-decomposition solver for the full 1000 seconds on each benchmark. This allows us to more fully estimate the treewidth and carving width of these benchmarks and so more fully evaluate the potential of decomposition solvers. Each experiment was run in a high-performance cluster (Linux kernel 2.6.32) using a single 2.80 GHz core of an Intel Xeon X5660 CPU and 48 GB RAM.
 
 
 % \subsection{Results}
-% We first compare treewidth and carving width using the benchmarks from Section \ref{sec:experiments:cubic}: randomly-generated cubic graphs \cite{KCMR18}. Since \textbf{FT} only factors tensors of order 4 or higher and all vertices in each cubic graph has exactly three incident edges, \textbf{FT} performs no factoring on these graphs. Thus both \textbf{LG} and \textbf{FT} can be used to find carving decompositions.
+% We first compare treewidth and carving width using the benchmarks from Section \ref{sec:tensors:experiments:cubic}: randomly-generated cubic graphs \cite{KCMR18}. Since \textbf{FT} only factors tensors of order 4 or higher and all vertices in each cubic graph has exactly three incident edges, \textbf{FT} performs no factoring on these graphs. Thus both \textbf{LG} and \textbf{FT} can be used to find carving decompositions.
 
 % Results on these benchmarks are summarized in Figure \ref{fig:vertex-cover-width}. We observe that, for most large graphs, the carving width of $G$ is smaller than the treewidth of $G$, which is smaller that the treewidth of $\Line{G}$. On these benchmarks, the width of the carving decompositions of $G$ found by \textbf{LG} are indeed smaller than the upper bound guaranteed by Theorem \ref{thm:carving-equiv-tree} of the width of the used tree decomposition plus one.
 
@@ -33,7 +33,7 @@ In this section, we present additional graphs on the structural properties of th
 \caption{\label{fig:wmc-width-ft} A histogram comparing an upper bound on the treewidth of $G$ (the width of the best tree decomposition found across all solvers after 1000 seconds) with the width of the best carving decomposition of preprocessed constructed by \textbf{FT}, across 1091 probabilistic inference benchmarks. On most benchmarks, the tree decompositions found of $G$ have significantly smaller width than the tree decompositions found of $\Line{G}$. Thus the carving decompositions produced by \textbf{FT} are significantly better than those produced by \textbf{LG}.}
 \end{figure}
 
-We first compare treewidth and carving width using the benchmarks from Section \ref{sec:experiments:cachet}: incidence graphs of probabilistic inference benchmarks \cite{SBK05}. Results on these benchmarks are summarized in Figure \ref{fig:wmc-width-lg} and Figure \ref{fig:wmc-width-ft}.
+We first compare treewidth and carving width using the benchmarks from Section \ref{sec:tensors:experiments:cachet}: incidence graphs of probabilistic inference benchmarks \cite{SBK05}. Results on these benchmarks are summarized in Figure \ref{fig:wmc-width-lg} and Figure \ref{fig:wmc-width-ft}.
 
 We observe that the carving width of $G$ found by \textbf{LG} is extremely large on these benchmarks (larger than $50$ on 1064 of the 1091 benchmarks), since these graphs have vertices of high degree. Nevertheless, the carving width of $G$ found by \textbf{LG} is still smaller than the upper bound guaranteed by Theorem \ref{thm:carving-equiv-tree} of the treewidth of $\Line{G}$ plus one on most benchmarks. We also observe that \textbf{FT} does significantly reduce the carving width by preprocessing the graph (to smaller than 50 on 1066 of the 1091 benchmarks).  Moreover, the carving width found by \textbf{FT} is smaller than the upper bound guaranteed by Theorem \ref{thm:factorable-tree} on most benchmarks.
 

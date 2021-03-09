@@ -1,14 +1,54 @@
-\documentclass{article}
-\usepackage[utf8]{inputenc}
+\documentclass[12pt]{sty/ruthesis}
+\usepackage{sty/packages}
 
-\title{PhD Thesis}
-\author{ }
-\date{February 2021}
+\title{Planning and Execution for\\Weighted Model Counting}
+\ctitle{Planning and Execution for Weighted Model Counting}
+\author{Jeffrey M. Dudek}
+\department{Computer Science}
+\school{Rice University}
+\degree{Doctor of Philosophy}
 
+\committee {
+        Moshe Y. Vardi, Chair \\
+        Karen Ostrum George Distinguished Service Professor in Computational Engineering \and
+        Devika Subramanian \\
+        Professor of Computer Science and Electrical Engineering \and
+        Illya V. Hicks\\
+        Professor of Computational and Applied Mathematics \and
+        Leonardo Due{\~n}as-Osorio\\
+        Professor of Civil and Environmental Engineering
+}
+
+\address{Houston, Texas}
+\donemonth{May} \doneyear{2021} \makeindex
 \begin{document}
 
-\maketitle
+  \begin{frontmatter}
+   \pagenumbering{roman}
+   %\makecover
+   \maketitle
+   \include{content/0-abstract}
+   %\include{ack}
+   \tableofcontents
+   \listoffigures
+   \listoftables
+  \end{frontmatter}
+\pagenumbering{arabic}
 
-\section{Introduction}
+\linespacing{1.7}
 
+\include{content/1-introduction}
+
+\appendix
+
+%\include{append-a}
+%\appendix
+%\addcontentsline{toc} {chapter}{\numberline {}Appendix A}
+%\include{append-a}
+%\include{append-b}
+%\addcontentsline{toc} {chapter}{\numberline {}Bibliography}{}
+%\include{biblio}
+
+\bibliographystyle{ieeetr}
+\bibliography{main}
 \end{document}

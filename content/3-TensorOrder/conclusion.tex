@@ -1,0 +1,14 @@
+\section{Conclusions and Future Work} \label{sec:conclusion}
+We presented two methods, \textbf{LG} and \textbf{FT}, for using graph decompositions to find contraction trees of small max rank of tensor networks. \textbf{LG} is a general-purpose method for finding contraction orders, while \textbf{FT} is a novel method tailored for constrained counting to handle high-rank, highly-structured tensors. We evaluated \textbf{LG} and \textbf{FT} in the context of exact weighted model counting and demonstrated that \tool{TensorOrder} is able to solve many benchmarks solved by no other exact model counter. In particular, \tool{TensorOrder} is the best tool on benchmarks of small carving width. Thus \tool{TensorOrder} is useful as part of a portfolio of weighted model counters. 
+
+It would be interesting in the future to analyze the types of benchmarks amenable to tensor-network methods, e.g. by computing lower bounds on carving width in addition to the upper bounds given by heuristic methods. It would also be interesting to explore the impact of other preprocessing techniques (e.g., PMC \cite{LM14} or B+E \cite{LLM16}) on carving width and treewidth.
+
+Although we restricted our experiments to a single core, a variety of libraries exist for efficiently performing tensor contractions on multiple cores or on GPUs \cite{KSTKPPRS19,NRBHHJN15}. Another direction for future work is to analyze and improve the potential parallelism of tensor-based algorithms. This would allow comparison against other recent GPU-based counters, including Fichte \emph{et al.} \shortcite{FHWZ18} which also uses graph decompositions. It may also be possible to use spare tensor libraries \cite{FWS20} or decision diagrams \cite{BFGHMPS97} to perform tensor contractions.
+
+Tensor-based methods can also be used to count other classes of CSPs. For example, all techniques we introduced in this work would have similar performance computing the weighted model count of formulas that mix OR clauses with XOR clauses and Exactly-One clauses (as such clauses can also be represented as tree-factorable tensors). More generally, our algorithms for tensor-network contraction can be used to improve many other applications of tensor networks, e.g. quantum circuit simulation \cite{MS08}. Evaluating our techniques on a wider collection of tensor networks is an exciting direction for future work. % that may enable new applications of tensor networks.
+
+% We proved in Corollary \ref{cor:planar-carving} that contraction trees of minimal max rank can be found in cubic time for planar tensor networks. One direction for future work is to implement and evaluate this algorithm in practice on benchmarks of planar tensor networks.
+
+
+
+

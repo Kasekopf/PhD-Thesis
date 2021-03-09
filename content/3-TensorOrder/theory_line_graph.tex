@@ -1,0 +1,105 @@
+\section{The Line-Graph Method for Finding Contraction Trees}
+\label{sec:contraction-theory}
+The \textbf{Line-Graph} method for finding contraction trees for a tensor network $N$ applies graph-decomposition techniques to a particular graph constructed from $N$. Prior work \cite{MS08} on tensor networks with no free indices constructed a graph from a tensor network where tensors correspond to vertices and indices shared between tensors correspond to edges. In the context of constraint networks \cite{dechter03}, this is analogous to the dual constraint graph (if multiple edges are drawn between constraints with multiple variables in common).
+
+Although tensor networks constructed from weighted model counting instances do not have free indices, we utilize tensor networks with free indices as part of the preprocessing in Section \ref{sec:preprocessing} and so we need a more general graph construction that can handle free indices. Other works, e.g. \cite{Ying17}, extend the graph construction of \cite{MS08} to tensor networks with free indices by treating free indices as ``half-edges'' (i.e., edges incident to one vertex), but decompositions of such graphs are not well-studied. In order to cleanly extend our decomposition-based analysis to tensor networks with free indices, in this work we instead add an extra vertex incident to all free indices, which we call the \emph{free vertex}. We call the resulting graph the \emph{structure graph} of a tensor network:
+\begin{definition}[Structure Graph]\label{def:structure}
+	Let $N$ be a tensor network. The \emph{structure graph} of $N$ is the graph $G$ whose 
+    vertices are the tensors of $N$ and a fresh vertex $\fv$ (called the \emph{free vertex}) and whose edges are the indices of $N$. Each tensor is incident to its indices, and $\fv$ is incident to all free indices.
+    That is, $\V{G} = N \sqcup \{ \fv \}$, $\E{G} = \tnbound{N} \cup \tnfree{N}$, $\vinc{G}{A} = \tdim{A}$ for all $A \in N$, and $\vinc{G}{\fv} = \tnfree{N}$.
+\end{definition}
+
+If $N$ has no free indices, the free vertex has no incident edges and the remaining graph is exactly the graph analyzed in prior work. Intuitively, the structure graph of a tensor network $N$ captures how indices are shared by the tensors of $N$. For example, on a CNF formula $\varphi$ Theorem \ref{thm:wmc-reduction} produces a tensor network $N_\varphi$ whose structure graph is exactly the \emph{incidence graph} of $\varphi$. The structure graph of $N$ contains all information needed to compute the max-rank of a contraction-tree of $N$, as formalized in the following lemma.
+\begin{lemma} \label{lemma:tcn-equiv-structure}
+	Let $N$ be a tensor network with structure graph $G$. If $N' \subseteq N$ is nonempty, then $N'$ is a tensor network and $\tnfree{N'} = \vinc{G}{N'} \cap \vinc{G}{\V{G} \setminus N'}$.
+\end{lemma}
+\begin{proof}
+	$N'$ is a tensor network since $N$ is. Let $\fv$ be the free vertex of $G$.
+	An index $i$ is free in $N'$ if and only if $i$ appears in $N'$ and either $i$ is free in $N$ or $i$ also appears in $N \setminus N'$. Thus
+    $$\tnfree{N'} = \bigcup_{A \in N'} \tdim{A} \cap \left( \tnfree{N} \cup \bigcup_{B \in N \setminus N'} \tdim{B} \right).$$
+	Since $\tdim{A} = \vinc{G}{A}$ for all $A \in N$ and $\tnfree{N} = \vinc{G}{z}$, we conclude that
+	$$\tnfree{N'} = \vinc{G}{N'} \cap (\vinc{G}{\fv} \cup \vinc{G}{N \setminus N'}) =  \vinc{G}{N'} \cap \vinc{G}{\V{G} \setminus N'}.$$\hfill$\square$
+\end{proof}
+
+
+
+% If $N'$ is a subset of a tensor network $N$, $N'$ is also a subset of vertices in the structure graph of $N$. In this case, the rank of $N'$ is exactly the number of edges in the structure graph of $N$ incident with both a vertex in $N'$ and a vertex in $(N \sqcup \{f\}) \setminus N'$ (where $\fv$ is the free vertex). Thus the structure graph of $N$ contains all the information necessary to compute the rank of a subset of $N$ and thus to compute the max rank of a contraction-tree of $N$.
+
+\subsection{Finding Contraction Trees from Carving Decompositions}
+Contraction trees are closely connected to decompositions of the structure graph. In particular, contraction trees of a tensor network correspond to carving decompositions of its structure graph, where max rank corresponds exactly to carving width. This correspondence was first proven for tensor networks with no free indices by de Oliveira Oliveira \cite{de15}. Theorem \ref{thm:contraction-equiv-carving} extends this correspondence to tensor networks with free indices as well:
+\begin{theorem}
+	\label{thm:contraction-equiv-carving}
+	Let $N$ be a tensor network with structure graph $G$ and let $w \in \mathbb{N}$. Then $N$ has a contraction tree of max rank $w$ if and only if $G$ has a carving decomposition of width $w$. Moreover, given one of these objects the other can be constructed in $O(|N|)$ time.
+\end{theorem}
+%\begin{lemma} \label{lemma:contraction-to-carving}
+%	Let $N$ be a tensor network with structure graph $G$. Let $T$ be a contraction tree of $N$ of max-width $w$. Construct $T'$ from $T$ by adding the free vertex $\fv \in \V{G}$ as a leaf and adding an arc from $\fv$ to the root of $T$. Then $T'$ is a carving decomposition of $G$ and $width_c(T) = w$.
+%\end{lemma}
+\begin{proof}
+Let $\fv$ be the free vertex of $G$. First, let $T$ be a contraction tree of $N$ of max-rank $w$. Construct $T'$ from $T$ by adding $\fv$ as a leaf to the root of $T$. 
+
+$T'$ is a carving decomposition of $G$, since $T'$ is an unrooted binary tree with $\Lv{T'} = \Lv{T} \sqcup \{\fv\} = \V{G}$. 
+For each $a \in \E{T'}$, removing $a$ from $T'$ produces two connected components, both trees. Let $T_a$ be the connected component that does not contain $\fv$ and note that $T_a$ is a contraction tree for $\Lv{T_a} \subseteq N$. 
+
+This gives us a bijection between $\E{T'}$ and the set of recursive calls of Algorithm \ref{alg:network-contraction}, where each $a \in \E{T'}$ corresponds to the recursive call where $T_a$ is the input contraction tree and $\tntensor{\Lv{T_a}}$ is the output tensor. Thus
+\begin{align*}
+&width_c(T') = \max_{a \in \E{T'}} \left| \vinc{G}{\Lv{T_a}} \cap \vinc{G}{\V{G} \setminus \Lv{T_a}} \right| = \max_{a \in \E{T'}} \left| \tnfree{\Lv{T_a}} \right| = w
+\end{align*}
+where the middle equality is given by applying Lemma \ref{lemma:tcn-equiv-structure} with $N' = \Lv{T_a}$.
+
+Conversely, let $S$ be a carving decomposition of $G$ of width $w$. Construct $S'$ from $S$ by removing the leaf $\fv$ (and its incident arc) from $S$. $S'$ is a contraction tree of $N$, since $S$ is a rooted binary tree (whose root is the node previously attached by an arc to $\fv$) and $\Lv{S'} = \Lv{S} \setminus \{\fv\} = N$. Moreover, applying the construction in the first half of the proof produces $S$ and so the max rank of $S'$ is $width_c(S) = w$. \hfill$\square$
+\end{proof}
+
+One corollary of Theorem \ref{thm:contraction-equiv-carving} is that tensor networks with isomorphic structure graphs have contraction trees of equal max rank. This corollary is closely related to Theorem 1 of \cite{EP14}.
+
+Carving decompositions have been studied in several settings. For example, there is an algorithm to find a carving decomposition of minimal width of a planar graph in time cubic in the number of edges \cite{GT08}. It follows that if the structure graph of a tensor network $N$ is planar, one can construct a contraction tree of $N$ of minimal max rank in time $O(|\tnbound{N} \cup \tnfree{N}|^3)$. This may be of interest in domains where problems can be seen as planar or near-planar, e.g. in circuit analysis or infrastructure reliability \cite{MS08,DLVR18}, but most benchmarks we consider in Section \ref{sec:experiments} do not result in planar structure graphs.
+
+There is limited work on the heuristic construction of ``good'' carving decompositions for non-planar graphs. Instead, we leverage the work behind finding tree decompositions to find carving decompositions and subsequently find contraction trees of small max rank.
+
+\subsection{Finding Contraction Trees from Tree Decompositions}
+
+%In this work, we aim to find ``good'' choices for the rooted binary tree that minimize the running-time and memory usage of Algorithm \ref{alg:network-contraction} on a given tensor contraction network.
+%In this work, we make the additional assumption that all dimensions have domains of the same (or similar) size. Thus the max-size of a contraction-tree is entirely characterized by the max rank, and so to find a contraction-tree of small max-size it is equivalent to find a contraction-tree of small max rank.
+
+
+One technique for join-query optimization \cite{DKV02,MPPV04} focuses on analysis of the \emph{join graph}. The \emph{join graph} of a project-join query consists of all attributes of a database as vertices and all tables in the join as cliques. In this approach, tree decompositions for the join graph of a query are used to find optimal join trees. The analogous technique on factor graphs analyzes the \emph{primal graph} of a factor graph, which consists of all variables as vertices and all factors as cliques. Similarly, tree decompositions of the primal graph can be used to find variable elimination orders \cite{KDLD05}. The graph analogous to join graphs and primal graphs for tensor networks is the \emph{line graph} of the structure graph:
+\begin{definition}[Line Graph]
+	\label{def:line-graph}
+	The \emph{line graph} of a graph $G$ is a graph $\Line{G}$ whose vertices are the edges of $G$, and where the number of edges between each $e,f \in \E{G}$ is $|\einc{G}{e} \cap \einc{G}{f}|$, the number of endpoints shared between $e$ and $f$.
+\end{definition}
+
+This technique was applied in the context of tensor networks by Markov and Shi \cite{MS08}, who proved that tree decompositions for $\Line{G}$ (where $G$ is the structure graph of a tensor network $N$) can be transformed into contraction trees for $N$ of small contraction complexity. Specifically, tree decompositions of optimal width $w$ yield contraction trees of contraction complexity $w+1$.
+
+In the following theorem we analyze the max rank of the resulting contraction trees, which has not previously been studied. We present this result as a new relationship between carving width and treewidth:
+\begin{theorem} \label{thm:carving-equiv-tree}
+	Let $G$ be a graph with $\E{G} \neq \emptyset$. Given a tree decomposition $T$ for $\Line{G}$ of width $w \in \mathbb{N}$, one can construct in polynomial time a carving decomposition for $G$ of width no more than $w+1$.
+\end{theorem}
+
+In order to prove this theorem, it is helpful to first state and prove a lemma on simplifying the internal structure of a tree decomposition. In particular, we show that given an edge clique cover of a graph $G$, it is sufficient to only consider tree decompositions whose leaves are labeled only by elements of the edge clique cover.
+
+\begin{lemma}\label{lemma:tree-simplification}
+Let $G$ be a graph, let $(T, \chi)$ be a tree decomposition of $G$, and let $A$ be a finite set. If $f: A \rightarrow 2^{\V{G}}$ is a function whose image is an edge clique cover of $G$, then we can construct in polynomial time a tree decomposition $(S, \psi)$ of $G$ and a bijection $g: A \rightarrow \Lv{S}$ with $width_t(S, \psi) \leq width_t(T, \chi)$ and $\psi \circ g = f$.
+\end{lemma}
+\begin{proof}
+Consider an arbitrary $a \in A$ and define $\chi_a: \V{T} \rightarrow 2^{\V{G}}$ by $\chi_a(n) \equiv \chi(n) \cap f(a)$ for all $n \in \V{T}$. Notice that $(T, \chi_a)$ is a tree decomposition of $G \cap f(a)$. Since $f$ is an edge clique cover, $G \cap f(a)$ is a complete graph with $|f(a)|$ vertices and thus has treewidth $|f(a)|-1$. It follows that $width_t(T, \chi_a) \geq |f(a)|-1$. That is, there is some $n_a \in \V{T}$ such that $|\chi_a(n_a)| \geq |f(a)|$. It follows that $\chi_a(n_a) = f(a)$ and so $f(a) \subseteq \chi(n_a)$. Choose an arbitrary arc $b \in \einc{T}{n_a}$ and construct $T'$ from $T$ by attaching a new leaf $\ell_a$ at $b$ (and introducing a new internal node). We can extend $\chi$ into a labeling $\chi': \V{T'} \rightarrow 2^{\E{G}}$ by labeling the new internal node with $\chi(n_a)$ and labeling the new leaf node with $f(a)$. Note that $(T', \chi')$ is still a tree decomposition of $G$ of width $width_t(T, \chi)$, that all labels of leaves of $(T, \chi)$ are still labels of leaves of $(T', \chi')$, and that the new leaf of $(T' \chi')$, namely $\ell_a$, is labeled by $f(a)$.
+
+By repeating this process for every $a \in A$, by induction we produce in polynomial time a tree decomposition $(T', \chi')$ of width $width_t(T, \chi)$. Moreover, define the function $g: A \rightarrow \Lv{T'}$ for all $a \in A$ by $g(a) = \ell_a$ (the new leaf attached at each step). By construction, $\chi' \circ g = f$ (since each $\ell_a$ was labeled by $f(a)$) and moreover $f$ is an injection (since a new leaf was introduced at each step). It remains to make $f$ a bijection by removing leaves of $T'$.
+
+Since $f$ is an edge clique cover, properties (1) and (2) of a tree decomposition can be satisfied purely looking at the nodes of $T'$ in the range of $g$. Moreover, removing leaves of $T'$ cannot falsify property (3) of a tree decomposition. Thus we can repeatedly remove leaves of $T'$ not in the range of $g$ until we eventually reach a tree decomposition $(S, \psi)$ for $G$ whose leaves are exactly the range of $g$. After this process, $g$ is a bijection as a function onto $\Lv{S}$ and $\psi \circ f = \delta_G$. Moreover, since $\psi(\V{S}) \subseteq \chi'(\V{T'})$ it follows that $width_t(S, \psi) \leq width_t(T', \chi') = width_t(T, \chi)$ as desired. \hfill$\square$
+\end{proof}
+
+We now use this lemma to prove Theorem \ref{thm:carving-equiv-tree}.
+
+\begin{proof}% WLOG, we may assume that $\Line{G}$ has no vertices of degree 0 (vertices in $\Line{G}$ of degree 0 are an edge in $G$ between two vertices of degree $1$, so we can construct a carving decomposition of each pair of these vertices, use this lemma to find a carving decomposition of the remaining graph, and finally attach each carving decomposition at an arbitrary arc of $T'$ by introducing two new internal nodes).
+% TODO: Just add condition to Lemma that every node appears in A
+First, observe that the image of $\vincf{G}: \V{G} \rightarrow \E{G}$ is an edge clique cover of $\Line{G}$. It follows by Lemma \ref{lemma:tree-simplification} that we can construct a tree decomposition $(S, \psi)$ of $\Line{G}$ and a bijection $g: \V{G} \rightarrow \Lv{S}$ such that $\psi \circ g = \vincf{G}$ and $width_t(S, \psi) \leq width_t(T, \chi)$.
+
+Construct $T'$ from $S$ by replacing every leaf $\ell \in \Lv{S}$ with $g^{-1}(\ell)$. Since $g$ is a bijection, $\Lv{T'} = \V{G}$ and so $T'$ is a carving decomposition. In order to compute the carving width of $T'$, consider an arbitrary arc $a \in \E{T'}$ and let $C_a$ be an element of the partition of $\V{G}$ defined by removing $a$. 
+
+For every edge $e \in \vinc{G}{C_a} \cap \vinc{G}{\Lv{T'} \setminus C_a}$, there must be vertices $v \in C_a$ and $w \in \Lv{T'} \setminus C_a$ that are both incident to $e$ and so $e \in \vinc{G}{v} \cap \vinc{G}{w}$. Since $\chi \circ g = \vincf{G}$, it follows that $e \in \chi(g(v)) \cap \chi(g(w))$.  Property 3 of tree decompositions implies that $e$ must also be in the label of every node in the path from $g(v)$ to $g(w)$ in $T$; in particular, $e$ must be in the label of both endpoints of $a$.
+
+Thus every element of $\vinc{G}{C_a} \cap \vinc{G}{\Lv{T'} \setminus C_a}$ must be in the label of both endpoints of $a$. It follows that $|\vinc{G}{C_a} \cap \vinc{G}{\Lv{T'} \setminus C_a}| \leq width_t(T, \chi)+1$. Hence $width_c(T') \leq width_t(T, \chi)+1$ as desired. \hfill$\square$
+\end{proof}
+
+An alternative proof of Theorem \ref{thm:carving-equiv-tree} uses Theorem 2.4 of \cite{HW18} to construct a carving decomposition $T'$ of $G$ from $T$ whose vertex congestion is $w+1$. By Lemma 2 of \cite{ACDJPS07}, it follows that the carving width of $T'$ is no more than $w+1$.
+
+Applying Theorem \ref{thm:carving-equiv-tree} when $G$ is the structure graph of a tensor network (together with Theorem \ref{thm:contraction-equiv-carving}) gives us the \textbf{Line-Graph} method, which finds contraction trees by finding tree decompositions of the corresponding line graph. There are several advantages to our new analysis over the analysis of \cite{MS08}: our analysis holds for tensor networks with free indices, and we analyze the max rank of contraction trees instead of the contraction complexity. Although the contraction complexity (and, for factor graphs, the width of the elimination order) is equal to one plus the width of the used tree decomposition, the max rank is smaller on some graphs; see the appendix for an experimental analysis of this.

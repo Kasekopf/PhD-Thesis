@@ -1,0 +1,41 @@
+% Operations on Dimensions
+\newcommand{\domain}[1]{[#1]}				% Get the domain of a dimension or set of dimensions
+\newcommand{\dlabel}[1]{\ell(#1)} 			% Get the label attached to each dimension
+
+% Operations on Assignments
+\newcommand{\restrict}[1]{\big|_{#1}}		% Given an assignment to E, and D \subseteq E, get the corresponding assignment to D
+
+% Operations on Tensors
+\newcommand{\tdim}[1]{\mathcal{I}(#1)}		% Get the set of indices of a tensor
+\newcommand{\rank}[1]{rank(#1)}				% Get the rank of a tensor
+\newcommand{\size}[1]{size(#1)}				% Get the size of a tensor
+
+% Operations on Tensor Networks
+\newcommand{\tntensor}[1]{\mathcal{T}(#1)}	% Get the tensor identified by the network
+\newcommand{\tnfree}[1]{\mathcal{F}(#1)}	% Get the set of free dimensions
+\newcommand{\tnbound}[1]{\mathcal{B}(#1)}	% Get the set of bound dimensions
+
+% Operations on Graphs
+\newcommand{\edge}[1]{\{#1\}}				% Construct an edge incident to the given vertices
+\newcommand{\vinc}[2]{\delta_{#1}(#2)}		% Get all edges incident to a vertex
+\newcommand{\vincf}[1]{\delta_{#1}}		% Get the function that returns all edges incident to a vertex
+\newcommand{\einc}[2]{\epsilon_{#1}(#2)}	% Get all vertices incident to an edge 
+\newcommand{\eincf}[1]{\epsilon_{#1}}	    % Get the function that returns all vertices incident to an edge 
+\newcommand{\E}[1]{\mathcal{E}(#1)}			% Get the set of edges of a graph
+\newcommand{\V}[1]{\mathcal{V}(#1)}			% Get the set of vertices of a graph
+\newcommand{\Lv}[1]{\mathcal{L}(#1)}		% Get the set of leafs of a tree
+\newcommand{\C}[3]{\mathcal{C}_{#1,#2}(#3)}	% Get the children of a node of a rooted tree
+\newcommand{\paritions}[1]{\mathcal{P}(#1)}
+\newcommand{\Line}[1]{Line(#1)}
+
+\newcommand{\blocks}[1]{\mathcal{B}(#1)}
+\newcommand{\Ind}[0]{\mathbf{Ind}}
+\newcommand{\pkg}[1]{\texttt{#1}}
+\newcommand{\tool}[1]{\texttt{#1}}
+
+\newcommand{\fv}[0]{z}
+\newcommand{\copyt}[0]{\text{COPY}}
+
+\newcommand{\support}[1]{\text{sup}(#1)}
+\newcommand{\depend}[1]{\text{dep}(#1)}
+\newcommand{\shortcite}[1]{\cite{#1}} % In this bib style, no need for shortcite

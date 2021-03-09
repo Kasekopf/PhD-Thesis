@@ -1,0 +1,137 @@
+\section{Implementation and Evaluation} \label{sec:experiments}
+We are interested in the following experimental research questions:
+\begin{enumerate}
+    \item[RQ1.] Are tensor-network-based approaches competitive with existing state-of-the-art unweighted model counters?
+    \item[RQ2.] Are tensor-network-based approaches competitive with existing state-of-the-art weighted model counters?
+    \item[RQ3.] What are the structural properties of benchmarks for which the tensor-network-based approaches perform well?
+\end{enumerate}
+
+To answer these questions, we implement Algorithm 2 in \tool{TensorOrder}, a new tool for weighted model counting using tensor networks. \tool{TensorOrder} can be configured to find contraction trees using existing methods \cite{KCMR18}-- \textbf{greedy} (using a greedy algorithm), \textbf{metis} (using graph partitioning), and \textbf{GN} (using community structure detection)-- or methods presented in this paper-- \textbf{LG} (Section \ref{sec:contraction-theory}) and \textbf{FT} (Section \ref{sec:preprocessing}). Implementation details appear in Section \ref{sec:experiments:implementation}.
+
+To answer RQ1, in Section \ref{sec:experiments:cubic} we compare \tool{TensorOrder} with existing state-of-the-art tools for unweighted model counting (\tool{dynQBF} \cite{CW16}, \tool{dynasp} \cite{FHMW17}, \tool{SharpSAT} \cite{Thurley2006}, \tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) on formulas that count the number of vertex covers of randomly-generated cubic graphs \cite{KCMR18}. Note \tool{dynQBF} and \tool{dynasp} are solvers from related domains (that can be used as model counters) that also use tree decompositions.
+
+To answer RQ2, in Section \ref{sec:experiments:cachet} we compare \tool{TensorOrder} with existing state-of-the-art tools for weighted model counting (\tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) on formulas whose weighted count corresponds to exact inference on Bayesian networks \cite{SBK05}. Note that the other tools (\tool{dynQBF}, \tool{dynasp}, and \tool{SharpSAT}) cannot perform weighted model counting.
+
+% We use \tool{TensorOrder} to compare tensor-based methods with existing state-of-the-art tools for weighted model counting: \tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}. %Note that \tool{d4} requires a d-DNNF reasoner to perform weighted model counting; we use \cite{CDLL18}. 
+% We also compare with \tool{dynQBF} \cite{CW16}, \tool{dynasp} \cite{FHMW17} and \tool{SharpSAT} \cite{Thurley2006} when the benchmarks are unweighted. Note \tool{dynQBF} and \tool{dynasp} are solvers from related domains (that can be used as model counters) that also use tree decompositions.
+
+% We then compare our tensor-based algorithms for weighted model counting against state-of-the-art weighted model counters and against existing tensor-based algorithms. We demonstrate that our tensor-based algorithms are useful as part of a portfolio of weighted model counters. 
+
+% We compare \tool{TensorOrder} on two sets of existing benchmarks. First, in Section \ref{sec:experiments:cubic} we compare on formulas that count the number of vertex covers of randomly-generated cubic graphs \cite{KCMR18}. Second, in Section \ref{sec:experiments:cachet} we compare 
+To answer RQ3, we compute upper bounds on the treewidth and carving width of these benchmarks. We run each of three heuristic tree decomposition solvers (\pkg{Tamaki} \cite{Tamaki17}, \pkg{FlowCutter} \cite{HS18}, and \pkg{htd} \cite{AMW17}) on each benchmark with a timeout of 1000 seconds: once on the structure graph $G$ corresponding to the benchmark, and once on $\Line{G}$. The minimal width of all produced tree decompositions for $G$ (resp. $\Line{G}$) is an upper bound for the treewidth of $G$ (resp. $\Line{G}$). The minimal max-rank of the contraction trees produced by running \textbf{LG} (resp. \textbf{FT}) on each tree decomposition of $\Line{G}$ (resp. $G$) is an upper bound for the carving width of $G$ (resp. $G$ after \text{FT}-preprocessing).
+
+Each experiment was run in a high-performance cluster (Linux kernel 2.6.32) using a single 2.80 GHz core of an Intel Xeon X5660 CPU and 48 GB RAM. We provide all code, benchmarks, and detailed data of benchmark runs at \url{https://github.com/vardigroup/TensorOrder}.
+
+% \paragraph{Experimental Methodology}
+% To evaluate runtime performance, we run each tool once on each benchmark with a timeout of 1000 seconds and record the wall-clock time taken. For \tool{TensorOrder}, recorded times include all of Algorithm \ref{alg:wmc} (and, specifically, include the time of the underlying tree-decomposition solver).
+
+
+
+% We then use these tree decompositions to compute upper bounds on the treewidth of $G$ (the minimal width of all found tree decompositions for $G$), the treewidth of $\Line{G}$ (the minimal width of all found tree decompositions for $\Line{G}$), the carving width of $G$ (the minimal max-rank of all contraction trees produced by running \textbf{LG} on tree decompositions of $\Line{G}$), and the carving width of $G$ after \textbf{FT}-preprocessing (the minimal max-rank of all contraction trees produced by running \textbf{FT} on tree decompositions of $\Line{G}$).
+
+% \begin{enumerate}
+%     \item the treewidth of $G$ by taking the minimum width amongst all discovered tree decompositions for $G$,
+%     \item the treewidth of $\Line{G}$ by taking the minimum width amongst all discovered tree decompositions for $\Line{G}$,
+%     \item the carving width of $G$ by taking the minimum width amongst all contraction trees produced by running \textbf{LG} on each tree decomposition of $\Line{G}$, and
+%     \item the carving width of $G$ after \textbf{FT}-preprocessing by taking the minimum width amongst all contraction trees produced by running \textbf{FT} on each tree decomposition of $G$.
+% \end{enumerate}
+
+% compute an upper bound for the treewidth of $G$ (resp. $\Line{G}$) by taking the minimum width amongst all discovered tree decompositions for $G$ (resp. $\Line{G}$). Similarly, we compute an upper bound for the carving width of $G$ by taking the minimum width amongst all contraction trees produced by running \textbf{LG} on each tree decomposition of $\Line{G}$.
+
+
+% We then record the width of the best tree decomposition found amongst all tree-decomposition solvers. We also 
+
+% We also evaluate the structural properties of these benchmarks by performing an experimental comparison of treewidth and carving width of the incidence. For each benchmark with corresponding incidence graph $G$, we run each of the three heuristic tree decomposition solvers \tool{Tamaki}, \tool{FlowCutter}, and \tool{htd} for 1000 seconds on $G$ and $\Line{G}$. We then record the width of the best tree decomposition found amongst all tree-decomposition solvers. On each tree decomposition for $\Line{G}$ found by the solvers, we use \textbf{LG} to compute the corresponding carving decomposition of $G$ and recorded the smallest width found amongst all decompositions. Similarly, on each tree decomposition for $G$ found by the solvers, we use \textbf{FT} to compute the corresponding carving decomposition of the preprocessed graph and recorded the smallest width found amongst all decompositions. 
+
+\begin{figure}
+	\centering
+	\input{figures/3/vertex_cover_time.pgf}
+	\input{figures/3/vertex_cover_rank.pgf}
+	\caption{\label{fig:cubic-time} Median solving time (top) and max-rank of the computed contraction tree (bottom) of various model counters and tensor-based methods run on benchmarks counting the number of vertex covers of 100 cubic graphs with $n$ vertices. Solving time of datapoints that ran out of time ($1000$ seconds) or memory (48 GB) are not shown. When $n \geq 170$, our contribution \textbf{LG+Flow} is faster than all other methods and finds contraction trees of lower max-rank than all other tensor-based methods.}
+\end{figure}
+
+\subsection{Implementation Details of \tool{TensorOrder}}
+\label{sec:experiments:implementation}
+\tool{TensorOrder} is implemented in Python 3.6. All tensor contractions are performed using \pkg{numpy} 1.15 and 64-bit double precision floats. \tool{TensorOrder} also supports infinite-precision integer arithmetic, but the performance is significantly degraded by limited \pkg{numpy} support. Note that \pkg{numpy} is able to leverage SIMD parallelism for tensor contraction.
+
+Both \textbf{LG} and \textbf{FT} require first finding a tree decomposition. To do this, we leverage three heuristic tree-decomposition solvers: \pkg{Tamaki} \cite{Tamaki17}, \pkg{FlowCutter} \cite{HS18}, and \pkg{htd} \cite{AMW17}. \tool{TensorOrder} therefore has three implementations of \textbf{LG} (using \textbf{LG+Tamaki}, \textbf{LG+Flow}, and \textbf{LG+htd}) and three implementations of \textbf{FT} (using \textbf{FT+Tamaki}, \textbf{FT+Flow}, and \textbf{FT+htd}) for different choices of solver.
+
+All the tree-decomposition solvers we consider are online solvers and so each implementation must decide how long to run the solver (this time is included in the measured running time). \tool{TensorOrder} estimates the time to contract each potential contraction tree (using techniques from the \pkg{einsum} package of \pkg{numpy}) and continues to look for better tree decompositions until it expects to have spent more than half of the running time on finding a tree decomposition.  This strikes a balance between improving and using the contraction trees.
+
+\begin{figure}
+	\centering
+	\input{figures/3/appendix_vertex_cover_width.pgf}
+	\caption{\label{fig:vertex-cover-width} Median of the best upper bound found for treewidth and carving width of 100 cubic graphs with $n$ vertices. For most large graphs, the carving width of $G$ is smaller than the treewidth of $G$, which is smaller that the treewidth of $\Line{G}$.}
+\end{figure}
+
+%\begin{figure}
+%	\centering
+%	\input{figures/vertex_cover_time.pgf}
+%	\caption{\label{fig:cubic-time} Median runtime of various methods on counting the number of vertex covers of 100 randomly-sampled cubic graphs with $n$ vertices. Datapoints that ran out of time ($1000$ seconds) or memory (48 GB) are not shown. Our contribution \textbf{Line+Flow} is faster than the other methods on formulas counting vertex covers of large graphs.}
+%\end{figure}
+
+%\begin{figure}
+%	\centering
+%	\input{figures/vertex_cover_rank.pgf}
+%	\caption{\label{fig:cubic-rank} Median max rank of the contraction tree found by various tensor-based methods, on tensor networks that count the number of vertex covers of 100 randomly-sampled cubic graphs with $n$ vertices. Our contribution \textbf{Line+Flow} finds lower max-rank contraction trees than other methods when $n \geq 170$.}
+%\end{figure}
+
+\subsection{Unweighted Model Counting: Vertex Covers of Cubic Graphs}
+\label{sec:experiments:cubic}
+
+% (i.e., the number of sets of vertices where every edge of the graph is incident to at least one vertex) 
+We first compare on benchmarks that count the number of vertex covers of randomly-generated cubic graphs \cite{KCMR18}. For each number of vertices $n \in \{50, 60, 70, \cdots, 250\}$ we randomly sample 100 connected cubic graphs using a Monte Carlo procedure \cite{VL05}. These benchmarks are monotone 2-CNF formulas in which every variable appears 3 times. We run each tool once on each benchmark with a timeout of 1000 seconds and record the wall-clock time taken. 
+
+Results on the runtime performance for these benchmarks are summarized in Figure \ref{fig:cubic-time}. For ease of presentation, we display only the best-performing of the \textbf{LG} and \textbf{FT} implementations: \textbf{LG+Flow}. We observe that tensor-based methods are fastest when $n \geq 110$. On large graphs ($n \geq 170$) our contribution \textbf{LG+Flow} is fastest and able to find the lowest max-rank contraction trees. \textbf{LG+Flow} is the only implementation able to solve at least 50 benchmarks within 1000 seconds when $n$ is $220$. We conclude that tensor-network-based approaches outperform state-of-the-art unweighted model counters on these benchmarks.
+
+Results on the structural properties of these benchmarks are summarized in Figure \ref{fig:vertex-cover-width}. 
+% Note that both \textbf{LG} and \textbf{FT} can be used to find carving decompositions on these benchmarks; although \textbf{FT} requires preprocessing to factor all tensors of order 4 or higher, each vertex in each cubic graph has exactly three incident edges and so there is no factoring required. 
+For most large graphs $G$, we observe that the carving width of $G$ is smaller than the treewidth of $G$ which is smaller that the treewidth of $\Line{G}$. 
+% Note that the carving width of $G$ is indeed smaller than the upper bound guaranteed by Theorem \ref{thm:carving-equiv-tree} of $width_t(\Line{G})+1$. In fact, the carving width of $G$ is smaller than the treewidth of $G$.
+
+% width of the carving decompositions of $G$ found by \textbf{LG} are indeed smaller than the upper bound guaranteed by Theorem \ref{thm:carving-equiv-tree} of the tree decomposition width plus 1.
+
+% In Figure \ref{fig:cubic-rank}, we present the median max rank of the contraction tree ultimately returned by each tensor-based method when counting each benchmark. We observe that \textbf{line-Flow} is consistently able to find better contraction trees than the other methods when $n \geq 180$. The flat performance of \textbf{line-Flow} when $n$ is between $100$ and $200$ is a result of the algorithm halting the online search for a contraction tree to immediately perform the contraction. % If \textbf{line-Flow} continues to improve a contraction tree for the full 5 minutes, we see (from the points labeled \textbf{line-Flow} [5 min]) that it consistently finds better contraction trees.
+
+\begin{figure}[t]
+	\centering
+	\input{figures/3/cachet_inference_cactus.pgf}
+	\caption{\label{fig:cachet-cactus} A cactus plot of the number of benchmarks solved by various methods out of 1091 probabilistic inference benchmarks. Although our contributions \textbf{FT+*} solve fewer benchmarks than the existing weighted model counters \tool{cachet}, \tool{miniC2D}, and \tool{d4}, they improve the virtual best solver on 231 benchmarks. Note that \tool{dynQBF}, \tool{dynasp}, and \tool{SharpSAT} are unweighted model counters and so cannot solve these weighted benchmarks.}
+\end{figure}
+
+\begin{figure}[t]
+	\centering
+	\input{figures/3/cachet_inference_carving_cactus.pgf}
+	\caption{\label{fig:cachet-carving-cactus} A plot of the number of benchmarks solved by various methods organized by carving width. Each $(x,y)$ data point indicates that the corresponding tool was able to solve $y$ benchmarks whose carving width (after \textbf{FT}-preprocessing) was at most $x$. Our approach \textbf{FT+Tamaki} can solve almost all benchmarks with carving width below 27 (unlike existing model counters, which fail on many benchmarks with small carving width) and no benchmarks with carving width above 30.}
+\end{figure}
+
+\subsection{Weighted Model Counting: Exact Inference}
+\label{sec:experiments:cachet}
+We next compare on a set of weighted model counting benchmarks from Sang, Beame, and Kautz \shortcite{SBK05}. These 1091 benchmarks are formulas whose weighted model count corresponds to exact inference on Bayesian networks. We compare against the weighted model counters \tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}. Since these benchmarks are weighted, we cannot compare against tools that can only perform unweighted model counting (\tool{dynQBF} \cite{CW16}, \tool{dynasp} \cite{FHMW17} and \tool{SharpSAT} \cite{Thurley2006}). We run each tool once on each benchmark with a timeout of 1000 seconds and record the wall-clock time taken.
+
+We first evaluate numerical accuracy, since our approach uses 64-bit double precision floats: on all benchmarks that \tool{miniC2D} also finishes, the weighted model count returned by our approaches agrees within $10^{-3}$.
+
+We next evaluate runtime performance. Results on these benchmarks are summarized in Figure \ref{fig:cachet-cactus}. \textbf{FT+Tamaki} is able to solve the most benchmarks of all tensor-based methods. Our implementations of \textbf{FT} each solve fewer benchmarks than \tool{cachet}, \tool{miniC2D}, and \tool{d4}. Nevertheless, \textbf{FT+*} are together able to solve 231 benchmarks faster than existing counters (\textbf{FT+Tamaki} is fastest on 50, \textbf{FT+Flow} is fastest on 175, and \textbf{FT+htd} is fastest on 6), including 62 benchmarks on which \tool{cachet}, \tool{miniC2D}, and \tool{d4} all time out. This significantly improves the virtual best solver (VBS) when \textbf{FT+*} are included. We conclude that \textbf{FT} is useful as part of a portfolio of weighted model counters.
+
+% A more detailed analysis is available in the appendix.
+
+\begin{figure}
+	\centering
+	\input{figures/3/tree_solver_analysis.pgf}
+	\caption{\label{fig:solver-analysis} The number of probabilistic-inference benchmarks (out of 1091) for which \textbf{FT+Tamaki}, \textbf{FT+Flow}, and \textbf{FT+htd} were able to find a contraction tree whose max-rank was no larger than (top) 30, (middle) 25, or (bottom) 20 within the indicated time.}
+\end{figure}
+
+The existing tensor-based methods (\textbf{LG}, \textbf{greedy}, \textbf{metis}, and \textbf{GN}) that do not perform factoring were only able to count a single benchmark from this set within 1000 seconds. We observe that most of these benchmarks have a variable that appears many times, which significantly hinders tensor-based methods that do not perform factoring. This justifies our motivation for \textbf{FT} in Section \ref{sec:preprocessing}.
+
+We next evaluate the structural properties of benchmarks for which \textbf{FT} outperforms other approaches. In Figure \ref{fig:cachet-carving-cactus}, we organize the number of benchmarks completed for each tool by carving width after \textbf{FT}-preprocessing. We observe that all tensor-based methods perform best on benchmarks with small carving width. In particular, \textbf{FT+Tamaki} was able to solve almost all benchmarks whose width is below 27. On the other hand, existing tools do not heavily rely on structural properties and so solve fewer low-width benchmarks than \textbf{FT+Tamaki} but significantly more high-width benchmarks. We conclude that tensor-network-based approaches perform well on benchmark instances of low carving width (after  \textbf{FT}-preprocessing).
+
+Finally, we are interested in explaining the relative performance of the tensor-based methods \textbf{FT+Tamaki}, \textbf{FT+Flow}, and \textbf{FT+htd} on these benchmarks. To do this, we analyze the quality of the contraction trees they produce over time. Specifically, we rerun each implementation of \textbf{FT} for 1000 seconds with the contraction step disabled (i.e. remove step 3 of Algorithm \ref{alg:wmc}). Each implementation of \textbf{FT} is an online solver and so produces a sequence of contraction trees over time. For each contraction tree produced on each benchmark, we record the max-rank and time of production.
+
+Results of this experiment are summarized in Figure \ref{fig:solver-analysis}. 
+\textbf{FT+Flow} is able to find more contraction trees of small max-rank within 10 seconds than the other methods, while \textbf{FT+Tamaki} is able to find more contraction trees of small max-rank within 1000 seconds than the other methods. This matches our previous observations that, among the tensor-based methods, \textbf{FT+Flow} was the fastest method on the most benchmarks while \textbf{FT+Tamaki} was able to solve the most benchmarks after 1000 seconds.
+
+% Moreover, we observe that the quality of the discovered contraction trees does not significantly improve on most benchmarks after 4 seconds for \textbf{FT+Flow}, 20 seconds for \textbf{FT+htd}, and 500 seconds for \textbf{FT+Tamaki}. This suggests that these methods are not likely to discover significantly better contract
+
+We conclude from the experiments in Section \ref{sec:experiments:cubic} and Section \ref{sec:experiments:cachet} that both \textbf{LG} and \textbf{FT} are useful as part of a portfolio of model counters.
+
+% Although \pkg{Tamaki} placed above \pkg{FlowCutter} in the PACE 2017 competition, our implementations based on \pkg{FlowCutter} outperformed our implementations based on \pkg{Tamaki} on both sets of benchmarks. This suggests that tensor-based methods might be improved by developing specialized decomposition solvers.

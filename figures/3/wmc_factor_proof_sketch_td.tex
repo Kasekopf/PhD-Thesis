@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+\begin{scope}[every node/.style={fill, circle, inner sep=0pt, outer sep=0, minimum size=5pt}]
+    \node[label={[xshift=5pt]$n$}] (n) at (0, 0) {};
+\end{scope}
+
+\draw[thick] (n) -- (0, 2) node [midway, left] {$a$};
+\draw[thick] (n) -- (-1.73, -1) node [midway, above] {$b$};
+\draw[thick] (n) -- (1.73, -1) node [midway, above] {$c$};
+\end{tikzpicture}

@@ -1,0 +1,69 @@
+\begin{tikzpicture}
+% Center node
+\node[fill, circle, inner sep=0pt, outer sep=0, minimum size=5pt, label={[xshift=8pt, yshift=-5pt]$y_n$}] (yn) at (0, 0) {};
+
+% Minor nodes
+\begin{scope}[every node/.style={fill, circle, inner sep=0pt, outer sep=0, minimum size=3pt}]
+    \draw[thick] (yn) -- node[pos=0.75, label=right:{$z_{n,a}$}, minimum size=5pt] (zna) {} 
+    node[pos=0.525] (Ina1) {} node[pos=0.375] (Ina2) {} node[pos=0.225] (Ina3) {} (0,2);
+    \node[left=0.5 of Ina1] (Hna1) {};
+    \node[left=0.5 of Ina2] (Hna2) {};
+    \node[left=0.5 of Ina3] (Hna3) {};
+    
+    \draw[thick] (yn) -- node[pos=0.75, label={[xshift=-5pt,yshift=-5pt]$z_{n,b}$}, minimum size=5pt] (znb) {}
+    node[pos=0.525] (Inb1) {} node[pos=0.375] (Inb2) {} node[pos=0.225] (Inb3) {} (-1.73, -1);
+    \node[below right=0.25 and 0.1 of Inb1] (Hnb1) {};
+    \node[below right=0.25 and 0.1 of Inb2] (Hnb2) {};
+    \node[below right=0.25 and 0.1 of Inb3] (Hnb3) {};
+    
+    \draw[thick] (yn) -- node[pos=0.75, label={[xshift=5pt,yshift=-5pt]$z_{n,c}$}, minimum size=5pt] (znc) {}
+    node[pos=0.525] (Inc1) {} node[pos=0.375] (Inc2) {} node[pos=0.225] (Inc3) {} (1.73, -1);
+    \node[below left=0.25 and 0.1 of Inc1] (Hnc1) {};
+    \node[below left=0.25 and 0.1 of Inc2] (Hnc2) {};
+    \node[below left=0.25 and 0.1 of Inc3] (Hnc3) {};
+    
+    % \node[left=5 of zna, label=right:{$z_{\ell,a}$}, minimum size=5pt] (zla) {};
+    % \node[left=5 of Ina1] (Ila1) {};
+    % \node[left=5 of Ina2] (Ila2) {};
+    % \node[left=5 of Ina3] (Ila3) {};
+    % \node[left=5 of Hna1] (Hla1) {};
+    % \node[left=5 of Hna2] (Hla2) {};
+    % \node[left=5 of Hna3] (Hla3) {};
+    
+    \draw[thick] (-3, 0.52) -- node[pos=0.6825, label=right:{$z_{\ell,a}$}, minimum size=5pt] (zna) {}
+    node[pos=0.39] (Ila1) {} node[pos=0.195] (Ila2) {} node[pos=0] (Ila3) {} (-3,2);
+    \node[left=0.5 of Ila1] (Hla1) {};
+    \node[left=0.5 of Ila2] (Hla2) {};
+    \node[left=0.5 of Ila3] (Hla3) {};
+\end{scope}
+
+% \node at (zna) [above right] {$y_n$};
+%\draw[thick] (yn) -- (0, 2);
+%\draw[thick] (yn) -- (-1.73, -1);
+%\draw[thick] (yn) -- (1.73, -1);
+
+\draw[thick] (Ina1) -- (Hna1);
+\draw[thick] (Ina2) -- (Hna2);
+\draw[thick] (Ina3) -- (Hna3);
+\draw[decoration={brace,raise=3pt},decorate] (Ina1) -- node[right=4pt] {$I_{n,a}$} (Ina3);
+\draw[decoration={brace,mirror,raise=3pt},decorate] (Hna1) -- node[left=4pt] {$H_{n,a}$} (Hna3);
+
+\draw[thick] (Inb1) -- (Hnb1);
+\draw[thick] (Inb2) -- (Hnb2);
+\draw[thick] (Inb3) -- (Hnb3);
+\draw[decoration={brace,raise=3pt},decorate] (Inb1) -- node[above left=1pt and 1pt] {$I_{n,b}$} (Inb3);
+\draw[decoration={brace,mirror,raise=3pt},decorate] (Hnb1) -- node[below=6pt] {$H_{n,b}$} (Hnb3);
+
+\draw[thick] (Inc1) -- (Hnc1);
+\draw[thick] (Inc2) -- (Hnc2);
+\draw[thick] (Inc3) -- (Hnc3);
+\draw[decoration={brace,mirror,raise=3pt},decorate] (Inc1) -- node[above right=1pt and 1pt] {$I_{n,c}$} (Inc3);
+\draw[decoration={brace,raise=3pt},decorate] (Hnc1) -- node[below=6pt] {$H_{n,c}$} (Hnc3);
+
+
+\draw[thick] (Ila1) -- (Hla1);
+\draw[thick] (Ila2) -- (Hla2);
+\draw[thick] (Ila3) -- (Hla3);
+\draw[decoration={brace,raise=3pt},decorate] (Ila1) -- node[right=4pt] {$I_{\ell,a}$} (Ila3);
+\draw[decoration={brace,mirror,raise=3pt},decorate] (Hla1) -- node[left=4pt] {$H_{\ell,a}$} (Hla3);
+\end{tikzpicture}

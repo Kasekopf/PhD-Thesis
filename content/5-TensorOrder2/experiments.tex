@@ -26,14 +26,14 @@ All counters are run in the Docker images (one for each counter) with Docker 19.
 
 \subsection{Implementation Details of \tool{TensorOrder2}}
 \label{sec:experiments:impl}
-\tool{TensorOrder2} is primarily implemented in Python 3 as a modified version of \tool{TensorOrder}. We replace portions of the Python code with C++ (\tool{g++} v7.4.0) using Cython 0.29.15 for general speedup, especially in $\func{FactorTree}(\cdot)$.
+\tool{TensorOrder2} is primarily implemented in Python 3 as a modified version of the tool from Chapter \ref{ch:tensors}, \tool{TensorOrder}. We replace portions of the Python code with C++ (\tool{g++} v7.4.0) using Cython 0.29.15 for general speedup, especially in $\func{FactorTree}(\cdot)$.
 
 \paragraph{Planning.} 
 \tool{TensorOrder} contains an implementation of the planning stage using a choice of three single-core tree-decomposition solvers: \pkg{Tamaki} \cite{Tamaki17}, \pkg{FlowCutter} \cite{HS18}, and \pkg{htd} \cite{AMW17}. We add to \tool{TensorOrder2} an implementation of Theorem \ref{thm:factorable-branch} and use it to add a branch-decomposition solver \pkg{Hicks} \cite{hicks02}.
 We implement a parallel portfolio of graph-decomposition solvers in C++ and give \tool{TensorOrder2} access to two portfolios, each with access to all cores: \pkg{P3} (which combines \pkg{Tamaki},  \pkg{FlowCutter}, and \pkg{htd}) and \pkg{P4} (which includes \pkg{Hicks} as well).
 
 \paragraph{Execution.} 
-\tool{TensorOrder} is able to perform the execution stage on a single core and on multiple cores using \pkg{numpy} v1.18.1 and \pkg{OpenBLAS} v0.2.20. We add to \tool{TensorOrder2} the ability to contract tensors on a GPU with \pkg{TensorFlow} v2.1.0 \cite{ABCCDDDGII16}. To avoid GPU kernel calls for small contractions, \tool{TensorOrder2} uses a GPU only for contractions where one of the tensors involved has rank $\geq 20$, and reverts back to using multi-core \pkg{numpy} otherwise. We also add an implementation of Algorithm \ref{alg:tn-sliced}.
+\tool{TensorOrder} is able to perform the execution stage on a single core and on multiple cores using \pkg{numpy} v1.18.1 and \pkg{OpenBLAS} v0.2.20. In \tool{TensorOrder2}, we add the ability to contract tensors on a GPU with \pkg{TensorFlow} v2.1.0 \cite{ABCCDDDGII16}. To avoid GPU kernel calls for small contractions, \tool{TensorOrder2} uses a GPU only for contractions where one of the tensors involved has rank $\geq 20$, and reverts back to using multi-core \pkg{numpy} otherwise. We also add an implementation of Algorithm \ref{alg:tn-sliced}.
 Overall, \tool{TensorOrder2} runs the execution stage on three hardware configurations: \pkg{CPU1} (restricted to a single CPU core), \pkg{CPU8} (allowed to use all 8 CPU cores), and \pkg{GPU} (allowed to use all 8 CPU cores and use a GPU).
 
 \begin{figure}
@@ -110,7 +110,7 @@ We observe that preprocessing significantly boosts \tool{TensorOrder2} relative 
   \centering
   \begin{tabular}{l||r|r|r||r|r|r|}
   & \multicolumn{3}{c||}{Without preprocessing} & \multicolumn{3}{c|}{With \tool{pmc-eq} preprocessing} \\
- & \# Fastest & \# Solved & PAR-2 Score & \# Fastest & \# Solved & PAR-2 Score\\ \hline 
+ & \# Fastest & \# Solved & PAR-2 & \# Fastest & \# Solved & PAR-2\\ \hline 
 \pkg{T.}+\pkg{CPU1} & 0 & 1151 & 1640803. & 0 & 1514 & 834301.\\ 
 \pkg{P4}+\pkg{CPU1} & 45 & 1164 & 1562474. & 83 & 1526 & 805547.\\ 
 \pkg{P4}+\pkg{CPU8} & 50 & 1185 & 1500968. & 67 & 1542 & 771821.\\ 

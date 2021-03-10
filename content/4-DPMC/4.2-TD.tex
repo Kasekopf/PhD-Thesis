@@ -1,0 +1,92 @@
+
+
+
+
+
+
+\subsection{Planning with Anytime Tree-Decomposition Tools}
+\label{sec_td}
+
+In join-query optimization, \emph{tree decompositions} can be used to compute join trees \cite{dalmau2002constraint,mcmahan2004projection}.
+Tree decompositions \cite{robertson1991graph} decompose graphs into tree structures.
+% A central technique in join-query optimization uses \emph{tree decompositions} to compute join trees \cite{dalmau2002constraint,mcmahan2004projection}.
+% Tree decompositions \cite{robertson1991graph} offer a way to decompose a graph into a tree structure.
+% Formally:
+\begin{definition}[Tree Decomposition]
+	A \emph{tree decomposition} $(S, \chi)$ of a graph $G$ is a tree $S$ with a labeling function $\chi : \V{S} \to 2^{\V{G}}$ where:
+	% (1) $\bigcup_{n \in \V{S}} \chi(n) = \V{G}$,
+	% (2) for all $e \in \E{G}$, there exists $n \in \V{S}$ \st{} $\einc{G}{e} \subseteq \chi(n)$, and
+	% (3) for all $n, o, p \in \V{S}$, if $p$ is on the path from $n$ to $o$ then $\chi(n) \cap \chi(o) \subseteq \chi(p)$.
+	\begin{enumerate}[ref=\arabic*]
+		\item for all $v \in \V{G}$, there exists $n \in \V{S}$ \st{} $v \in \chi(n)$,
+		\item for all $e \in \E{G}$, there exists $n \in \V{S}$ \st{} $\einc{G}{e} \subseteq \chi(n)$, and
+		\item for all $n, o, p \in \V{S}$, if $o$ is on the path from $n$ to $p$, then $\chi(n) \cap \chi(p) \subseteq \chi(o)$. \label{prop_running_intersection}
+	\end{enumerate}
+	The \emph{treewidth}, or simply \emph{width}, of $(S, \chi)$ is $\func{tw}(S, \chi) \equiv \max_{n \in \V{S}} \size{\chi(n)} - 1.$
+	% , denoted $width_t(S, \chi)$, is the maximum size (minus 1) of the label of every vertex, \ie,
+	% $$width_t(S, \chi) = \max_{n \in \V{S}} | \chi(n) | - 1.$$
+\end{definition}
+
+In particular, join-query optimization uses tree decompositions of the \emph{join graph} to find optimal join trees \cite{dalmau2002constraint,mcmahan2004projection}.
+The \emph{join graph} of a project-join query consists of all attributes of a database as vertices and all tables as cliques.
+In this approach, tree decompositions of the join graph of a query are used to find optimal project-join trees; see Algorithm 3 of \cite{mcmahan2004projection}.
+Similarly, tree decompositions of the \emph{primal graph} of a factor graph, which consists of all variables as vertices and all factors as cliques, can be used to find variable elimination orders \cite{kask2005unifying}.
+This technique has also been applied in the context of tensor networks \cite{morgenstern2008ltl,dudek2019efficient}.
+
+Translated to model counting, this technique allows us to use tree decompositions of the \textdef{Gaifman graph} of a CNF formula to compute project-join trees.
+The Gaifman graph of a CNF formula $\phi$, denoted $\gaifman(\phi)$, has a vertex for each variable of $\phi$, and two vertices are adjacent if the corresponding variables appear together in some clause of $\phi$.
+We present this tree-decomposition-based technique as Algorithm \ref{alg_td_to_join}.
+The key idea is that each clause $c$ of $\phi$ forms a clique in $\gaifman(\phi)$ between the variables of $c$.
+Thus all variables of $c$ must appear together in some label of the tree decomposition.
+We identify that node with $c$.
+\begin{algorithm*}[t]
+\label{alg_td_to_join}
+\caption{Using a tree decomposition to build a project-join tree}
+    \DontPrintSemicolon
+    \KwIn{$X$: set of Boolean variables}
+    \KwIn{$\phi$: CNF formula over $X$}
+    \KwIn{$(S, \chi)$: tree decomposition of the Gaifman graph of $\phi$}
+    \KwOut{$(T, r, \gamma, \pi)$: project-join tree of $\phi$}
+    $(T, \nil, \gamma, \pi) \gets \text{empty project-join tree}$\;
+    $found \gets \emptyset$\tcc*{clauses of $\phi$ that have been added to $T$}
+    \Function{\upshape $\func{Process}(n, \ell)$}{
+        \KwIn{$n \in \V{S}$: node of $S$ to process}
+        \KwIn{$\ell \subseteq X$: variables that must not be projected out here}
+        \KwOut{$N \subseteq \V{T}$}
+        $clauses \gets \{ c \in \phi : c \notin found~\text{and}~\vars(c) \subseteq \chi(n)\}$\; \label{line_clauses}
+        $found \gets found \cup clauses$\; \label{line_found}
+        $children \gets \{\leaf(T, c) : c \in clauses\} \cup \bigcup_{o \in \C(n)} \func{Process}(o, \chi(n))$\; \label{line_recur}
+            \tcc*{new leaf nodes $p \in \V T$ with $\gamma(p) = c$}
+        \If{$children = \emptyset$~\text{\upshape or}~$\chi(n) \subseteq \ell$}{
+            \Return{children}
+        }
+        \Else{
+            \Return{\upshape $\{\internal(T, children, \chi(n) \setminus \ell)\}$}\; \label{line_return_singleton}
+                \tcc*{new internal node $o \in \V T$ with label $\pi(o) = \chi(n) \setminus \ell$}
+        }
+    }
+    $s \gets$ arbitrary node of $S$ \label{line_arbitrary_node}
+        \tcc*{fixing $s$ as root of $S$}
+    $r \gets \text{only element of}~\func{Process}(s, \emptyset)$\;
+    \Return{$(T, r, \gamma, \pi)$}
+\end{algorithm*}
+
+The width of the resulting project-join tree is closely connected to the width of the original tree decomposition.
+We formalize this in the following theorem.
+\begin{theorem}
+\label{thm_td_to_join}
+	Let $\phi$ be a CNF formula over a set $X$ of variables and $(S, \chi)$ be a tree decomposition of $\gaifman(\phi)$ of width $w$.
+    Then Algorithm \ref{alg_td_to_join} returns a project-join tree of $\phi$ of width at most $w+1$.
+\end{theorem}
+The key idea is that, for each node $n \in \V{S}$, the label $\chi(n)$ is a bound on the variables that appear in all nodes returned by $\func{Process}(n, \cdot)$.
+Theorem \ref{thm_td_to_join} allows us to leverage state-of-the-art anytime tools for finding tree decompositions \cite{tamaki2019positive,strasser2017computing,abseher2017htd} to construct project-join trees, which we do in Section \ref{sec_experiments_planning}.
+
+On the theoretical front, it is well-known that tree decompositions of the Gaifman graph are actually equivalent to project-join trees \cite{mcmahan2004projection}.
+That is, one can go in the other direction as well: given a project-join tree of $\phi$, one can construct a tree decomposition of $\gaifman(\phi)$ of equivalent width.
+Formally:
+\begin{theorem}
+\label{thm_join_to_td}
+    Let $\phi$ be a CNF formula and $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$ of width $w$.
+    Then there is a tree decomposition of $\gaifman(\phi)$ of width $w-1$.
+\end{theorem}
+Theorem \ref{thm_join_to_td} is Lemma 1 of \cite{mcmahan2004projection} and can be seen as the inverse of Theorem \ref{thm_td_to_join}.

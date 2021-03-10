@@ -1,0 +1,77 @@
+
+
+
+
+
+
+
+
+\subsection{Planning with One-Shot Constraint-Satisfaction Heuristics}
+\label{sec_csp}
+
+A variety of constraint-satisfaction heuristics for model counting were presented in a single algorithmic framework by \cite{dudek2020addmc}.
+These heuristics have a long history in constraint programming \cite{dechter2003constraint}, database-query optimization \cite{mcmahan2004projection}, and propositional reasoning \cite{pan2005symbolic}.
+In this section, we adapt the framework of \cite{dudek2020addmc} to produce project-join trees.
+This algorithm is presented as Algorithm \ref{alg_csp_jt}, which constructs a project-join tree of a CNF formula using constraint-satisfaction heuristics.
+The functions $\clusterVarOrder$, $\clauseRank$, and $\chosenCluster$ represent heuristics for fine-tuning the specifics of the algorithm.
+Before discussing the various heuristics, we assert the correctness of Algorithm \ref{alg_csp_jt} in the following theorem.
+\begin{theorem}
+\label{thm_csp_jt}
+    Let $X$ be a set of variables and $\phi$ be a CNF formula over $X$.
+    Assume that $\clusterVarOrder$ returns an injection $X \to \N$.
+    Furthermore, assume that all $\clauseRank$ and $\chosenCluster$ calls satisfy the following conditions:
+    \begin{enumerate}[ref=\arabic*]
+        \item $1 \le \clauseRank(c, \rho) \le m$, \label{cond1}
+        \item $i < \chosenCluster(n_i) \le m$, and \label{cond2}
+        \item $X_s \cap \vars(n_i) = \emptyset$ for all integers $s$ where $i < s < \chosenCluster(n_i)$. \label{cond3}
+    \end{enumerate}
+    Then Algorithm \ref{alg_csp_jt} returns a project-join tree of $\phi$.
+\end{theorem}
+
+\begin{algorithm*}[t]
+\label{alg_csp_jt}
+\caption{Using combined constraint-satisfaction heuristics to build a project-join tree}
+    \DontPrintSemicolon
+    \KwIn{$X$: set of $m \ge 1$ Boolean variables}
+    \KwIn{$\phi$: CNF formula over $X$}
+    \KwOut{$(T, r, \gamma, \pi)$: project-join tree of $\phi$}
+    $(T, \nil, \gamma, \pi) \gets \text{empty project-join tree}$\;
+    $\rho \gets \clusterVarOrder(\phi)$
+        \tcc*{injection $\rho : X \to \N$}
+    \For{$i = m, m - 1, \ldots, 1$}{
+        $\Gamma_i \gets \set{c \in \phi : \clauseRank(c, \rho) = i}$
+            \tcc*{$1 \le \clauseRank(c, \rho) \le m$}
+        $\kappa_i \gets \set{\leaf(T, c) : c \in \Gamma_i}$\;
+            \tcc*{for each $c$, a leaf $l$ with $\gamma(l) = c$ is constructed and put in cluster $\kappa_i$}
+        $X_i \gets \vars(\Gamma_i) \setminus \bigcup_{j = i + 1}^m \vars(\Gamma_j)$
+            \tcc*{$\set{X_i}_{i = 1}^m$ is a partition of $X$}
+    }
+    \For{$i = 1, 2, \ldots, m$}{
+        \If{$\kappa_i \ne \emptyset$}{
+            $n_i \gets \internal(T, \kappa_i, X_i)$
+                \tcc*{$\C(n_i) = \kappa_i$ and $\pi(n_i) = X_i$}
+                \label{line_internal_node}
+            \If{$i < m$}{
+                $j \gets \chosenCluster(n_i)$ \label{line_chosen_cluster}
+                    \tcc*{$i < j \le m$}
+                $\kappa_j \gets \kappa_j \cup \set{n_i}$ \label{line_cluster_union}
+            }
+        }
+    }
+    \Return{$(T, n_m, \gamma, \pi)$}
+\end{algorithm*}
+
+By Condition \ref{cond1}, we know that $\set{\Gamma_i}_{i = 1}^m$ is a partition of the clauses of $\phi$.
+Condition \ref{cond2} ensures that Lines \ref{line_chosen_cluster}-\ref{line_cluster_union} place a new internal node $n_i$ in a cluster that has not yet been processed.
+Also on Lines \ref{line_chosen_cluster}-\ref{line_cluster_union}, Condition \ref{cond3} prevents the node $n_i$ from skipping a cluster $\kappa_s$ if there exists some $x \in X_s \cap \vars(n_i)$, since $x$ is projected in iteration $s$, \ie, $x$ is added to $\pi(n_s)$.
+These invariants are sufficient to prove that Algorithm \ref{alg_csp_jt} indeed returns a project-join tree of $\phi$.
+All heuristics we use in this work satisfy the conditions of Theorem \ref{thm_csp_jt}.
+
+There are a variety of heuristics to fine-tune Algorithm \ref{alg_csp_jt}.
+For the function $\clusterVarOrder$, we consider the heuristics \Random, \Mcs{} (\textdef{maximum-cardinality search} \cite{tarjan1984simple}), \Lexp/\Lexm{} (\textdef{lexicographic search for perfect/minimal orders} \cite{koster2001treewidth}), and \Minfill{} (\textdef{minimal fill-in} \cite{dechter2003constraint}) as well as their inverses (\Invmcs, \Invlexp, \Invlexm, and \Invminfill).
+Heuristics for $\clauseRank$ include \Be{} (\textdef{bucket elimination} \cite{dechter1999bucket}) and \Bm{} (\textdef{Bouquet's Method} \cite{bouquet1999gestion}).
+For $\chosenCluster$, the heuristics we use are \ListH{} and \TreeH{} \cite{dudek2020addmc}.
+We combine $\clauseRank$ and $\chosenCluster$ as \textdef{clustering heuristics}: $\Be-\ListH$, $\Be-\TreeH$, $\Bm-\ListH$, and $\Bm-\TreeH$.
+These heuristics are described in \cite{dudek2020addmc}%
+% and in Appendix \ref{sec_csp_heuristics}
+.

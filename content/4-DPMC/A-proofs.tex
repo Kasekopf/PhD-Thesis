@@ -1,0 +1,429 @@
+
+
+
+
+
+\section{Proofs}
+\label{sec_proofs}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Proof of Theorem \ref{thm_early_proj}}
+
+\begin{proof}
+    For every $\tau \in 2^{(X \cup Y) \setminus \set{x}}$, we have:
+    \begin{align*}
+      \pars{\proj_x (A \mult B)} &(\tau)
+       = (A \mult B)(\tau) + (A \mult B)(\tau \cup \set{x})
+        \tag{Definition \ref{def_proj}} \\
+      & = A(\tau \cap X) \mult B(\tau \cap Y)+ A((\tau \cup \set{x}) \cap X) \mult B((\tau \cup \set{x}) \cap Y)
+        \tag{Definition \ref{def_mult}} \\
+      & = A(\tau \cap X) \mult B(\tau \cap Y)+ A((\tau \cup \set{x}) \cap X) \mult B(\tau \cap Y)
+        \tag{as $x \notin Y$} \\
+      & = A(\tau \cap X) \mult B(\tau \cap Y)+ A(\tau \cap X \cup \set{x}) \mult B(\tau \cap Y)
+        \tag{as $x \in X$} \\
+      & = (A(\tau \cap X) + A(\tau \cap X \cup \set{x})) \mult B(\tau \cap Y) \\
+      & = \pars{\proj_x A}(\tau \cap X) \mult B(\tau \cap Y)
+        \tag{Definition \ref{def_proj}} \\
+      & = \pars{\proj_x A}(\tau \cap (X \setminus \set{x})) \mult B(\tau \cap Y)
+        \tag{as $x \notin \tau$} \\
+      & = \pars{\pars{\proj_x A} \mult B)}(\tau)
+        \tag{Definition \ref{def_mult}}
+    \end{align*}
+\qed
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Proof of Theorem \ref{thm_valuation_wmc}}
+
+In this section, for pseudo-Boolean functions $f : 2^X \to \R$, we define $\vars(f) \equiv X$.
+Notice that a clause $c$ in a CNF formula can be interpreted as a Boolean function $c : 2^{\vars(c)} \to \B$.
+Similarly, a set $\phi$ of clauses can be interpreted as the Boolean function $\phi = \prod_{c \in \phi} c$.
+
+Let $X$ be a set of variables and $W = \prod_{x \in X} W_x$ be a literal-weight function.
+Given a set $Y \subseteq X$, we define $W_{Y} \equiv \prod_{x \in Y} W_x$.
+Notice $W_Y \mult W_Z = W_{Y \cup Z}$ for all sets $Y, Z \subseteq X$.
+
+Let $\phi$ be a CNF formula over a set $X$ of variables, $(T, r, \gamma, \sigma)$ be a project-join tree of $\phi$, and $n \in \V T$.
+Denote by $S(n)$ the subtree rooted at $n$.
+We define the set $\Phi(n)$ of clauses that correspond to the leaves of $S(n)$:
+\begin{align*}
+    \Phi(n) \equiv
+    \begin{cases}
+        \set{\gamma(n)} & \text{if } n \in \Lv T \\
+        \bigcup_{o \in \C(n)} \Phi(o) & \text{otherwise}
+    \end{cases}
+\end{align*}
+We also define the set $P(n)$ of all variables to project in the subtree $S(n)$:
+\begin{align*}
+    P(n) \equiv
+    \begin{cases}
+       \emptyset & \text{if } n \in \Lv{T} \\
+        \pi(n) \cup \bigcup_{o \in \C(n)} P(o) & \text{otherwise}
+    \end{cases}
+\end{align*}
+
+\begin{lemma}
+\label{lemma_disjoint_P}
+    In a project-join tree $(T, r, \gamma, \pi)$, let $n$ be an internal node with children $o \ne q$.
+    Then $P(o) \cap \vars \pars{\Phi(q) \mult W_{P(q)}} = \emptyset$.
+\end{lemma}
+\begin{proof}
+    Let variable $x \in P(o)$.
+    Notice that $x \in \pi(s)$ for some internal node $s$ that is a descendant of $o$.
+    Assume there is an arbitrary clause $c \in \phi$ \st{} $x$ appears in $c$.
+    By the last property in Definition \ref{def_jointree}, the corresponding leaf $\gamma^{-1}(c)$ is a descendant of $s$ and thus a descendant of $o$.
+    So $x$ appears in no descendant leaf of $q$ (as $q$ is a sibling of $o$ in the tree $T$).
+    Thus $x \notin \vars(\Phi(q))$.
+
+    Now, note that $P(q) \subseteq \vars(\Phi(q))$, again by Definition \ref{def_jointree}.
+    So $x \notin P(q)$.
+    Therefore $x \notin \vars(\Phi(q) \mult W_{P(q)}) = \vars(\Phi(q)) \cup \vars(W_{P(q)}) = \vars(\Phi(q)) \cup P(q)$.
+    Since $x \in P(o)$ is arbitrary, we have $P(o) \cap \vars \pars{\Phi(q) \mult W_{P(q)}} = \emptyset$.
+\qed
+\end{proof}
+
+\begin{lemma}
+\label{lemma_late_proj}
+    In a project-join tree $(T, r, \gamma, \pi)$, let $n$ be an internal node with children $o \ne q$.
+    Then:
+    $$\proj_{P(o)} \pars{ \Phi(o) \mult W_{P(o)} } \mult \proj_{P(q)} \pars{ \Phi(q) \mult W_{P(q)} } = \proj_{P(o) \cup P(q)} \pars{ \Phi(o) \Phi(q) \mult W_{P(o) \cup P(q)} }$$
+\end{lemma}
+\begin{proof}
+    We have:
+    \begin{align*}
+        \proj_{P(o)} \pars{ \Phi(o) \mult W_{P(o)} } \mult \proj_{P(q)} \pars{ \Phi(q) \mult W_{P(q)} }
+        & = \proj_{P(o)} \pars{ \Phi(o) \mult W_{P(o)} \mult \proj_{P(q)} \pars{ \Phi(q) \mult W_{P(q)} } } \tag{undoing early projection of $P(o)$, observing Lemma \ref{lemma_disjoint_P}} \\
+        & = \proj_{P(q)} \proj_{P(o)} \pars{ \Phi(o) \mult W_{P(o)} \mult \Phi(q) \mult W_{P(q)} } \tag{undoing early projection of $P(q)$, observing Lemma \ref{lemma_disjoint_P}} \\
+        & = \proj_{P(o)} \proj_{P(q)} \pars{ \Phi(o) \Phi(q) \mult W_{P(o)} W_{P(q)} }
+        % \tag{both projection and multiplication are commutative}
+        \\
+        & = \proj_{P(o) \cup P(q)} \pars{ \Phi(o) \Phi(q) \mult W_{P(o) \cup P(q)} }
+    \end{align*}
+\qed
+\end{proof}
+
+\pagebreak
+% \clearpage
+
+\begin{lemma}
+\label{lemma_valuation}
+    Let $\phi$ be a CNF formula over a set $X$ of variables, $W$ be a literal-weight function over $X$, and $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$.
+    Then for every node $n$ in $T$:
+    $$f^W_n = \proj_{P(n)} \pars{ \Phi(n) \mult W_{P(n)} }$$
+    % Regarding the projection operator $\proj$, we use the convention that $\sum_\emptyset g = g$ for pseudo-Boolean functions g.
+\end{lemma}
+\begin{proof}
+    Notice that both pseudo-Boolean functions have the same variables in their domains:
+    \begin{align*}
+        \vars \pars{f^W_n}
+        & = \vars(n) \\
+        & = \vars(\Phi(n)) \setminus P(n) \\
+        & = \vars \pars{ \proj_{P(n)} \pars{ \Phi(n) \mult W_{P(n)} } }
+    \end{align*}
+
+    We employ structural induction on $n \in \V T$.
+    In the base case, $n$ is a leaf.
+    So $P(n) = \emptyset$ and $\Phi(n) = \set{\gamma(n)}$.
+    We have:
+    \begin{align*}
+        f^W_n
+        & = \gamma(n) \tag{Equation \eqref{eq_valuation}} \\
+        & = \prod_{c \in \Phi(n)} c \tag{singleton set} \\
+        & = \Phi(n)
+        % \tag{clause conjunction corresponds to function multiplication}
+        \\
+        & = \Phi(n) \mult \prod_{x \in \emptyset} W_x \tag{an empty product is equal to the number $1$} \\
+        & = \Phi(n) \mult W_\emptyset \\
+        & = \Phi(n) \mult W_{P(n)} \\
+        & = \proj_{\emptyset} \pars{ \Phi(n) \mult W_{P(n)} } \tag{convention on projection} \\
+        & = \proj_{P(n)} \pars{ \Phi(n) \mult W_{P(n)} }
+    \end{align*}
+
+    In the inductive case, $n$ is an internal node of $T$.
+    Our induction hypothesis is that
+    $$f^W_o = \proj_{P(o)} \pars{ \Phi(o) \mult W_{P(o)} }$$
+    for every child node $o$ of $n$.
+    Then we have:
+    \begin{align*}
+        f^W_n
+        & = \proj_{\pi(n)} \pars{\prod_{o \in \C(n)} f^W_o \mult \prod_{x \in \pi(n)} W_x} \tag{Equation \eqref{eq_valuation}} \\
+        & = \proj_{\pi(n)} \pars{\prod_{o \in \C(n)} f^W_o \mult W_{\pi(n)}} \\
+        & = \proj_{\pi(n)} \pars{\prod_{o \in \C(n)} \pars{\proj_{P(o)} \pars{ \Phi(o) \mult W_{P(o)} } } \mult W_{\pi(n)}} \tag{induction hypothesis} \\
+        & = \proj_{\pi(n)} \pars{ \proj_{\bigcup_{s \in \C(n)} P(s)} \pars{ \prod_{o \in \C(n)} \Phi(o) \mult W_{\bigcup_{t \in \C(n)} P(t)} } \mult W_{\pi(n)} } \tag{applying Lemma \ref{lemma_late_proj} multiple times} \\
+        & = \proj_{\pi(n)} \pars{ \proj_{\bigcup_{s \in \C(n)} P(s)} \pars{ \prod_{o \in \C(n)} \Phi(o) \mult W_{\bigcup_{t \in \C(n)} P(t)} \mult W_{\pi(n)}} } \tag{undoing early projection, observing $\pi(n) \cap \bigcup_{s \in \C(n)} P(s) = \emptyset$} \\
+        & = \proj_{\pi(n) \cup \bigcup_{s \in \C(n)} P(s)} \pars{ \prod_{o \in \C(n)} \Phi(o) \mult W_{\bigcup_{t \in \C(n)} P(t) \cup \pi(n)} } \\
+        & = \proj_{P(n)} \pars{ \prod_{o \in \C(n)} \Phi(o) \mult W_{P(n)} } \tag{definition of $P(n)$} \\
+        & = \proj_{P(n)} \pars{ \Phi(n) \mult W_{P(n)} } \tag{as $\Phi(n) = \bigcup_{o \in \C(n)} \Phi(o)$ is a set of clauses}
+    \end{align*}
+\qed
+\end{proof}
+
+Now, we can prove Theorem \ref{thm_valuation_wmc}.
+\begin{proof}
+    As $r$ is the root of the project-join tree, $P(r) = X$ and $\Phi(r) = \phi$.
+    Then:
+    \begin{align*}
+        f^W_r(\emptyset)
+        & = \pars{ \proj_{P(r)} \pars{ \Phi(r) \mult W_{P(r)} } } (\emptyset) \tag{Lemma \ref{lemma_valuation}} \\
+        & = \pars{ \proj_{X} \pars{ \phi \mult W_{X} } } (\emptyset) \\
+        & = \pars{ \proj_{X} \pars{ \phi \mult W } } (\emptyset) \\
+        & = W(\phi)
+    \end{align*}
+\qed
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Proof of Theorem \ref{thm_csp_jt}}
+
+In this section, we assume the antecedents of Theorem \ref{thm_csp_jt} regarding the functions $\clusterVarOrder$, $\clauseRank$, and $\chosenCluster$.
+Notice that for each $i = 1, 2, \ldots, m$ in Algorithm \ref{alg_csp_jt}, we have the following:
+\begin{itemize}
+    \item $\Gamma_i$ is a set of clauses
+    \item $\kappa_i$ is a set of nodes that includes leaves $l$ \st{} $\gamma(l) \in \Gamma_i$
+    \item $n_i$ is an internal node
+    \item $n_i$'s children include the leaves in $\kappa_i$
+    \item $\pi(n_i) = X_i$
+\end{itemize}
+
+We show that the first property in Definition \ref{def_jointree} holds:
+\begin{lemma}[Property \ref{prop1}]
+\label{lemma_prop1}
+    The set $\set{\pi(n) : n \in \V T \setminus \Lv T}$ is a partition of $X$.
+\end{lemma}
+\begin{proof}
+    For each $i = 1, 2, \ldots, m$, Algorithm \ref{alg_csp_jt} constructs an internal nodes $n_i$ with $\pi(n_i) = X_i$.
+    Recall that $\set{X_i}_{i = 1}^m$ is a partition of $X$.
+    Then $\set{\pi(n_i)}_{i = 1}^m$ is the same partition of $X$.
+\qed
+\end{proof}
+
+We show that the second property in Definition \ref{def_jointree} holds through the following lemmas.
+
+\begin{lemma}
+\label{lemma_unprojected}
+    Let $1 \le p < q \le m$.
+    Assume some $x \in \vars(\Gamma_p) \cap X_q$.
+    Then $x \in \vars(n_p)$.
+\end{lemma}
+\begin{proof}
+    Notice $x \in X_q = \pi(n_q)$.
+    Then $x$ is projected in $n_q$.
+    Since $p < q$, we know $x$ is projected in neither $n_p$ nor a descendants of $n_p$.
+    Since $x \in \vars(\Gamma_p)$, we know $x$ remains in $n_p$.
+\qed
+\end{proof}
+
+\begin{lemma}
+\label{lemma_internal_descedant}
+    Let $1 \le p_0 < q \le m$.
+    Assume $\vars(\Gamma_{p_0}) \cap X_q \ne \emptyset$.
+    Then the internal node $n_{p_0}$ is a descendant of the node $n_q$.
+\end{lemma}
+\begin{proof}
+    Let $n_{p_1}, n_{p_2}, \ldots$ be the parent, grandparent,\ldots{} of $n_{p_0}$.
+    By way of contradiction, assume every $p_i \ne q$.
+    Let $x$ be a variable in $\vars(\Gamma_{p_0}) \cap X_q \ne \emptyset$.
+    By Lemma \ref{lemma_unprojected}, we know $x \in \vars(n_{p_0})$.
+    Notice that for all $i = 0, 1, 2, \ldots$, we have:
+    \begin{itemize}
+        \item $x \notin X_{p_i}$, as $x \in X_q$ already
+        \item $x \in \vars(n_{p_i})$, as $x$ remains from $n_{p_0}$ without being projected according to $\pi(n_{p_i}) = X_{p_i}$
+        \item $p_i < p_{i + 1} = \chosenCluster(n_{p_i}) \le q$ by Condition \ref{cond3} of Theorem \ref{thm_csp_jt}, as $x \in \pi(n_q) \cap \vars(n_{p_{i+1}}) = X_q \cap \vars(n_{p_{i+1}}) \ne \emptyset$
+    \end{itemize}
+    So the strictly increasing sequence $\seq{p_i}_i$ must contain $q$, contradiction.
+\qed
+\end{proof}
+
+\begin{lemma}
+\label{lemma_earlier_cluster}
+    Let $1 \le p, q \le m$.
+    Assume $\vars(\Gamma_p) \cap X_q \ne \emptyset$.
+    Then $p \le q$.
+\end{lemma}
+\begin{proof}
+    To the contrary, assume $p > q$.
+    Then by construction, $X_q \cap \vars(\Gamma_p) = \emptyset$, contradiction.
+\qed
+\end{proof}
+
+\begin{lemma}[Property \ref{prop2}]
+\label{lemma_prop2}
+    Let $1 \le q \le m$ and variable $x \in \pi(n_q)$.
+    Take an arbitrary clause $c \in \phi$ \st{} $x \in \vars(c)$.
+    Then the leaf $\gamma^{-1}(c)$ is a descendant of $n_q$.
+\end{lemma}
+\begin{proof}
+    Notice that $c \in \Gamma_p$ for some $1 \le p \le m$.
+    Then $x \in \vars(c) \subseteq \vars(\Gamma_p)$.
+    Note that $x \in \pi(n_q) = X_q$.
+    Thus $p \le q$ by Lemma \ref{lemma_earlier_cluster}.
+
+    Let $l = \gamma^{-1}(c)$.
+    Notice that $l \in \kappa_p$ (as $c \in \Gamma_p$).
+    So $l$ is a child of the node $n_p$.
+    \begin{itemize}
+        \item If $p = q$, then $l$ is a child of $n_q$, and we are done.
+        \item If $p < q$, by Lemma \ref{lemma_internal_descedant}, we know $n_p$ is a descendant of $n_q$, as $x \in \vars(\Gamma_p) \cap \pi(n_q) = \vars(\Gamma_p) \cap X_q \ne \emptyset$.
+        Then $l$ is a descendant of $n_q$.
+    \end{itemize}
+\qed
+\end{proof}
+
+Now we can prove Theorem \ref{thm_csp_jt}
+\begin{proof}
+    Algorithm \ref{alg_csp_jt} returns a tree $T$ with root $n_m$, bijection $\gamma : \Lv T \to \phi$, and labeling function $\pi : \V T \setminus \Lv T \to 2^X$.
+    The project-join tree properties are satisfied, by Lemma \ref{lemma_prop1} and Lemma \ref{lemma_prop2}
+\qed
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Proof of Theorem \ref{thm_td_to_join}}
+
+Let $(T, r, \gamma, \pi)$ be the object returned by Algorithm \ref{alg_td_to_join}.
+We first observe that $T$ is indeed a tree with root $r$.
+For each node $a \in \V{T}$, let $O(a) \in \V{S}$ denote the node in $\V{S}$ \st{} $a$ was created in the $\func{Process}(O(a), \ell)$ call for some $\ell \subseteq X$.
+Throughout, let $s$ denote the value obtained on Line \ref{line_arbitrary_node} of Algorithm \ref{alg_td_to_join}.
+
+We begin by stating three basic properties of Algorithm \ref{alg_td_to_join}.
+\begin{lemma}
+\label{lem:td-label}
+    For each $a \in \V{T} \setminus \Lv{T}$, we have $\pi(a) \subseteq \chi(O(a))$.
+\end{lemma}
+\begin{proof}
+    This follows from Line \ref{line_return_singleton} of Algorithm \ref{alg_td_to_join}.
+\qed
+\end{proof}
+
+\begin{lemma}
+\label{lem:td-parent}
+    For each $a \in \V{T} \setminus \Lv{T}$ where $O(a) \neq s$, let $p$ be the parent of $O(a)$ in $S$.
+    Then $\pi(a) \cap \chi(p) = \emptyset$.
+\end{lemma}
+\begin{proof}
+    Observe that $\ell = \chi(p)$ in the $\func{Process}(O(a), \ell)$ call on Line \ref{line_recur}.
+    The result then follows from Line \ref{line_return_singleton} of Algorithm \ref{alg_td_to_join}.
+\qed
+\end{proof}
+
+
+\begin{lemma}
+\label{lem:td-bounds}
+    Let $n \in \V{S}$.
+    For every $\ell \subseteq X$ and $i \in \func{Process}(n, \ell)$, we have $\vars(i) \subseteq \ell$.
+\end{lemma}
+\begin{proof}
+    We proceed by induction on the tree structure of $S$.
+
+    Let $A$ denote the set $children$ after Line \ref{line_recur} occurs and let $a \in A$.
+    We first prove that $\vars(a) \subseteq \chi(n)$.
+    First, assume that $a$ is a leaf node corresponding to some $c \in clauses$.
+    In this case, $\vars(a) = \vars(c) \subseteq \chi(n)$ by Line \ref{line_clauses}.
+    Otherwise $a \in \func{Process}(o, \chi(n))$ for some $o \in C(n)$.
+    In this case, notice that $n$ is an internal node, so by the inductive hypothesis, $\vars(a) \subseteq \chi(n)$.
+
+    Now, if $A = \emptyset$, then $\func{Process}(n, \ell)$ returns $\emptyset$, so the lemma is vacuously true.
+    If $\chi(n) \subseteq \ell$, then $A$ is returned by $\func{Process}(n, \ell)$.
+    So for every $i \in A$, we have $\vars(i) \subseteq \chi(n) \subseteq \ell$.
+
+    Otherwise, $A \neq \emptyset$ and $\chi(n) \not\subseteq \ell$.
+    In this case, $\func{Process}(n, \ell)$ returns a single node $i$ with $\vars(i) = \cup_{a \in A} \vars(a) \setminus (\chi(n) \setminus \ell) \subseteq \chi(n) \setminus (\chi(n) \setminus \ell) \subseteq \ell$.
+\qed
+\end{proof}
+
+% For every vertex $n$ of a tree $T$, let $D(n)$ denote the set of all descendants of $n$ (including itself).
+% That is,
+% \begin{equation}
+%     D(n) \equiv
+%     \begin{cases}
+%         \{n\} & \text{if}~n \in \Lv{T} \\
+%         \{n\} \cup \bigcup_{c \in C(n)} D(c) & \text{if}~n \notin \Lv{T}
+%     \end{cases}
+% \end{equation}
+
+% \begin{lemma}
+% Let $n \in \V{S}$.
+% For every $i \in \func{Process}(n, \ell)$ \st{} $i \notin \Lv{T}$,
+
+% and $\ell \subseteq X$, $\vars(i) \subseteq \ell$.
+% \end{lemma}
+
+% \mathcal{L}(n)$ denote the set of all labels of the descendants of $n$ in $\V{S}$.
+% That is, define $\mathcal{L}(n)$ as follows:
+% \begin{equation}
+%     \mathcal{L}(n) \equiv
+%     \begin{cases}
+%         \chi(n) & \text{if}~n \in \Lv{S} \\
+%         \chi(n) \cup \bigcup_{o \in \C(n)} \mathcal{L}(o) & \text{if}~n \notin \Lv{S}
+%     \end{cases}
+% \end{equation}
+
+% Similarly, let $\mathcal{L}(n)$ denote the set of all labels of all descendants of $n$.
+
+% We can define the set of all variables projected at some descendant of $n$.
+
+Given these three properties, it is straightforward to prove that $(T, r, \gamma, \pi)$ satisfies all conditions to be a project-join tree of $\phi$.
+We prove each condition in a separate lemma here.
+
+\begin{lemma}
+    $\gamma$ is a bijection.
+\end{lemma}
+\begin{proof}
+    Note that $\gamma$ is an injection since $found$ on Line \ref{line_found} of Algorithm \ref{alg_td_to_join} ensures that we generate at most one leaf node for each clause.
+    To show that $\gamma$ is a surjection, consider $c \in \phi$.
+    Then $\vars(c)$ forms a clique in the Gaifman graph of $\phi$.
+    It follows (since the treewidth of a complete graph on $k$ vertices is $k-1$) that $\vars(c) \subseteq \chi(n)$ for some $n \in \V{S}$.
+    Thus $\gamma$ is a surjection as well.
+\qed
+\end{proof}
+\begin{lemma}
+    $P = \{\pi(a) : a \in \V{T} \setminus \Lv{T} \}$ is a partition of $X$.
+\end{lemma}
+\begin{proof}
+    First, let $x \in X$.
+    Then $x \in \vars(c)$ for some $c \in \phi$.
+    Since $\gamma$ is a bijection, $x \in \vars(p)$ for some $p = \gamma^{-1}(c) \in \Lv{T}$.
+    However, by Lemma \ref{lem:td-bounds}, we know $x \notin \vars(r) = \emptyset$.
+    Thus $x$ must have been projected out at some node $q \in \V{T}$ between $p$ and $r$.
+    It follows that $x \in \pi(q) \subseteq P$.
+
+    On the other hand, assume for the sake of a contradiction that there are distinct $a, b \in \V{T}$ \st{} $x \in \pi(a) \cap \pi(b)$.
+    By Lemma \ref{lem:td-label}, $x \in \chi(O(a)) \cap \chi(O(b))$.
+    Since $S$ is a tree, there is some node $p \in \V{S}$ on the path between $O(a)$ and $O(b)$ \st{} $p$ is the parent of either $O(a)$ or $O(b)$.
+    By Property \ref{prop_running_intersection} of tree decompositions, $x \in \chi(p)$.
+    However, this contradicts Lemma \ref{lem:td-parent}.
+\qed
+\end{proof}
+
+\begin{lemma}
+    For each internal node $a \in \V{T} \setminus \Lv{T}$, variable $x \in \pi(a)$, and clause $c \in \phi$ \st{} $x$ appears in $c$, the leaf node $\gamma^{-1}(c)$ is a descendant of $a$ in $T$.
+\end{lemma}
+\begin{proof}
+    If $O(a) = s$, then $a$ is the root of $T$, so all leaf nodes are descendants.
+    Otherwise, assume for the sake of contradiction that $\gamma^{-1}(c)$ is not a descendant of $a$ in $T$.
+    Then $O(\gamma^{-1}(c))$ is not a descendant of $O(a)$ in $S$.
+    This means that the parent $p \in \V{S}$ of $O(a)$ is on the path between $O(a)$ and $O(\gamma^{-1}(c))$.
+    By Lemma \ref{lem:td-label}, we must have $x \in \chi(O(a)) \cap \chi(O(\gamma^{-1}(c)))$.
+    By Property \ref{prop_running_intersection} of tree decompositions, $x \in \chi(p)$.
+    But this contradicts Lemma \ref{lem:td-parent}.
+\qed
+\end{proof}
+
+It follows that $(T, r, \gamma, \pi)$ is a project-join tree of $\phi$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Proof of Theorem \ref{thm_join_to_td}}
+
+\begin{proof}
+    Let $X = \vars(\phi)$.
+    Define $\chi: \V{T} \to 2^X$ by, for all $n \in \V{T}$,
+    % $\chi(n) \equiv \vars(f_n)$%
+    $\chi(n) \equiv\vars(n)$ if $n \in \Lv{T}$ and $\chi(n) \equiv \vars(n) \cup \pi(n)$ otherwise.
+    Then $(T, \chi)$ is a tree decomposition of the Gaifman graph of $\phi$.
+    Moreover, the width of $(T, \chi)$ is $\func{tw}(T, \chi) = \max_{n \in \V{T}} \size{\chi (n)}  - 1 = \max_{n \in \V T} \func{size}(n) - 1 = w - 1$.
+\qed
+\end{proof}

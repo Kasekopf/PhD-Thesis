@@ -1,0 +1,82 @@
+
+
+
+
+
+
+\section{Constraint-Satisfaction Heuristics for Project-Join Tree Planning}
+\label{sec_csp_heuristics}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Heuristics for $\clusterVarOrder$}
+
+In Algorithm \ref{alg_csp_jt}, the function $\clusterVarOrder$ returns a variable order what will be used to rank the clauses of $\phi$.
+We consider nine heuristics for variable ordering: \Random, \Mcs, \Lexp, \Lexm, \Minfill, \Invmcs, \Invlexp, \Invlexm, and \Invminfill.
+
+One simple heuristic for $\clusterVarOrder$ is to randomly order the variables, \ie, for a formula over some set $X$ of variables, sample an injection $X \to \set{1, 2, \ldots, |X|}$ uniformly at random.
+We call this the \Random{} heuristic.
+\Random{} is a baseline to compare other variable-order heuristics.
+
+For the remaining heuristics, we use {Gaifman graphs} of CNF formulas. % defined in Section \ref{sec_td}
+Recall that the Gaifman graph $\gaifman(\phi)$ of a CNF formula $\phi$ has a vertex for each variable of $\phi$.
+Also, two vertices of $\gaifman(\phi)$ are connected by an edge if and only if the corresponding variables appear together in some clause of $\phi$.
+We say that two variables of $\phi$ are \emph{adjacent} if the corresponding two vertices of $\gaifman(\phi)$ are neighbors.
+
+A well-known heuristic for $\clusterVarOrder$ is \textdef{maximum-cardinality search} \cite{tarjan1984simple}.
+At each step of the heuristic, the next variable chosen is the variable adjacent to the greatest number of previously chosen variables.
+We call this the \Mcs{} heuristic for variable ordering.
+
+Another heuristic is \textdef{lexicographic search for perfect orders} \cite{koster2001treewidth}.
+Every vertex $v$ of $\gaifman(\phi)$ is assigned an initially empty set of vertices, called the \textdef{label} of $v$.
+At each step of the heuristic, the next variable chosen is the variable $x$ whose label is lexicographically smallest among the unchosen variables.
+Then $x$ is added to the labels of its neighbors in $\gaifman(\phi)$.
+We call this the \Lexp{} heuristic for variable ordering.
+
+A similar heuristic is \textdef{lexicographic search for minimal orders} \cite{koster2001treewidth}.
+As before, each vertex of $\gaifman(\phi)$ is assigned an initially empty label.
+At each step of the heuristic, the next variable chosen is again the variable $x$ whose label is lexicographically smallest.
+Then $x$ is added to the label of every variable $y$ \st{} there is a path $x, z_1, z_2, \ldots, z_k, y$ in $\gaifman(\phi)$ where every $z_i$ is unchosen and the label of $z_i$ is lexicographically smaller than the label of $y$.
+We call this the \Lexm{} heuristic for variable ordering.
+
+A different heuristic is \textdef{minimal fill-in} \cite{dechter2003constraint}.
+Whenever a variable $v$ is chosen, we add \textdef{fill-in} edges to connect all of $v$'s neighbors in the Gaifman graph.
+At each step of the heuristic, the next variable chosen is the variable that minimizes the number of fill-in edges.
+We call this the \Minfill{} heuristic for variable ordering.
+
+Additionally, the variable orders produced by \Mcs{}, \Lexp{}, \Lexm, and \Minfill{} can be inverted.
+We call these heuristics \Invmcs, \Invlexp, \Invlexm, and \Invminfill.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Heuristics for $\clauseRank$}
+
+In Algorithm \ref{alg_csp_jt}, given a cluster variable order $\rho$, we partition the clauses of $\phi$ by calling the function $\clauseRank$.
+We consider two possible heuristics for $\clauseRank$ that satisfy the conditions of Theorem \ref{thm_csp_jt}: \Be{} and \Bm{}.
+
+One heuristic assigns the rank of each clause $c \in \phi$ to be the smallest $\rho$-rank of the variables that appear in $c$, \ie, $\clauseRank(c, \rho) = \min_{x \in \vars(c)} \rho(x)$.
+This heuristic corresponds to \textdef{bucket elimination} \cite{dechter1999bucket}, so we call it the \Be{} heuristic.
+Using \Be{} for $\clauseRank$ in Algorithm \ref{alg_csp_jt}, notice that every CNF clause $c$ containing a variable $x \in X$ can only appear in a set $\Gamma_i$ if $i \le \rho(x)$.
+It follows that $x$ has always been projected from all clauses by the end of iteration $\rho(x)$ in the second loop.
+
+A different heuristic assigns the rank of each clause to be the largest $\rho$-rank of the variables that appear in the clause.
+That is, $\clauseRank(c, \rho) = \max_{x \in \vars(c)} \rho(x)$.
+This heuristic corresponds to \textdef{Bouquet's Method} \cite{bouquet1999gestion}, so we call it the \Bm{} heuristic.
+Unlike the \Be{} case, we can make no guarantee about when each variable is projected in Algorithm \ref{alg_csp_jt} using \Bm{}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Heuristics for $\chosenCluster$}
+
+In Algorithm \ref{alg_csp_jt}, the function $\chosenCluster$ determines the parent of the current internal node.
+We consider two possible heuristics to use for $\chosenCluster$ that satisfy the conditions of Theorem \ref{thm_csp_jt}: \heuristic{List} and \heuristic{Tree} \cite{dudek2020addmc}.
+
+One option is for $\chosenCluster$ to place the internal node $n_i$ in the nearest cluster that satisfies the conditions of Theorem \ref{thm_csp_jt}, namely the next cluster to be processed.
+That is, $\chosenCluster(n_i) = i + 1$.
+We call this the \heuristic{List} heuristic.
+Notice that project-join trees are left-deep with \ListH{}.
+
+Another option is for $\chosenCluster$ to place $n_i$ in the furthest cluster that satisfies the conditions of Theorem \ref{thm_csp_jt}.
+That is, $\chosenCluster(n_i)$ returns the smallest $j > i$ \st{} $X_j \cap \vars(n_i) \ne \emptyset$ (or returns $m$, if $\vars(n_i) = \emptyset)$.
+We call this the \heuristic{Tree} heuristic.
+Project-join trees with the \TreeH{} heuristic are more balanced than those with the \ListH{} heuristic.

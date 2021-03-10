@@ -21,7 +21,8 @@
 }
 
 \address{Houston, Texas}
-\donemonth{May} \doneyear{2021} \makeindex
+% The month shown on the title page should be that in which the final copy is submitted to the Office of Graduate & Postdoctoral Studies or the month in which the degree will be conferred (May, August or December).
+\donemonth{August} \doneyear{2021} \makeindex
 \begin{document}
   \begin{frontmatter}
    \pagenumbering{roman}
@@ -35,10 +36,10 @@
   \end{frontmatter}
 \pagenumbering{arabic}
 
-\linespacing{1.7}
+\linespacing{1.1} % Was 1.7; must be >= 1.5 in final version
 
-\include{content/1-introduction}
-\include{content/2-preliminaries}
+\include{content/1-Introduction}
+\include{content/2-Background/main}
 \include{content/3-TensorOrder/main}
 
 \appendix

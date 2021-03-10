@@ -48,6 +48,7 @@ See Figure \ref{fig:wmc-example} for an example of the reduction. This reduction
 
 Theorem \ref{thm:wmc-reduction} suggests that the weighted model count of $\varphi$ can be computed by constructing and contracting $N_\varphi$. We present this framework as Algorithm \ref{alg:wmc}. Algorithm \ref{alg:wmc} is a fixed-parameter algorithm for model counting, parameterized by carving-width of the incidence graph. The existence of such algorithms is easily implied by fixed-parameter algorithms for model counting parameterized by treewidth \cite{FMR08,SS10} since treewidth is bounded by thrice the carving width \cite{sasak10}. A variety of methods can be used in Step 2 to find a contraction tree to contract $N_\varphi$, including the methods \textbf{LG} and \textbf{FT} that we discuss in the following sections.
 
+% TODO: References in TensorOrder2 assume that \alpha is incorporated
 \begin{algorithm*}[t]
     \label{alg:wmc}
     \caption{Computing the weighted model count with a TN}

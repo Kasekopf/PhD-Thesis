@@ -13,7 +13,11 @@ The execution stage in \cite{DDV19} was done using \tool{numpy} \cite{numpy} and
 
 We implement our techniques in \tool{TensorOrder2}, a new parallel weighted model counter. We compare \tool{TensorOrder2} to a variety of state-of-the-art counters. We show that the improved \tool{TensorOrder2} is the fastest counter on 11\% of benchmarks after preprocessing \cite{LM14}, outperforming the GPU-based counter \tool{gpuSAT2} \cite{FHZ19}. Thus \tool{TensorOrder2} is useful as part of a portfolio of counters. All code and data are available at  \url{https://github.com/vardigroup/TensorOrder}.
 
-The rest of the paper is organized as follows: in Section~\ref{sec:prelim}, we give background information on weighted model counting, graph decompositions, and tensor networks. In Section~\ref{sec:algorithm}, we discuss the algorithm for performing weighted model counting using tensor networks as outlined by \cite{DDV19}. In Section~\ref{sec:parallel}, we describe parallelization of this algorithm and two related theoretical improvements: planning with branch decompositions, and index slicing. In Section~\ref{sec:experiments}, we implement this parallelization in \tool{TensorOrder2} and analyze its performance experimentally.
+The rest of the paper is organized as follows. 
+% In Section~\ref{sec:prelim}, we give background information on weighted model counting, graph decompositions, and tensor networks. 
+% In Section~\ref{sec:algorithm}, we discuss the algorithm for performing weighted model counting using tensor networks as outlined by \cite{DDV19}.
+In Section~\ref{sec:parallel}, we describe parallelization of this algorithm and two related theoretical improvements: planning with branch decompositions, and index slicing. 
+In Section~\ref{sec:experiments}, we implement this parallelization in \tool{TensorOrder2} and analyze its performance experimentally.
 
 %both the machine learning and the high-performance computing communities.
 % Many problems in artificial intelligence have significantly benefited from parallelization. 

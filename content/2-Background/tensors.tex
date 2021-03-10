@@ -74,23 +74,25 @@ directly following Equation \ref{eqn:contraction} requires performing a summatio
 
 $\tntensor{N}$ can instead be computed by recursively decomposing the tensor network, as in Algorithm \ref{alg:network-contraction} \cite{EP14}. The choice of rooted binary tree $T$ does not affect the output of Algorithm \ref{alg:network-contraction} but may have a dramatic impact on the running-time and memory usage. We explore this in more detail in the following section.
 
-\begin{algorithm}[t]
-	\caption{Recursively contracting a tensor network}\label{alg:network-contraction}
-	\hspace*{\algorithmicindent} \textbf{Input:} A tensor network $N$ and a rooted binary tree $T$ whose leaves are the tensors of $N$, i.e. $\Lv{T} = N$. \\
-	\hspace*{\algorithmicindent} \textbf{Output:} $\tntensor{N}$, the contraction of $N$ as given in Definition \ref{def:contraction}.
-	\begin{algorithmic}[1]
-	    \Procedure{Contract}{$N,T$}
-		\If {$\left|N\right| = 1$}
-		\State \Return the tensor contained in $N$
-		\Else
-        \State $T_1, T_2 \gets \text{immediate subtrees of}~T$
-		\State $A_1 \gets \Call{Contract}{\Lv{T_1}, T_1}$
-		\State $A_2 \gets \Call{Contract}{\Lv{T_2}, T_2}$
-		\State \Return $A_1 \cdot A_2$
-		\EndIf
-		\EndProcedure
-	\end{algorithmic}
-\end{algorithm}
+\begin{algorithm*}[t]
+    \label{alg:network-contraction}
+    \caption{Recursively contracting a tensor network}
+    
+    \DontPrintSemicolon
+    \KwIn{A tensor network $N$}
+    \KwIn{A rooted binary tree $T$ whose leaves are the tensors of $N$, i.e. $\Lv{T} = N$}
+    \KwOut{$\tntensor{N}$, the contraction of $N$ as given in Definition \ref{def:contraction}}
+    \Function{\upshape $\func{Contract}(N, T)$}{
+        \If{$\left|N\right| = 1$} {
+            \Return{$\textup{the tensor contained in}~N$}
+        }\Else{
+            $T_1, T_2 \gets \text{immediate subtrees of}~T$\;
+            $A_1 \gets \func{Contract}(\Lv{T_1}, T_1)$\;
+            $A_2 \gets \func{Contract}(\Lv{T_2}, T_2)$\;
+            \Return{$A_1 \cdot A_2$}
+        }
+    }
+\end{algorithm*}
 
 \subsection{Contracting Tensor Networks}
 The rooted binary trees used by Algorithm \ref{alg:network-contraction} are called contraction trees:
@@ -98,10 +100,7 @@ The rooted binary trees used by Algorithm \ref{alg:network-contraction} are call
 	Let $N$ be a tensor network. A \emph{contraction tree} for $N$ is a rooted binary tree $T$ whose leaves are the tensors of $N$. %, i.e. $\Lv{T} = N$.
 \end{definition}
 
-In our database analogy, a contraction tree for a tensor network representing a project-join query is a join tree of that query (with projections done as early as possible). In our factor-graph analogy, a contraction tree corresponds to a \emph{dtree} \cite{darwiche01},
-%MYV{Hard to parse next sentence fragment.} %JMD: Adjusted
-to an elimination order \cite{darwiche01b}, 
-and to a binary join tree \cite{shenoy97} where factors are assigned to leaf nodes.
+In our database analogy, a contraction tree for a tensor network representing a project-join query is a join tree of that query (with projections done as early as possible). In our factor-graph analogy, a contraction tree corresponds to a \emph{dtree} \cite{darwiche01}, to an elimination order \cite{darwiche01b}, and to a binary join tree \cite{shenoy97} where factors are assigned to leaf nodes.
 
 The problem of \emph{tensor-network-contraction optimization}, which we tackle in this paper, is given a tensor network $N$ to find a contraction tree that minimizes the computational cost of Algorithm \ref{alg:network-contraction}. % Prior work can be categorized into two types: \emph{exact} algorithms that focus on finding the best possible contraction tree, and \emph{heuristic} algorithms that aim to find a ``good-enough'' contraction tree. Since the number of possible contraction trees is exponential in the number of tensors, exact algorithms are generally best for tensor networks with few tensors while heuristic algorithms scale to larger tensor networks but offer worse contraction trees.
 Several \emph{cost-based} approaches aim for minimizing the total number of floating point operations to perform Algorithm \ref{alg:network-contraction} in step 8, e.g. \cite{PHV14} and the \pkg{einsum} package in \pkg{numpy}.  % A more complex cost-based approach is the Tensor Contraction Engine \cite{Hirata03}, which performs additional optimizations of Algorithm \ref{alg:network-contraction} at the compiler level. 

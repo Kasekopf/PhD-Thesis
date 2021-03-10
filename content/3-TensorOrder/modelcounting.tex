@@ -48,18 +48,17 @@ See Figure \ref{fig:wmc-example} for an example of the reduction. This reduction
 
 Theorem \ref{thm:wmc-reduction} suggests that the weighted model count of $\varphi$ can be computed by constructing and contracting $N_\varphi$. We present this framework as Algorithm \ref{alg:wmc}. Algorithm \ref{alg:wmc} is a fixed-parameter algorithm for model counting, parameterized by carving-width of the incidence graph. The existence of such algorithms is easily implied by fixed-parameter algorithms for model counting parameterized by treewidth \cite{FMR08,SS10} since treewidth is bounded by thrice the carving width \cite{sasak10}. A variety of methods can be used in Step 2 to find a contraction tree to contract $N_\varphi$, including the methods \textbf{LG} and \textbf{FT} that we discuss in the following sections.
 
-\begin{algorithm}[t]
-	\caption{Computing the weighted model count with a TN}\label{alg:wmc}
-	\hspace*{\algorithmicindent} \textbf{Input:} A CNF formula $\varphi$ and a weight function $W$\\
-	\hspace*{\algorithmicindent} \textbf{Output:} $W(\varphi)$, the weighted model count of $\varphi$ w.r.t. $W$
-	\begin{algorithmic}[1]
-	    % \Procedure{WMC}{$\varphi,~W$}
-	    \State $N_\varphi \gets \text{tensor network constructed via Theorem \ref{thm:wmc-reduction}}$
-	    \State $T \gets \Call{Find\_Contraction\_Tree}{N_\varphi}$ \Comment{e.g., \textbf{LG} or \textbf{FG}}
-	    \State \Return $\Call{Contract}{N_\varphi,~T}$
-		% \EndProcedure
-	\end{algorithmic}
-\end{algorithm}
+\begin{algorithm*}[t]
+    \label{alg:wmc}
+    \caption{Computing the weighted model count with a TN}
+    \DontPrintSemicolon
+    \KwIn{$\varphi$: A CNF formula}
+    \KwIn{$W$: a weight function}
+    \KwOut{$W(\varphi)$, the weighted model count of $\varphi$ w.r.t. $W$}
+    $N_\varphi \gets \text{tensor network constructed via Theorem \ref{thm:wmc-reduction}}$\;
+    $T \gets \func{FindContractionTree}(N_\varphi)$ \tcc*{e.g., \textbf{LG} or \textbf{FG}}
+    \Return{$\func{Contract}(N_\varphi,~T)$}
+\end{algorithm*}
 
 % Nevertheless, on many benchmarks the carving width of the incidence graph is smaller than the treewidth. Since the width is in the exponent of the running time of decomposition-based counting algorithms, even a small decrease in width can dramatically decrease the running time.
 

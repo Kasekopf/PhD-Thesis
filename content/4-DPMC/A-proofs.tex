@@ -52,7 +52,7 @@ We define the set $\Phi(n)$ of clauses that correspond to the leaves of $S(n)$:
     \Phi(n) \equiv
     \begin{cases}
         \set{\gamma(n)} & \text{if } n \in \Lv T \\
-        \bigcup_{o \in \C(n)} \Phi(o) & \text{otherwise}
+        \bigcup_{o \in \C{T}{r}{n}} \Phi(o) & \text{otherwise}
     \end{cases}
 \end{align*}
 We also define the set $P(n)$ of all variables to project in the subtree $S(n)$:
@@ -60,7 +60,7 @@ We also define the set $P(n)$ of all variables to project in the subtree $S(n)$:
     P(n) \equiv
     \begin{cases}
        \emptyset & \text{if } n \in \Lv{T} \\
-        \pi(n) \cup \bigcup_{o \in \C(n)} P(o) & \text{otherwise}
+        \pi(n) \cup \bigcup_{o \in \C{T}{r}{n}} P(o) & \text{otherwise}
     \end{cases}
 \end{align*}
 
@@ -148,14 +148,14 @@ We also define the set $P(n)$ of all variables to project in the subtree $S(n)$:
     Then we have:
     \begin{align*}
         f^W_n
-        & = \proj_{\pi(n)} \pars{\prod_{o \in \C(n)} f^W_o \mult \prod_{x \in \pi(n)} W_x} \tag{Equation \eqref{eq_valuation}} \\
-        & = \proj_{\pi(n)} \pars{\prod_{o \in \C(n)} f^W_o \mult W_{\pi(n)}} \\
-        & = \proj_{\pi(n)} \pars{\prod_{o \in \C(n)} \pars{\proj_{P(o)} \pars{ \Phi(o) \mult W_{P(o)} } } \mult W_{\pi(n)}} \tag{induction hypothesis} \\
-        & = \proj_{\pi(n)} \pars{ \proj_{\bigcup_{s \in \C(n)} P(s)} \pars{ \prod_{o \in \C(n)} \Phi(o) \mult W_{\bigcup_{t \in \C(n)} P(t)} } \mult W_{\pi(n)} } \tag{applying Lemma \ref{lemma_late_proj} multiple times} \\
-        & = \proj_{\pi(n)} \pars{ \proj_{\bigcup_{s \in \C(n)} P(s)} \pars{ \prod_{o \in \C(n)} \Phi(o) \mult W_{\bigcup_{t \in \C(n)} P(t)} \mult W_{\pi(n)}} } \tag{undoing early projection, observing $\pi(n) \cap \bigcup_{s \in \C(n)} P(s) = \emptyset$} \\
-        & = \proj_{\pi(n) \cup \bigcup_{s \in \C(n)} P(s)} \pars{ \prod_{o \in \C(n)} \Phi(o) \mult W_{\bigcup_{t \in \C(n)} P(t) \cup \pi(n)} } \\
-        & = \proj_{P(n)} \pars{ \prod_{o \in \C(n)} \Phi(o) \mult W_{P(n)} } \tag{definition of $P(n)$} \\
-        & = \proj_{P(n)} \pars{ \Phi(n) \mult W_{P(n)} } \tag{as $\Phi(n) = \bigcup_{o \in \C(n)} \Phi(o)$ is a set of clauses}
+        & = \proj_{\pi(n)} \pars{\prod_{o \in \C{T}{r}{n}} f^W_o \mult \prod_{x \in \pi(n)} W_x} \tag{Equation \eqref{eq_valuation}} \\
+        & = \proj_{\pi(n)} \pars{\prod_{o \in \C{T}{r}{n}} f^W_o \mult W_{\pi(n)}} \\
+        & = \proj_{\pi(n)} \pars{\prod_{o \in \C{T}{r}{n}} \pars{\proj_{P(o)} \pars{ \Phi(o) \mult W_{P(o)} } } \mult W_{\pi(n)}} \tag{induction hypothesis} \\
+        & = \proj_{\pi(n)} \pars{ \proj_{\bigcup_{s \in \C{T}{r}{n}} P(s)} \pars{ \prod_{o \in \C{T}{r}{n}} \Phi(o) \mult W_{\bigcup_{t \in \C{T}{r}{n}} P(t)} } \mult W_{\pi(n)} } \tag{applying Lemma \ref{lemma_late_proj} multiple times} \\
+        & = \proj_{\pi(n)} \pars{ \proj_{\bigcup_{s \in \C{T}{r}{n}} P(s)} \pars{ \prod_{o \in \C{T}{r}{n}} \Phi(o) \mult W_{\bigcup_{t \in \C{T}{r}{n}} P(t)} \mult W_{\pi(n)}} } \tag{undoing early projection, observing $\pi(n) \cap \bigcup_{s \in \C{T}{r}{n}} P(s) = \emptyset$} \\
+        & = \proj_{\pi(n) \cup \bigcup_{s \in \C{T}{r}{n}} P(s)} \pars{ \prod_{o \in \C{T}{r}{n}} \Phi(o) \mult W_{\bigcup_{t \in \C{T}{r}{n}} P(t) \cup \pi(n)} } \\
+        & = \proj_{P(n)} \pars{ \prod_{o \in \C{T}{r}{n}} \Phi(o) \mult W_{P(n)} } \tag{definition of $P(n)$} \\
+        & = \proj_{P(n)} \pars{ \Phi(n) \mult W_{P(n)} } \tag{as $\Phi(n) = \bigcup_{o \in \C{T}{r}{n}} \Phi(o)$ is a set of clauses}
     \end{align*}
 \qed
 \end{proof}
@@ -357,7 +357,7 @@ We begin by stating three basic properties of Algorithm \ref{alg_td_to_join}.
 %     \mathcal{L}(n) \equiv
 %     \begin{cases}
 %         \chi(n) & \text{if}~n \in \Lv{S} \\
-%         \chi(n) \cup \bigcup_{o \in \C(n)} \mathcal{L}(o) & \text{if}~n \notin \Lv{S}
+%         \chi(n) \cup \bigcup_{o \in \C{T}{r}{n}} \mathcal{L}(o) & \text{if}~n \notin \Lv{S}
 %     \end{cases}
 % \end{equation}
 

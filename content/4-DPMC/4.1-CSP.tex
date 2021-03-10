@@ -49,7 +49,7 @@ Before discussing the various heuristics, we assert the correctness of Algorithm
     \For{$i = 1, 2, \ldots, m$}{
         \If{$\kappa_i \ne \emptyset$}{
             $n_i \gets \internal(T, \kappa_i, X_i)$
-                \tcc*{$\C(n_i) = \kappa_i$ and $\pi(n_i) = X_i$}
+                \tcc*{$\C{T}{r}{n_i} = \kappa_i$ and $\pi(n_i) = X_i$}
                 \label{line_internal_node}
             \If{$i < m$}{
                 $j \gets \chosenCluster(n_i)$ \label{line_chosen_cluster}

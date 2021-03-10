@@ -49,13 +49,15 @@ We identify that node with $c$.
     \KwOut{$(T, r, \gamma, \pi)$: project-join tree of $\phi$}
     $(T, \nil, \gamma, \pi) \gets \text{empty project-join tree}$\;
     $found \gets \emptyset$\tcc*{clauses of $\phi$ that have been added to $T$}
+    $s \gets$ arbitrary node of $S$ \label{line_arbitrary_node}
+        \tcc*{fixing $s$ as root of $S$}
     \Function{\upshape $\func{Process}(n, \ell)$}{
         \KwIn{$n \in \V{S}$: node of $S$ to process}
         \KwIn{$\ell \subseteq X$: variables that must not be projected out here}
         \KwOut{$N \subseteq \V{T}$}
         $clauses \gets \{ c \in \phi : c \notin found~\text{and}~\vars(c) \subseteq \chi(n)\}$\; \label{line_clauses}
         $found \gets found \cup clauses$\; \label{line_found}
-        $children \gets \{\leaf(T, c) : c \in clauses\} \cup \bigcup_{o \in \C(n)} \func{Process}(o, \chi(n))$\; \label{line_recur}
+        $children \gets \{\leaf(T, c) : c \in clauses\} \cup \bigcup_{o \in \C{S}{s}{n}} \func{Process}(o, \chi(n))$\; \label{line_recur}
             \tcc*{new leaf nodes $p \in \V T$ with $\gamma(p) = c$}
         \If{$children = \emptyset$~\text{\upshape or}~$\chi(n) \subseteq \ell$}{
             \Return{children}
@@ -65,8 +67,6 @@ We identify that node with $c$.
                 \tcc*{new internal node $o \in \V T$ with label $\pi(o) = \chi(n) \setminus \ell$}
         }
     }
-    $s \gets$ arbitrary node of $S$ \label{line_arbitrary_node}
-        \tcc*{fixing $s$ as root of $S$}
     $r \gets \text{only element of}~\func{Process}(s, \emptyset)$\;
     \Return{$(T, r, \gamma, \pi)$}
 \end{algorithm*}

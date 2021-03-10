@@ -42,7 +42,7 @@ We model a rearrangement of Equation \eqref{eq_factored_wmc} as a \emph{project-
     \end{enumerate}
 \end{definition}
 If $n$ is a leaf node, then $n$ corresponds to a clause $c = \gamma(n)$ in Equation \eqref{eq_factored_wmc}.
-If $n$ is an internal node, then $n$'s children $\C(n)$ are to be multiplied before the projections of variables in $\pi(n)$ are performed.
+If $n$ is an internal node, then $n$'s children $\C{T}{r}{n}$ are to be multiplied before the projections of variables in $\pi(n)$ are performed.
 The two properties ensure that the resulting expression is equivalent to Equation \eqref{eq_factored_wmc} using early projection.
 See Figure \ref{fig_join_tree} for a graphical example of a project-join tree.
 \begin{figure}%[H]
@@ -80,7 +80,7 @@ The $W$-valuation of a node $n \in \V{T}$ is denoted $f^W_n$ and defined as foll
     f^W_n \equiv
     \begin{cases}
        \gamma(n) & \text{if}~n \in \Lv{T} \\
-        \sum_{\pi(n)} \pars{ \prod_{o \in \C(n)} f^W_o \cdot \prod_{x \in \pi(n)} W_x } & \text{if}~n \notin \Lv{T}
+        \sum_{\pi(n)} \pars{ \prod_{o \in \C{T}{r}{n}} f^W_o \cdot \prod_{x \in \pi(n)} W_x } & \text{if}~n \notin \Lv{T}
     \end{cases}
 \end{equation}
 
@@ -106,7 +106,7 @@ In particular, for each node $n \in \V{T}$, define $\vars(n)$ as follows:
     \vars(n) \equiv
     \begin{cases}
         \vars(\gamma(n)) & \text{if}~n \in \Lv{T} \\
-        \pars{\bigcup_{o \in \C(n)} \vars(o)} \setminus \pi(n) & \text{if}~n \notin \Lv{T}
+        \pars{\bigcup_{o \in \C{T}{r}{n}} \vars(o)} \setminus \pi(n) & \text{if}~n \notin \Lv{T}
     \end{cases}
 \end{equation}
 

@@ -9,12 +9,29 @@
 \usepackage{appendix} % For appendix
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \usepackage{tikz}
-\usetikzlibrary{decorations.pathreplacing,angles,quotes,positioning}
+\usetikzlibrary{decorations.pathreplacing,angles,quotes,positioning,shapes,arrows}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
 
-% \newdefinition{definition}{Definition}
-% \newproof{proof}{Proof}
-% \newproof{proof_lg}{Proof of Theorem \ref{thm:carving-equiv-tree}}
+%% Added for DPMC
+\usepackage{float}
+\usepackage{tikz-qtree}
+\usepackage{mdframed}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\setlist[enumerate]{label*=\arabic*.}
+% \usepackage{breakcites}
+% \usepackage[hidelinks,bookmarksopen=true]{hyperref}
+% \usepackage{bookmark} % CP template disables PDF section bookmarks
+% \usepackage[nocompress]{cite} % citation numbers must be in numeric order
+% \usepackage[linesnumbered, ruled]{algorithm2e}
+% \SetCommentSty{}
+% \SetKwIF{If}{ElseIf}{Else}{if}{}{else if}{else}{}
+% \SetKwFor{For}{for}{}{}
+% \SetKwFor{While}{while}{}{}
+% \SetKwRepeat{DoWhile}{do}{while}
+% \SetKwInput{kwCreate}{create}
+% \SetKwProg{Function}{function}{:}{}

@@ -8,7 +8,9 @@
 % Operations on Tensors
 \newcommand{\tdim}[1]{\mathcal{I}(#1)}		% Get the set of indices of a tensor
 \newcommand{\rank}[1]{rank(#1)}				% Get the rank of a tensor
-\newcommand{\size}[1]{size(#1)}				% Get the size of a tensor
+	
+\newcommand{\contract}[0]{\otimes}
+\newcommand{\bigcontract}[0]{\bigotimes}
 
 % Operations on Tensor Networks
 \newcommand{\tntensor}[1]{\mathcal{T}(#1)}	% Get the tensor identified by the network
@@ -18,7 +20,7 @@
 % Operations on Graphs
 \newcommand{\edge}[1]{\{#1\}}				% Construct an edge incident to the given vertices
 \newcommand{\vinc}[2]{\delta_{#1}(#2)}		% Get all edges incident to a vertex
-\newcommand{\vincf}[1]{\delta_{#1}}		% Get the function that returns all edges incident to a vertex
+\newcommand{\vincf}[1]{\delta_{#1}}		    % Get the function that returns all edges incident to a vertex
 \newcommand{\einc}[2]{\epsilon_{#1}(#2)}	% Get all vertices incident to an edge 
 \newcommand{\eincf}[1]{\epsilon_{#1}}	    % Get the function that returns all vertices incident to an edge 
 \newcommand{\E}[1]{\mathcal{E}(#1)}			% Get the set of edges of a graph
@@ -30,8 +32,6 @@
 
 \newcommand{\blocks}[1]{\mathcal{B}(#1)}
 \newcommand{\Ind}[0]{\mathbf{Ind}}
-\newcommand{\pkg}[1]{\texttt{#1}}
-\newcommand{\tool}[1]{\texttt{#1}}
 
 \newcommand{\fv}[0]{z}
 \newcommand{\copyt}[0]{\text{COPY}}

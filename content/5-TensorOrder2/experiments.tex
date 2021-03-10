@@ -26,7 +26,7 @@ All counters are run in the Docker images (one for each counter) with Docker 19.
 
 \subsection{Implementation Details of \tool{TensorOrder2}}
 \label{sec:experiments:impl}
-\tool{TensorOrder2} is primarily implemented in Python 3 as a modified version of \tool{TensorOrder}. We replace portions of the Python code with C++ (\tool{g++} v7.4.0) using Cython 0.29.15 for general speedup, especially in $\Call{FactorTree}{\cdot}$.
+\tool{TensorOrder2} is primarily implemented in Python 3 as a modified version of \tool{TensorOrder}. We replace portions of the Python code with C++ (\tool{g++} v7.4.0) using Cython 0.29.15 for general speedup, especially in $\func{FactorTree}(\cdot)$.
 
 \paragraph{Planning.} 
 \tool{TensorOrder} contains an implementation of the planning stage using a choice of three single-core tree-decomposition solvers: \pkg{Tamaki} \cite{Tamaki17}, \pkg{FlowCutter} \cite{HS18}, and \pkg{htd} \cite{AMW17}. We add to \tool{TensorOrder2} an implementation of Theorem \ref{thm:factorable-branch} and use it to add a branch-decomposition solver \pkg{Hicks} \cite{hicks02}.
@@ -38,7 +38,7 @@ Overall, \tool{TensorOrder2} runs the execution stage on three hardware configur
 
 \begin{figure}
 	\centering
-	\input{figures/planning.pgf}
+	\input{figures/5/planning.pgf}
     \vspace*{-0.7cm}
 	\caption{\label{fig:planning} A cactus plot of the performance of various planners. A planner ``solves'' a benchmark when it finds a contraction tree of max rank 30 or smaller.}
 \end{figure}
@@ -89,7 +89,7 @@ We run each counter once on each benchmark (both with and without \pkg{pmc-eq} p
 
 \begin{figure}[t]
 \begin{center}
-\input{figures/comparison_all.pgf}
+\input{figures/5/comparison_all.pgf}
 %\input{figures/comparison_pmc_eq.pgf}
 \vspace*{-0.5cm}
 \caption{\label{fig:comparison} A cactus plot of the number of benchmarks solved by various counters, without (above) and with (below) the \tool{pmc-eq} \cite{LM14} preprocessor.}

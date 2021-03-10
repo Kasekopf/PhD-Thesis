@@ -5,7 +5,7 @@ In this section, we discuss opportunities for parallelization of Algorithm \ref{
 
 \subsection{Parallelizing the Planning Stage with a Portfolio}
 \label{sec:parallel:planning}
-As discussed in Section \ref{sec:algorithm:planning}, $\Call{FactorTree}{N}$ first computes a tree decomposition of $\struct{N}$ and then applies Theorem \ref{thm:factorable-tree}. In \cite{DDV19}, most time in the planning stage was spent finding low-width tree decompositions with a choice of single-core heuristic tree-decomposition solvers \cite{AMW17,HS18,Tamaki17}. Finding low-width tree decompositions is thus a valuable target for parallelization.
+As discussed in Section \ref{sec:algorithm:planning}, $\func{FactorTree}(N)$ first computes a tree decomposition of $\struct{N}$ and then applies Theorem \ref{thm:factorable-tree}. In \cite{DDV19}, most time in the planning stage was spent finding low-width tree decompositions with a choice of single-core heuristic tree-decomposition solvers \cite{AMW17,HS18,Tamaki17}. Finding low-width tree decompositions is thus a valuable target for parallelization.
 
 We were unable to find state-of-the-art parallel heuristic tree-decomposition solvers. There are several classic algorithms for parallel tree-decomposition construction \cite{Lagergren90,SWG13}, but no recent implementations. There is also an exact tree-decomposition solver that leverages a GPU \cite{VB17}, but exact tools are not able to scale to handle our benchmarks. Existing single-core heuristic tree-decomposition solvers are highly optimized and so parallelizing them is nontrivial.
 
@@ -13,7 +13,7 @@ Instead, we take inspiration from the SAT solving community. One competitive app
 
 We apply this technique to heuristic tree-decomposition solvers by running a variety of single-core heuristic tree-decomposition solvers in parallel on multiple cores and collating their outputs into a single stream. We analyze the performance of this technique in Section \ref{sec:experiments}.
 
-While Theorem \ref{thm:factorable-tree} lets us integrate tree-decomposition solvers into the portfolio, the portfolio might also be improved by integrating solvers of other graph decompositions. The following theorem shows that branch-decomposition solvers may also be used for $\Call{FactorTree}{N}$:
+While Theorem \ref{thm:factorable-tree} lets us integrate tree-decomposition solvers into the portfolio, the portfolio might also be improved by integrating solvers of other graph decompositions. The following theorem shows that branch-decomposition solvers may also be used for $\func{FactorTree}(N)$:
 \begin{theorem} \label{thm:factorable-branch}
 Let $N$ be a tensor network of tree-factorable tensors such that $|\tnfree{N}| \leq 3$ and $G=\struct{N}$ has a branch decomposition $T$ of width $w \geq 1$. Then we can construct in polynomial time a tensor network $M$ and a contraction tree $S$ for $M$ s.t. $\text{max-rank}(S) \leq \ceil{4w/3}$ and $N$ is a partial contraction of $M$.
 \end{theorem}
@@ -50,20 +50,20 @@ Let $N$ be a tensor network and let $I \subseteq \tnbound{N}$. For each $\eta \i
 Move the summation over $\eta \in \domain{I}$ to the outside of Equation \ref{eqn:contraction}, then apply the definition of tensor slices and recombine terms.
 \end{proof}
 
-\begin{algorithm}[t]
-	\caption{Sliced contraction of a tensor network}\label{alg:tn-sliced}
-	\textbf{Input:} A tensor network $N$, a contraction tree $T$ for $N$, and a memory bound $m$. \\
-	\textbf{Output:} $\tntensor{N}$, the contraction of $N$, performed using at most $m$ memory.
-	\begin{algorithmic}[1]
-	    %\Procedure{ExecuteSliced}{$N, T, m$}
-	    \State $I \gets \emptyset$
-	    \While{$\Call{MemCost}{N, T, I} > m$}
-	    \State $I \gets I \cup \{\Call{ChooseSliceIndex}{N, T, I}\}$
-	    \EndWhile
-	    \State \Return $\sum_{\eta \in [I]} \Call{Execute}{N[\eta], T[\eta]}$
-		%\EndProcedure
-	\end{algorithmic}
-\end{algorithm}
+% \begin{algorithm}[t]
+% 	\caption{Sliced contraction of a tensor network}\label{alg:tn-sliced}
+% 	\textbf{Input:} A tensor network $N$, a contraction tree $T$ for $N$, and a memory bound $m$. \\
+% 	\textbf{Output:} $\tntensor{N}$, the contraction of $N$, performed using at most $m$ memory.
+% 	\begin{algorithmic}[1]
+% 	    %\Procedure{ExecuteSliced}{$N, T, m$}
+% 	    \State $I \gets \emptyset$
+% 	    \While{$\Call{MemCost}{N, T, I} > m$}
+% 	    \State $I \gets I \cup \{\Call{ChooseSliceIndex}{N, T, I}\}$
+% 	    \EndWhile
+% 	    \State \Return $\sum_{\eta \in [I]} \Call{Execute}{N[\eta], T[\eta]}$
+% 		%\EndProcedure
+% 	\end{algorithmic}
+% \end{algorithm}
 
 By choosing $I$ carefully, computing each $\tntensor{N[\eta]}$ uses less intermediate memory (compared to computing $\tntensor{N}$) while using the same contraction tree. In exchange, the number of floating point operations to compute all $\tntensor{N[\eta]}$ terms increases. 
 
@@ -73,7 +73,7 @@ Choosing $I$ is itself a difficult problem. Our goal is to choose the smallest $
 
 Instead, in this work as a first step we use a heuristic from \cite{CZHNS18,GK20}: choose $I$ incrementally, greedily minimizing the memory cost of contracting $N[\eta]$ until the memory usage fits in onboard memory. Unlike cutset and recursive conditioning, the resulting networks $N[\eta]$ are typically still highly connected. One direction for future work is to compare other heuristics for choosing $I$ (e.g., see the discussion in Section 10 of \cite{dechter99}).
 
-This gives us Algorithm \ref{alg:tn-sliced}, which performs the execution stage with limited memory at the cost of additional time. $T[\eta]$ is the contraction tree obtained by computing the $\eta$-slice of every tensor in $T$. $\Call{MemCost}{N, T, I}$ computes the memory for one $\Call{Execute}{N[\eta], T[\eta]}$ call. $\Call{ChooseSliceIndex}{N,T,I}$ chooses the next slice index greedily to minimize memory cost.
+This gives us Algorithm \ref{alg:tn-sliced}, which performs the execution stage with limited memory at the cost of additional time. $T[\eta]$ is the contraction tree obtained by computing the $\eta$-slice of every tensor in $T$. $\func{MemCost}(N, T, I)$ computes the memory for one $\func{Execute}(N[\eta], T[\eta])$ call. $\func{ChooseSliceIndex}(N,T,I)$ chooses the next slice index greedily to minimize memory cost.
 
 %\begin{align*}
 %    \tntensor{N}(\tau) =& \sum_{\rho \in \domain{\tnbound{N}}} \prod_{A \in N} A((\rho \cup \tau)\restrict{\tdim{A}}) \\

@@ -11,20 +11,20 @@ Second, in the \emph{planning} stage a plan for contracting the tensor network $
 The planning stage is allowed to modify the input tensor network $N$ as long as the new tensor network $M$ contracts to an identical tensor. We discuss various heuristics for contraction trees in Section \ref{sec:algorithm:planning}.
 Planning in Algorithm \ref{alg:wmc-tn} is an anytime process: we heuristically generate better contraction trees until one is ``good enough'' to use. The trade-off between planning and executing is governed by a parameter $\alpha \in \mathbb{R}$, which we determine empirically in Section \ref{sec:experiments}. 
 
-\begin{algorithm}[t]
-	\caption{Weighted Model Counting with Tensor Networks}\label{alg:wmc-tn}
-	\hspace*{\algorithmicindent} \textbf{Input:} A CNF formula $\varphi$, weight function $W$, and performance factor $\alpha \in \mathbb{R}$. \\
-	\hspace*{\algorithmicindent} \textbf{Output:} $W(\varphi)$, the weighted model count of $\varphi$ w.r.t. $W$.
-	\begin{algorithmic}[1]
-%	    \Procedure{WMC}{$\varphi,W,\alpha$}
-	    \State $N \gets \Call{Reduce}{\varphi, W}$
-	    \Repeat
-	    \State $M, T \gets \Call{Plan}{N}$
-	    \Until{$\alpha \cdot \Call{TimeCost}{M, T} < \text{elapsed time in seconds}$}
-	    \State \Return $\Call{Execute}{M, T}(\emptyset)$
-%		\EndProcedure
-	\end{algorithmic}
-\end{algorithm}
+% \begin{algorithm}[t]
+% 	\caption{Weighted Model Counting with Tensor Networks}\label{alg:wmc-tn}
+% 	\hspace*{\algorithmicindent} \textbf{Input:} A CNF formula $\varphi$, weight function $W$, and performance factor $\alpha \in \mathbb{R}$. \\
+% 	\hspace*{\algorithmicindent} \textbf{Output:} $W(\varphi)$, the weighted model count of $\varphi$ w.r.t. $W$.
+% 	\begin{algorithmic}[1]
+% %	    \Procedure{WMC}{$\varphi,W,\alpha$}
+% 	    \State $N \gets \Call{Reduce}{\varphi, W}$
+% 	    \Repeat
+% 	    \State $M, T \gets \Call{Plan}{N}$
+% 	    \Until{$\alpha \cdot \Call{TimeCost}{M, T} < \text{elapsed time in seconds}$}
+% 	    \State \Return $\Call{Execute}{M, T}(\emptyset)$
+% %		\EndProcedure
+% 	\end{algorithmic}
+% \end{algorithm}
 
 
 Third, in the \emph{execution} stage the chosen contraction tree is used to contract the tensor network. We discuss this algorithm in more detail in Section \ref{sec:algorithm:execution}.
@@ -34,9 +34,9 @@ We assert the correctness of Algorithm \ref{alg:wmc-tn} in the following theorem
 \label{thm:alg-correctness}
 Let $\varphi$ be a CNF formula and let $W$ be a weight function. 
     Assume:
-    (1) $\Call{Reduce}{\varphi, W}$ returns a tensor network $N$ s.t. $\tntensor{N}(\emptyset) = W(\varphi)$,
-    (2) $\Call{Plan}{N}$ returns a tensor network $M$ and a contraction tree $T$ for $M$ s.t. $\tntensor{M} = \tntensor{N}$, and
-    (3) $\Call{Execute}{M, T}$ returns $\tntensor{M}$ for all tensor networks $M$ and contraction trees $T$ for $M$.
+    (1) $\func{Reduce}(\varphi, W)$ returns a tensor network $N$ s.t. $\tntensor{N}(\emptyset) = W(\varphi)$,
+    (2) $\func{Plan}(N)$ returns a tensor network $M$ and a contraction tree $T$ for $M$ s.t. $\tntensor{M} = \tntensor{N}$, and
+    (3) $\func{Execute}(M, T)$ returns $\tntensor{M}$ for all tensor networks $M$ and contraction trees $T$ for $M$.
     %\begin{enumerate}
 %    \item $\Call{Reduce}{\varphi, W}$ returns a tensor network $N$ s.t. $\tntensor{N}(\emptyset) = W(\varphi)$,
 %    \item $\Call{Plan}{N}$ returns a tensor network $M$ and a contraction tree $T$ for $M$ s.t. $\tntensor{M} = \tntensor{N}$, and
@@ -56,7 +56,7 @@ Organizationally, note that we discuss the execution stage in Section \ref{sec:a
 There is a reduction from weighted model counting to tensor-network contraction, as described by the following theorem of \cite{DDV19}:
 \begin{figure}[t]
 	\centering
-	\input{figures/wmc_example.tex}
+	\input{figures/5/wmc_example.tex}
 	\caption{\label{fig:wmc-example} The tensor network produced by Theorem \ref{thm:wmc-reduction} on $\varphi = (w \lor x \lor \neg y) \land (w \lor y \lor z) \land (\neg x \lor \neg y) \land (\neg y \lor \neg z)$ has 8 tensors (indicated by vertices) and 10 indices (indicated by edges). The $A_*$ tensors correspond to variables and have entries computed from the weight function.  The $B_*$ tensors correspond to clauses and have entries computed from the clause negations.}
 \end{figure}
 \begin{theorem}
@@ -81,7 +81,7 @@ Then $N_{\varphi,W} = \{A_x : x \in X\} \cup \{B_C : C \in \varphi\}$ is the des
 %Include in $N_{\varphi,W}$ a tensor for each variable and for each clause of $\varphi$. Each variable tensor and clause tensor share an index if and only if the corresponding variable appears in the corresponding clause.
 \end{proof}
 
-Theorem \ref{thm:wmc-reduction} proves that $\Call{Reduce}{\varphi,W} = N_{\varphi, W}$ satisfies assumption 1 in Theorem \ref{thm:alg-correctness}. See Figure \ref{fig:wmc-example} for an example of the reduction. This reduction is closely related to the formulation of model counting as the marginalization of a factor graph representing the constraints (but assigns tensors to variables as well, not just clauses). %Unlike the reduction to factor-graph marginalization, which only assigns factors to clauses, Theorem \ref{thm:wmc-reduction} also assigns a tensor to each variable $x$. % For example, if $x$ has weights $W(x, 0) = W(x,1) = 1$ then the tensor assigned to $x$ is a copy tensor. 
+Theorem \ref{thm:wmc-reduction} proves that $\func{Reduce}(\varphi,W) = N_{\varphi, W}$ satisfies assumption 1 in Theorem \ref{thm:alg-correctness}. See Figure \ref{fig:wmc-example} for an example of the reduction. This reduction is closely related to the formulation of model counting as the marginalization of a factor graph representing the constraints (but assigns tensors to variables as well, not just clauses). %Unlike the reduction to factor-graph marginalization, which only assigns factors to clauses, Theorem \ref{thm:wmc-reduction} also assigns a tensor to each variable $x$. % For example, if $x$ has weights $W(x, 0) = W(x,1) = 1$ then the tensor assigned to $x$ is a copy tensor. 
 This reduction can also be extended to other types of constraints, e.g. parity or cardinality constraints.
 
 \subsection{The Execution Stage}
@@ -92,21 +92,21 @@ Instead, Algorithm \ref{alg:network-contraction} shows how to compute $\tntensor
 % Since $N'$ is a partial contraction of $N$, $\tntensor{N'} = \tntensor{N}$. Thus, when this process produces a tensor network containing a single tensor, it follows inductively that this tensor is $\tntensor{N}$. Therefore Algorithm \ref{alg:network-contraction} satisfies assumption 3 of Theorem \ref{thm:alg-correctness}.
 
 \label{sec:algorithm:execution}
-\begin{algorithm}[t]
-	\caption{Recursively contracting a tensor network}\label{alg:network-contraction}
-	\textbf{Input:} A tensor network $N$ and a contraction tree $T$ for $N$. \\
-	\textbf{Output:} $\tntensor{N}$, the contraction of $N$.
-	\begin{algorithmic}[1]
-	    \Procedure{Execute}{$N,T$}
-		\If {$\left|N\right| = 1$}
-		\State \Return the tensor contained in $N$
-		\Else
-        \State $T_1, T_2 \gets \text{immediate subtrees of}~T$
-		\State \Return $\Call{Execute}{\Lv{T_1}, T_1} \cdot \Call{Execute}{\Lv{T_2}, T_2}$
-		\EndIf
-		\EndProcedure
-	\end{algorithmic}
-\end{algorithm}
+% \begin{algorithm}[t]
+% 	\caption{Recursively contracting a tensor network}\label{alg:network-contraction}
+% 	\textbf{Input:} A tensor network $N$ and a contraction tree $T$ for $N$. \\
+% 	\textbf{Output:} $\tntensor{N}$, the contraction of $N$.
+% 	\begin{algorithmic}[1]
+% 	    \Procedure{Execute}{$N,T$}
+% 		\If {$\left|N\right| = 1$}
+% 		\State \Return the tensor contained in $N$
+% 		\Else
+%         \State $T_1, T_2 \gets \text{immediate subtrees of}~T$
+% 		\State \Return $\Call{Execute}{\Lv{T_1}, T_1} \cdot \Call{Execute}{\Lv{T_2}, T_2}$
+% 		\EndIf
+% 		\EndProcedure
+% 	\end{algorithmic}
+% \end{algorithm}
 
 Each contraction in Algorithm \ref{alg:network-contraction} contains exactly two tensors and so can be implemented as a matrix multiplication. In \cite{DDV19}, \tool{numpy} \cite{numpy} was used to perform each of these contractions. %, but such contractions can also be done with \tool{TensorFlow} \cite{ABCCDDDGII16} and other tensor libraries.
 Although the choice of contraction tree does not affect the correctness of Algorithm \ref{alg:network-contraction}, it may have a dramatic impact on the running-time and memory usage. We explore this further in the following section.
@@ -139,7 +139,7 @@ For example, if $\varphi$ is a formula and $N_{\varphi,W}$ is the tensor network
 
 One structure-based approach for finding contraction trees \cite{DFGHSW18,MS08} utilizes low-width tree decompositions of the line graph of $\struct{N}$. This approach is analogous to \emph{variable elimination} on factor graphs \cite{BDP09,KDLD05}, which uses tree decompositions of the primal graph of a factor graph.
 
-Unfortunately, for many tensor network all possible contraction trees have large max-rank. \cite{DDV19} observed that this is the case for many standard counting benchmarks. This is because, for each variable $x$, the number of times $x$ appears in $\varphi$ is a lower bound on the max-rank of all contraction trees of $\Call{Reduce}{\varphi, \cdot}$. Thus traditional tensor network planning algorithms (e.g., \cite{DFGHSW18,KCMR18,MS08}) fail on counting benchmarks that have variables which appear more than $30$ times. 
+Unfortunately, for many tensor network all possible contraction trees have large max-rank. \cite{DDV19} observed that this is the case for many standard counting benchmarks. This is because, for each variable $x$, the number of times $x$ appears in $\varphi$ is a lower bound on the max-rank of all contraction trees of $\func{Reduce}(\varphi, \cdot)$. Thus traditional tensor network planning algorithms (e.g., \cite{DFGHSW18,KCMR18,MS08}) fail on counting benchmarks that have variables which appear more than $30$ times. 
 
 %For example, if a tensor network contains a rank $k$ tensor, then all contraction trees necessarily have max-rank at least $k$. Recall from Theorem \ref{thm:wmc-reduction} that, for weighted model counting, a variable $x$ that appears $k$ times in $\varphi$ is represented in $\Call{Reduce}{\varphi, W}$ by a rank $k$ tensor. Thus for many weighted model counting benchmarks, where a single variable might appear tens or even hundreds of times, the resulting tensor network will have tensors of infeasibly-high rank. Indeed, 
 Instead, \cite{DDV19} relaxed the planning stage by allowing changes to the input tensor network $N$. In particular, \cite{DDV19} used tree decompositions of $\struct{N}$ to factor high-rank, highly-structured tensors as a preprocessing step, following prior methods that split large CNF clauses \cite{SS10_2} and high-degree graph vertices \cite{oliveira18,MS11}. A tensor is highly-structured here if it is \emph{tree-factorable}:
@@ -158,6 +158,6 @@ The preprocessing method of \cite{DDV19} is then formalized as follows:
 Let $N$ be a tensor network of tree-factorable tensors such that $|\tnfree{N}| \leq 3$ and $\struct{N}$ has a tree decomposition of width $w \geq 1$. Then we can construct in polynomial time a tensor network $M$ and a contraction tree $T$ for $M$ s.t. $\text{max-rank}(T) \leq \ceil{4(w+1)/3}$ and $N$ is a partial contraction of $M$.
 \end{theorem}
 
-This gives us the $\Call{FactorTree}{N}$ planning method, which computes a tree decomposition of $\struct{N}$ and returns the $M$ and $T$ that result from Theorem \ref{thm:factorable-tree}. Because $N$ is a partial contraction of $M$, $\tntensor{N} = \tntensor{M}$. Since all tensors produced by Thereom \ref{thm:wmc-reduction} are tree-factorable, $\Call{FactorTree}{N}$ satisfies assumption 2 in Theorem \ref{thm:alg-correctness}. 
+This gives us the $\func{FactorTree}(N)$ planning method, which computes a tree decomposition of $\struct{N}$ and returns the $M$ and $T$ that result from Theorem \ref{thm:factorable-tree}. Because $N$ is a partial contraction of $M$, $\tntensor{N} = \tntensor{M}$. Since all tensors produced by Thereom \ref{thm:wmc-reduction} are tree-factorable, $\func{FactorTree}(N)$ satisfies assumption 2 in Theorem \ref{thm:alg-correctness}. 
 
-While both $\Call{FactorTree}{N}$ and variable elimination \cite{BDP09,KDLD05} use tree decompositions, they consider different graphs. For example, consider computing the model count of $\psi = \left(\lor_{i=1}^n x_i\right) \land \left(\lor_{i=1}^n \neg x_i\right)$. $\Call{FactorTree}{N}$ uses tree decompositions of the incidence graph of $\psi$, which has treewidth 2. Variable elimination uses tree decompositions of the primal graph of $\psi$, which has treewidth $n-1$. Thus $\Call{FactorTree}{N}$ can exhibit significantly better behavior than variable elimination on some formulas. On the other hand, the behavior of $\Call{FactorTree}{N}$ is at most slightly worse than variable elimination: as noted above, if the treewidth of the primal graph of a formula $\varphi$ is $k$, the treewidth of the incidence graph of $\varphi$ is at most $k+1$ \cite{KV00}. % In the next section we show how branch decompositions can be used to generalize Theorem \ref{thm:factorable-tree} and hence construct contraction trees.
+While both $\func{FactorTree}(N)$ and variable elimination \cite{BDP09,KDLD05} use tree decompositions, they consider different graphs. For example, consider computing the model count of $\psi = \left(\lor_{i=1}^n x_i\right) \land \left(\lor_{i=1}^n \neg x_i\right)$. $\func{FactorTree}(N)$ uses tree decompositions of the incidence graph of $\psi$, which has treewidth 2. Variable elimination uses tree decompositions of the primal graph of $\psi$, which has treewidth $n-1$. Thus $\func{FactorTree}(N)$ can exhibit significantly better behavior than variable elimination on some formulas. On the other hand, the behavior of $\func{FactorTree}(N)$ is at most slightly worse than variable elimination: as noted above, if the treewidth of the primal graph of a formula $\varphi$ is $k$, the treewidth of the incidence graph of $\varphi$ is at most $k+1$ \cite{KV00}. % In the next section we show how branch decompositions can be used to generalize Theorem \ref{thm:factorable-tree} and hence construct contraction trees.

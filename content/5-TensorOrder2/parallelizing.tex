@@ -51,20 +51,22 @@ Let $N$ be a tensor network and let $I \subseteq \tnbound{N}$. For each $\eta \i
 Move the summation over $\eta \in \domain{I}$ to the outside of Equation \ref{eqn:contraction}, then apply the definition of tensor slices and recombine terms.
 \end{proof}
 
-% \begin{algorithm}[t]
-% 	\caption{Sliced contraction of a tensor network}\label{alg:tn-sliced}
-% 	\textbf{Input:} A tensor network $N$, a contraction tree $T$ for $N$, and a memory bound $m$. \\
-% 	\textbf{Output:} $\tntensor{N}$, the contraction of $N$, performed using at most $m$ memory.
-% 	\begin{algorithmic}[1]
-% 	    %\Procedure{ExecuteSliced}{$N, T, m$}
-% 	    \State $I \gets \emptyset$
-% 	    \While{$\Call{MemCost}{N, T, I} > m$}
-% 	    \State $I \gets I \cup \{\Call{ChooseSliceIndex}{N, T, I}\}$
-% 	    \EndWhile
-% 	    \State \Return $\sum_{\eta \in [I]} \Call{Execute}{N[\eta], T[\eta]}$
-% 		%\EndProcedure
-% 	\end{algorithmic}
-% \end{algorithm}
+\begin{algorithm*}[t]
+    \label{alg:tn-sliced}
+    \caption{Sliced contraction of a tensor network}
+    \DontPrintSemicolon
+    \KwIn{$N$: a tensor network}
+    \KwIn{$T$: a contraction tree for $N$}
+    \KwIn{$m$: a memory bound}
+    \KwOut{$\tntensor{N}$, the contraction of $N$, performed using at most $m$ memory.}
+    \Function{\upshape $\func{ExecuteSliced}(N, T, m)$}{
+        $I \gets \emptyset$\;
+        \While{$\func{MemCost}(N, T, I) > m$}{
+            $I \gets I \cup \{\func{ChooseSliceIndex}(N, T, I)\}$\;
+        }
+        \Return{$\sum_{\eta \in [I]} \func{Execute}(N[\eta], T[\eta])$}
+    }
+\end{algorithm*}
 
 By choosing $I$ carefully, computing each $\tntensor{N[\eta]}$ uses less intermediate memory (compared to computing $\tntensor{N}$) while using the same contraction tree. In exchange, the number of floating point operations to compute all $\tntensor{N[\eta]}$ terms increases. 
 

@@ -1,0 +1,26 @@
+\begin{tikzpicture}
+\begin{scope}[every node/.style={thick,draw}]
+    \node (C) at (-1,-1) {$B_{\neg x \lor \neg y}$};
+    \node (x) at (-1,0) {$A_x$};
+    \node (A) at (-1.5,1) {$B_{w \lor x \lor \neg y}$};
+    \node (y) at (0,0) {$A_y$};
+    \node (w) at (0,1) {$A_w$};
+    \node (D) at (1,-1) {$B_{\neg y \lor \neg z}$};
+    \node (z) at (1,0) {$A_z$};
+    \node (B) at (1.5,1) {$B_{w \lor y \lor z}$};
+\end{scope}
+
+\begin{scope}[every node/.style={fill=white,circle},
+              every edge/.style={draw=black,very thick}]
+    \path [-] (A) edge (w);
+    \path [-] (A) edge (x);
+    \path [-] (A) edge (y);
+    \path [-] (B) edge (w);
+    \path [-] (B) edge (y);
+    \path [-] (B) edge (z);
+    \path [-] (C) edge (x);
+    \path [-] (C) edge (y);
+    \path [-] (D) edge (y);
+    \path [-] (D) edge (z);
+\end{scope}
+\end{tikzpicture}

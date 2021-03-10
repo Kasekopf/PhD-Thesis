@@ -1,0 +1,83 @@
+\section{Parallelizing Tensor-Network Contraction}
+\label{sec:parallel}
+
+In this section, we discuss opportunities for parallelization of Algorithm \ref{alg:wmc-tn}. Since the reduction stage was not a significant source of runtime in \cite{DDV19}, we focus on opportunities in the planning and execution stages.
+
+\subsection{Parallelizing the Planning Stage with a Portfolio}
+\label{sec:parallel:planning}
+As discussed in Section \ref{sec:algorithm:planning}, $\Call{FactorTree}{N}$ first computes a tree decomposition of $\struct{N}$ and then applies Theorem \ref{thm:factorable-tree}. In \cite{DDV19}, most time in the planning stage was spent finding low-width tree decompositions with a choice of single-core heuristic tree-decomposition solvers \cite{AMW17,HS18,Tamaki17}. Finding low-width tree decompositions is thus a valuable target for parallelization.
+
+We were unable to find state-of-the-art parallel heuristic tree-decomposition solvers. There are several classic algorithms for parallel tree-decomposition construction \cite{Lagergren90,SWG13}, but no recent implementations. There is also an exact tree-decomposition solver that leverages a GPU \cite{VB17}, but exact tools are not able to scale to handle our benchmarks. Existing single-core heuristic tree-decomposition solvers are highly optimized and so parallelizing them is nontrivial.
+
+Instead, we take inspiration from the SAT solving community. One competitive approach to building a parallel SAT solver is to run a variety of SAT solvers in parallel across multiple cores \cite{BSS15,MSSS13,XHHL08}. The portfolio SAT solver \tool{CSHCpar} \cite{MSSS13} won the open parallel track in the 2013 SAT Competition with this technique, and such portfolio solvers are now banned from most tracks due to their effectiveness relative to their ease of implementation. Similar parallel portfolios are thus promising for integration into the planning stage.
+
+We apply this technique to heuristic tree-decomposition solvers by running a variety of single-core heuristic tree-decomposition solvers in parallel on multiple cores and collating their outputs into a single stream. We analyze the performance of this technique in Section \ref{sec:experiments}.
+
+While Theorem \ref{thm:factorable-tree} lets us integrate tree-decomposition solvers into the portfolio, the portfolio might also be improved by integrating solvers of other graph decompositions. The following theorem shows that branch-decomposition solvers may also be used for $\Call{FactorTree}{N}$:
+\begin{theorem} \label{thm:factorable-branch}
+Let $N$ be a tensor network of tree-factorable tensors such that $|\tnfree{N}| \leq 3$ and $G=\struct{N}$ has a branch decomposition $T$ of width $w \geq 1$. Then we can construct in polynomial time a tensor network $M$ and a contraction tree $S$ for $M$ s.t. $\text{max-rank}(S) \leq \ceil{4w/3}$ and $N$ is a partial contraction of $M$.
+\end{theorem}
+\begin{proof}[Sketch of Construction]
+For simplicity, we sketch here only the case when $\tnfree{N} = \emptyset$, as occurs in counting. For each $A \in N$, $\tdim{A} = \vinc{G}{A}$ is a subset of the leaves of $T$ and so the smallest connected component of $T$ containing $\tdim{A}$ is a dimension tree $T_A$ of $A$. Factor $A$ with $T_A$ using Definition \ref{def:tree-factorable} to get $N_A$ and $g_A$.
+
+We now construct the contraction tree for $M = \cup_{A \in N} N_A$. For each $n \in \V{T}$, let $M_n = \{B~:~B \in N_A, g_A(B) = n\}$. At each leaf $\ell \in \Lv{T}$, attach an arbitrary contraction tree of $M_\ell$. At each non-leaf $n \in \V{T}$, partition $M_n$ into three equally-sized sets and attach an arbitrary contraction tree for each to the three edges incident to $n$. These attachments create a carving decomposition $T'$ from $T$ for $\struct{M}$, of width no larger than $\ceil{4w/3}$. Finally, apply Theorem 3 of \cite{DDV19} to construct a contraction tree $S$ for $M$ from $T'$ s.t. $\text{max-rank}(S) \leq \ceil{4w/3}$.
+\end{proof}
+
+The full proof is an extension of the proof of Theorem \ref{thm:factorable-tree} given in \cite{DDV19} and appears in Appendix \ref{sec:appendix:proof}.
+Theorem \ref{thm:factorable-branch} subsumes Theorem \ref{thm:factorable-tree}, since given a graph $G$ and a tree decomposition for $G$ of width $w+1$ one can construct in polynomial time a branch decomposition for $G$ of width $w$ \cite{RS91}. Moreover, on many graphs there are branch decompositions whose width is smaller than all tree decompositions. We explore this potential in practice in Section \ref{sec:experiments}.
+
+It was previously known that branch decompositions can also be used in variable elimination \cite{BDP09}, but Theorem \ref{thm:factorable-branch} considers branch decompositions of a different graph. For example, consider again computing the model count of $\psi = \left(\lor_{i=1}^n x_i\right) \land \left(\lor_{i=1}^n \neg x_i\right)$. Theorem \ref{thm:factorable-branch} uses branch decompositions of the incidence graph of $\psi$, which has branchwidth 2. Variable elimination uses branch decompositions of the primal graph of $\psi$, which has branchwidth $n-1$. 
+
+\subsection{Parallelizing the Execution Stage with TensorFlow and Slicing}
+\label{sec:parallelizing:execution}
+As discussed in Section \ref{sec:algorithm:execution}, each contraction in Algorithm \ref{alg:network-contraction} can be implemented as a matrix multiplication. This was done in \cite{DDV19} using \tool{numpy} \cite{numpy}, and it is straightforward to adjust the implementation to leverage multiple cores with \tool{numpy} and a GPU with \tool{TensorFlow} \cite{ABCCDDDGII16}.
+
+The primary challenge that emerges when using a GPU is dealing with the small onboard memory. For example, the \tool{NVIDIA Tesla-V100} (which we use in Section \ref{sec:experiments}) has just 16GB of onboard memory. This limits the size of tensors that can be easily manipulated. A single contraction of two tensors can be performed across multiple GPU kernel calls \cite{RRBSKH08}, and similar techniques were implemented in \tool{gpusat2} \cite{FHZ19}. These techniques, however, require parts of the input tensors to be copied into and out of GPU memory, which incurs significant slowdown.
+
+Instead, we use \emph{index slicing} \cite{CZHNS18,GK20,VBNHRBM19} of a tensor network $N$. This technique is analogous to \emph{conditioning} on Bayesian networks \cite{darwiche01,dechter99,pearl86,SAS94}. The idea is to represent $\tntensor{N}$ as the sum of contractions of smaller tensor networks. Each smaller network contains tensor slices:
+
+%The main it is to contract a tensor network $N$ by choosing a subset of bond indices $I \subseteq \tnbound{N}$ and representing $\tntensor{N}$ into the sum of $|\domain{I}|$ contractions of smaller tensor networks. % This corresponds to moving the marginalization of the indices in $I$ to the outside of Equation \ref{eqn:contraction}.
+%These smaller tensor networks contain tensor slices:
+\begin{definition}
+Let $A$ be a tensor, $I \subseteq \textbf{Ind}$, and $\eta \in \domain{I}$. Then the \emph{$\eta$-slice} of $A$ is the tensor $A[\eta]$ with indices $\tdim{A} \setminus I$ defined for all $\tau \in \domain{\tdim{A} \setminus I}$ by $A[\eta](\tau) \equiv A((\tau \cup \eta)\restrict{\tdim{A}}).$
+\end{definition}
+
+These are called slices because every value in $A$ appears in exactly one tensor in $\{ A[\eta] : \eta \in \domain{I} \}$. We now define and prove the correctness of index slicing: 
+\begin{theorem}
+Let $N$ be a tensor network and let $I \subseteq \tnbound{N}$. For each $\eta \in \domain{I}$, let $N[\eta] = \{ A[\eta] : A \in N\}$. Then $\tntensor{N} = \sum_{\eta \in \domain{I}} \tntensor{N[\eta]}.$
+\end{theorem}
+\begin{proof}
+Move the summation over $\eta \in \domain{I}$ to the outside of Equation \ref{eqn:contraction}, then apply the definition of tensor slices and recombine terms.
+\end{proof}
+
+\begin{algorithm}[t]
+	\caption{Sliced contraction of a tensor network}\label{alg:tn-sliced}
+	\textbf{Input:} A tensor network $N$, a contraction tree $T$ for $N$, and a memory bound $m$. \\
+	\textbf{Output:} $\tntensor{N}$, the contraction of $N$, performed using at most $m$ memory.
+	\begin{algorithmic}[1]
+	    %\Procedure{ExecuteSliced}{$N, T, m$}
+	    \State $I \gets \emptyset$
+	    \While{$\Call{MemCost}{N, T, I} > m$}
+	    \State $I \gets I \cup \{\Call{ChooseSliceIndex}{N, T, I}\}$
+	    \EndWhile
+	    \State \Return $\sum_{\eta \in [I]} \Call{Execute}{N[\eta], T[\eta]}$
+		%\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+By choosing $I$ carefully, computing each $\tntensor{N[\eta]}$ uses less intermediate memory (compared to computing $\tntensor{N}$) while using the same contraction tree. In exchange, the number of floating point operations to compute all $\tntensor{N[\eta]}$ terms increases. 
+
+Choosing $I$ is itself a difficult problem. Our goal is to choose the smallest $I$ so that contracting each network slice $N[\eta]$ can be done in onboard memory. We first consider adapting Bayesian network conditioning heuristics to the context of tensor networks. Two popular conditioning heuristics are (1) \emph{cutset conditioning} \cite{pearl86}, which chooses $I$ so that each network slice is a tree, and (2) \emph{recursive conditioning} \cite{darwiche01}, which chooses $I$ so that each network slice is disconnected\footnote{The full recursive conditioning procedure then recurses on each connected component. While recursive conditioning is an any-space algorithm, the partial caching required for this is difficult to implement on a GPU.}. Both of these heuristics result in a choice of $I$ far larger than our goal requires. 
+% Cutset conditioning chooses $I$ much larger than needed for our purpose, while recursive conditioning scales in memory using an explicit 
+
+
+Instead, in this work as a first step we use a heuristic from \cite{CZHNS18,GK20}: choose $I$ incrementally, greedily minimizing the memory cost of contracting $N[\eta]$ until the memory usage fits in onboard memory. Unlike cutset and recursive conditioning, the resulting networks $N[\eta]$ are typically still highly connected. One direction for future work is to compare other heuristics for choosing $I$ (e.g., see the discussion in Section 10 of \cite{dechter99}).
+
+This gives us Algorithm \ref{alg:tn-sliced}, which performs the execution stage with limited memory at the cost of additional time. $T[\eta]$ is the contraction tree obtained by computing the $\eta$-slice of every tensor in $T$. $\Call{MemCost}{N, T, I}$ computes the memory for one $\Call{Execute}{N[\eta], T[\eta]}$ call. $\Call{ChooseSliceIndex}{N,T,I}$ chooses the next slice index greedily to minimize memory cost.
+
+%\begin{align*}
+%    \tntensor{N}(\tau) =& \sum_{\rho \in \domain{\tnbound{N}}} \prod_{A \in N} A((\rho \cup \tau)\restrict{\tdim{A}}) \\
+%    =& \sum_{\eta \in \domain{I}} \sum_{\rho \in \domain{\tnbound{N} \setminus I}} \prod_{A \in N} A((\eta \cup \rho \cup \tau)\restrict{\tdim{A}}) \\
+%    =& \sum_{\eta \in \domain{I}} \left( \sum_{\rho \in \domain{\tnbound{N} \setminus I}} \prod_{A \in N} A[\eta]((\rho \cup \tau)\restrict{\tdim{A}}) \right) \\
+%    =& \sum_{\eta \in \domain{I}} \tntensor{\{A[\eta] : A \in N\}}.
+%\end{align*}

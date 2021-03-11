@@ -28,8 +28,9 @@
 \ProvidesClass{sty/ruthesis}[1995/11/21 Thesis Class, ECE, Rice University, jeo]
 
 \LoadClass[12pt]{report}
-\RequirePackage{ifthen}
-\RequirePackage[dvips]{graphicx}
+\RequirePackage{ifthen}	
+% Modified by Jeffrey Dudek (Removed [dvips] driver option)	
+\RequirePackage{graphicx}
 
 \DeclareOption{draft}{\typeout{DRAFT MODE}}
 \DeclareOption{12pt}{\typeout{12pt mode selected but not implemented}}

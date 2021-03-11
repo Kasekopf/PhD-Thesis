@@ -1,8 +1,6 @@
 \usepackage{url}
 \usepackage{amssymb}
 \usepackage{amsthm}
-% \usepackage{algorithm}
-% \usepackage[noend]{algpseudocode}
 \usepackage{mathtools}
 \usepackage{pgf}
 \usepackage[caption=false]{subfig}
@@ -11,9 +9,13 @@
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing,angles,quotes,positioning,shapes,arrows}
 
-\newtheorem{theorem}{Theorem}
+\newtheorem{theorem}{Theorem}[chapter]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
+
+\usepackage[hidelinks,bookmarksopen=true]{hyperref}
+\providecommand*{\toclevel@frontmatter}{0}  % To avoid warning
+\usepackage{bookmark}
 
 %% Added for DPMC
 \usepackage{float}
@@ -23,10 +25,7 @@
 \usepackage{amsmath}
 \usepackage{enumitem}
 \setlist[enumerate]{label*=\arabic*.}
-% \usepackage{breakcites}
-% \usepackage[hidelinks,bookmarksopen=true]{hyperref}
-% \usepackage{bookmark} % CP template disables PDF section bookmarks
-% \usepackage[nocompress]{cite} % citation numbers must be in numeric order
+\usepackage{breakcites}
 \usepackage[linesnumbered, ruled]{algorithm2e}
 \SetCommentSty{}
 \SetKwIF{If}{ElseIf}{Else}{if}{}{else if}{else}{}

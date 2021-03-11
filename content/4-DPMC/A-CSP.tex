@@ -9,7 +9,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Heuristics for $\clusterVarOrder$}
+\subsection{Heuristics for \texorpdfstring{$\clusterVarOrder$}{ClusterVarOrder}}
 
 In Algorithm \ref{alg_csp_jt}, the function $\clusterVarOrder$ returns a variable order what will be used to rank the clauses of $\phi$.
 We consider nine heuristics for variable ordering: \Random, \Mcs, \Lexp, \Lexm, \Minfill, \Invmcs, \Invlexp, \Invlexm, and \Invminfill.
@@ -49,7 +49,7 @@ We call these heuristics \Invmcs, \Invlexp, \Invlexm, and \Invminfill.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Heuristics for $\clauseRank$}
+\subsection{Heuristics for \texorpdfstring{$\clauseRank$}{ClauseRank}}
 
 In Algorithm \ref{alg_csp_jt}, given a cluster variable order $\rho$, we partition the clauses of $\phi$ by calling the function $\clauseRank$.
 We consider two possible heuristics for $\clauseRank$ that satisfy the conditions of Theorem \ref{thm_csp_jt}: \Be{} and \Bm{}.
@@ -66,7 +66,7 @@ Unlike the \Be{} case, we can make no guarantee about when each variable is proj
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Heuristics for $\chosenCluster$}
+\subsection{Heuristics for \texorpdfstring{$\chosenCluster$}{ChosenCluster}}
 
 In Algorithm \ref{alg_csp_jt}, the function $\chosenCluster$ determines the parent of the current internal node.
 We consider two possible heuristics to use for $\chosenCluster$ that satisfy the conditions of Theorem \ref{thm_csp_jt}: \heuristic{List} and \heuristic{Tree} \cite{dudek2020addmc}.

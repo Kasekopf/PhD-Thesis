@@ -15,7 +15,7 @@ We apply this technique to heuristic tree-decomposition solvers by running a var
 
 While Theorem \ref{thm:factorable-tree} lets us integrate tree-decomposition solvers into the portfolio, the portfolio might also be improved by integrating solvers of other graph decompositions. The following theorem shows that branch-decomposition solvers may also be used for $\func{FactorTree}(N)$:
 \begin{theorem} \label{thm:factorable-branch}
-Let $N$ be a tensor network of tree-factorable tensors such that $|\tnfree{N}| \leq 3$ and $G=\struct{N}$ has a branch decomposition $T$ of width $w \geq 1$. Then we can construct in polynomial time a tensor network $M$ and a contraction tree $S$ for $M$ s.t. $\text{max-rank}(S) \leq \ceil{4w/3}$ and $N$ is a partial contraction of $M$.
+Let $N$ be a tensor network of tree-factorable tensors s.t. $|\tnfree{N}| \leq 3$ and $G=\struct{N}$ has a branch decomposition $T$ of width $w \geq 1$. Then we can construct in polynomial time a tensor network $M$ and a contraction tree $S$ for $M$ s.t. $\text{max-rank}(S) \leq \ceil{4w/3}$ and $N$ is a partial contraction of $M$.
 \end{theorem}
 \begin{proof}[Sketch of Construction]
 For simplicity, we sketch here only the case when $\tnfree{N} = \emptyset$, as occurs in counting. For each $A \in N$, $\tdim{A} = \vinc{G}{A}$ is a subset of the leaves of $T$ and so the smallest connected component of $T$ containing $\tdim{A}$ is a dimension tree $T_A$ of $A$. Factor $A$ with $T_A$ using Definition \ref{def:tree-factorable} to get $N_A$ and $g_A$.

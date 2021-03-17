@@ -6,7 +6,7 @@ def data_dir(path):
     """
     Get the directory to locate data (default ../../data/[path]).
     """
-    return pathlib.Path(__file__).parent.parent.parent.absolute() / "data" / path
+    return str(pathlib.Path(__file__).parent.parent.parent.absolute() / "data" / path)
 
 
 def benchmark_dir(path):

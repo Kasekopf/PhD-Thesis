@@ -128,13 +128,13 @@ class Figure:
 
 
 class FigureOutput:
-    def __init__(self, type, base_dir):
-        mpl.use(type)
+    def __init__(self, fig_type, base_dir):
+        mpl.use(fig_type)
         import matplotlib.pyplot as plt
 
         self.__plt = plt
         self.__base_dir = base_dir
-        self.__suffix = type
+        self.__suffix = fig_type
 
     def figure(self, *args, **kwargs):
         f, axs = self.__plt.subplots(*args, **kwargs)

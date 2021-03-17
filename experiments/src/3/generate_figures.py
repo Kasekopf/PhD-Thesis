@@ -16,134 +16,62 @@ randomly generated cubic graphs.
 """
 
 
-def vertex_cover_counter(name, location, **other_args):
-    """
-    Generate an experiment using an existing counter
-    """
-    return slurmqueen.Experiment(
-        "python src/benchmark_counter.py",
-        [
-            {
-                "": [
-                    name,
-                    "benchmarks/cubic_vertex_cover/cubic_vc_%d_%d.cnf" % (num_vars, i),
-                ],
-                "timeout": 1000,
-                "counter": location,
-                **other_args,
-                "|num_vars": num_vars,
-                "|i": i,
-            }
-            for num_vars in range(50, 260, 10)
-            for i in range(100)
-        ],
-        output_argument="output",
-        log_argument="&>",
-    )
+class VertexCoverData:
+    def __init__(self, data_dir):
+        self.__instance = slurmqueen.Experiment("", []).instance(data_dir)
 
-
-def vertex_cover_tensor(method):
-    """
-    Generate an experiment using an tensor-based method
-    """
-    return slurmqueen.Experiment(
-        "python src/tensororder.py",
-        [
-            {
-                "": [
-                    "benchmarks/cubic_vertex_cover/cubic_vc_%d_%d.cnf" % (num_vars, i)
-                ],
-                "timeout": 1000,
-                "method": method,
-                "max_rank": 30,
-                "seed": 1234567,
-                "|num_vars": num_vars,
-                "|i": i,
-            }
-            for num_vars in range(50, 260, 10)
-            for i in range(100)
-        ],
-        output_argument="output",
-        log_argument="&>",
-    )
-
-
-vertex_cover_sharpsat = vertex_cover_counter(
-    "sharpsat", "counters/sharpSAT/sharpSAT"
-).instance(BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/sharpsat")
-vertex_cover_d4 = vertex_cover_counter("d4", "counters/d4/d4").instance(
-    BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/d4"
-)
-vertex_cover_minic2d = vertex_cover_counter(
-    "minic2d", "counters/miniC2D/miniC2D"
-).instance(BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/minic2d")
-vertex_cover_cachet = vertex_cover_counter(
-    "cachet", "counters/cachet/cachet", weighted=False
-).instance(BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/cachet")
-vertex_cover_dynasp = vertex_cover_counter(
-    "dynasp", "counters/dynasp/dynasp", gringo="formatters/clingo/gringo"
-).instance(BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/dynasp")
-vertex_cover_dynqbf = vertex_cover_counter("dynqbf", "counters/dynqbf/dynqbf").instance(
-    BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/dynqbf"
-)
-
-vertex_cover_kcmr_greedy = vertex_cover_tensor("KCMR-greedy").instance(
-    BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/kcmr_greedy"
-)
-vertex_cover_kcmr_metis = vertex_cover_tensor("KCMR-metis").instance(
-    BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/kcmr_metis"
-)
-vertex_cover_kcmr_gn = vertex_cover_tensor("KCMR-gn").instance(
-    BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/kcmr_gn"
-)
-vertex_cover_line_flow = vertex_cover_tensor("line-Flow").instance(
-    BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/line_flow"
-)
-vertex_cover_line_htd = vertex_cover_tensor("line-htd").instance(
-    BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/line_htd"
-)
-vertex_cover_line_tamaki = vertex_cover_tensor("line-Tamaki").instance(
-    BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/line_tamaki"
-)
-vertex_cover_factor_flow = vertex_cover_tensor("factor-Flow").instance(
-    BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/factor_flow"
-)
-vertex_cover_factor_htd = vertex_cover_tensor("factor-htd").instance(
-    BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/factor_htd"
-)
-vertex_cover_factor_tamaki = vertex_cover_tensor("factor-Tamaki").instance(
-    BASE_EXPERIMENT_DIR + "/cubic_vertex_cover/factor_tamaki"
-)
-
-
-def extract_vertex_medians(instance):
-    is_tensor_based = "Max Rank" in list(
-        instance.query("PRAGMA table_info(data)")["name"]
-    )
-    if is_tensor_based:
-        data = instance.query(
-            "SELECT [Count], [Max Rank], [Total Time], [|num_vars], [|i] FROM data"
+    def extract_vertex_medians(self):
+        is_tensor_based = "Max Rank" in list(
+            self.__instance.query("PRAGMA table_info(data)")["name"]
         )
-    else:
-        data = instance.query(
-            "SELECT [Count], [Total Time], [|num_vars], [|i] FROM data"
-        )
+        if is_tensor_based:
+            data = self.__instance.query(
+                "SELECT [Count], [Max Rank], [Total Time], [|num_vars], [|i] FROM data"
+            )
+        else:
+            data = self.__instance.query(
+                "SELECT [Count], [Total Time], [|num_vars], [|i] FROM data"
+            )
 
-    if len(data) != 2100:
-        print("Only {0}/2100 datapoints observed for {1}".format(len(data), instance))
+        if len(data) != 2100:
+            print(
+                "Only {0}/2100 datapoints observed for {1}".format(len(data), instance)
+            )
 
-    # Set the total time to TIMEOUT for all experiments that did not return a count (includes timeout, memout, etc.)
-    data.loc[data["Count"].isnull(), "Total Time"] = TIMEOUT
+        # Set the total time to TIMEOUT for all experiments that did not return a count (includes timeout, memout, etc.)
+        data.loc[data["Count"].isnull(), "Total Time"] = TIMEOUT
 
-    # Take the median runtime for each solvers and each number of variables, across all 100 benchmarks
-    data = data.groupby(["|num_vars"], as_index=False).median()
-    return data
+        # Take the median runtime for each solvers and each number of variables, across all 100 benchmarks
+        data = data.groupby(["|num_vars"], as_index=False).median()
+        return data
+
+
+vertex_cover_data = {
+    "sharpsat": VertexCoverData(util.data_dir("3/cubic_vertex_cover/sharpsat")),
+    "d4": VertexCoverData(util.data_dir("3/cubic_vertex_cover/d4")),
+    "minic2d": VertexCoverData(util.data_dir("3/cubic_vertex_cover/minic2d")),
+    "cachet": VertexCoverData(util.data_dir("3/cubic_vertex_cover/cachet")),
+    "dynasp": VertexCoverData(util.data_dir("3/cubic_vertex_cover/dynasp")),
+    "dynqbf": VertexCoverData(util.data_dir("3/cubic_vertex_cover/dynqbf")),
+    "kcmr_greedy": VertexCoverData(util.data_dir("3/cubic_vertex_cover/kcmr_greedy")),
+    "kcmr_metis": VertexCoverData(util.data_dir("3/cubic_vertex_cover/kcmr_metis")),
+    "kcmr_gn": VertexCoverData(util.data_dir("3/cubic_vertex_cover/kcmr_gn")),
+    "line_flow": VertexCoverData(util.data_dir("3/cubic_vertex_cover/line_flow")),
+    "line_htd": VertexCoverData(util.data_dir("3/cubic_vertex_cover/line_htd")),
+    "line_tamaki": VertexCoverData(util.data_dir("3/cubic_vertex_cover/line_tamaki")),
+    "factor_flow": VertexCoverData(util.data_dir("3/cubic_vertex_cover/factor_flow")),
+    "factor_htd": VertexCoverData(util.data_dir("3/cubic_vertex_cover/factor_htd")),
+    "factor_tamaki": VertexCoverData(
+        util.data_dir("3/cubic_vertex_cover/factor_tamaki")
+    ),
+}
 
 
 def plot_vertex_runtime(experiment_infos, ax):
     for exp_info in experiment_infos:
-        data = exp_info.data[
-            exp_info.data["Total Time"] < TIMEOUT
+        data = exp_info.data.extract_vertex_medians()
+        data = data[
+            data["Total Time"] < TIMEOUT
         ]  # Do not draw points that didn't finish (at median)
         ax.plot(
             data["|num_vars"],
@@ -174,7 +102,7 @@ def plot_vertex_runtime(experiment_infos, ax):
 
 def plot_vertex_rank(experiment_infos, ax):
     for exp_info in experiment_infos:
-        data = exp_info.data
+        data = exp_info.data.extract_vertex_medians()
         ax.plot(
             data["|num_vars"],
             data["Max Rank"],
@@ -405,10 +333,6 @@ def plot_cactus_line(ax, times, *args, **kw_args):
     ax.plot(x, y, *args, **kw_args)
 
 
-def build_vbs(*times_by_instance):
-    return [min(times_by_benchmark) for times_by_benchmark in zip(*times_by_instance)]
-
-
 def plot_inference_cactus(ax):
     flow_times = load_inference_data(wmc_factor_flow)["Total Time"]
     htd_times = load_inference_data(wmc_factor_htd)["Total Time"]
@@ -438,7 +362,7 @@ def plot_inference_cactus(ax):
     )
     plot_cactus_line(
         ax,
-        build_vbs(
+        util.vbs(
             flow_times, htd_times, tamaki_times, cachet_times, minic2d_times, d4_times
         ),
         label="VBS",
@@ -690,32 +614,16 @@ def generate_vertex_cover_plots():
         "DisplayInfo", ["name", "data", "color", "marker"]
     )
     vertex_experiments = [
-        DisplayInfo(
-            "cachet", extract_vertex_medians(vertex_cover_cachet), "#dd0f0f", "p"
-        ),
-        DisplayInfo(
-            "dynQBF", extract_vertex_medians(vertex_cover_dynqbf), "#000033", "P"
-        ),
-        DisplayInfo(
-            "dynasp", extract_vertex_medians(vertex_cover_dynasp), "#0000dd", "d"
-        ),
-        DisplayInfo(
-            "sharpSAT", extract_vertex_medians(vertex_cover_sharpsat), "#403bcb", "s"
-        ),
-        DisplayInfo("d4", extract_vertex_medians(vertex_cover_d4), "#9d02d7", "o"),
-        DisplayInfo(
-            "miniC2D", extract_vertex_medians(vertex_cover_minic2d), "#ea5f94", "D"
-        ),
-        DisplayInfo(
-            "greedy", extract_vertex_medians(vertex_cover_kcmr_greedy), "#877662", "v"
-        ),
-        DisplayInfo(
-            "metis", extract_vertex_medians(vertex_cover_kcmr_metis), "#9c9146", "<"
-        ),
-        DisplayInfo("GN", extract_vertex_medians(vertex_cover_kcmr_gn), "#c7a441", ">"),
-        DisplayInfo(
-            "LG+Flow", extract_vertex_medians(vertex_cover_line_flow), "#ffb14e", "*"
-        ),
+        DisplayInfo("cachet", vertex_cover_data["cachet"], "#dd0f0f", "p"),
+        DisplayInfo("dynQBF", vertex_cover_data["dynqbf"], "#000033", "P"),
+        DisplayInfo("dynasp", vertex_cover_data["dynasp"], "#0000dd", "d"),
+        DisplayInfo("sharpSAT", vertex_cover_data["sharpsat"], "#403bcb", "s"),
+        DisplayInfo("d4", vertex_cover_data["d4"], "#9d02d7", "o"),
+        DisplayInfo("miniC2D", vertex_cover_data["minic2d"], "#ea5f94", "D"),
+        DisplayInfo("greedy", vertex_cover_data["kcmr_greedy"], "#877662", "v"),
+        DisplayInfo("metis", vertex_cover_data["kcmr_metis"], "#9c9146", "<"),
+        DisplayInfo("GN", vertex_cover_data["kcmr_gn"], "#c7a441", ">"),
+        DisplayInfo("LG+Flow", vertex_cover_data["line_flow"], "#ffb14e", "*"),
     ]
     f, ax = output.figure(ncols=1)
     plot_vertex_runtime(vertex_experiments, ax)

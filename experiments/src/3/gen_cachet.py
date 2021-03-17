@@ -1,5 +1,7 @@
+import math
 import slurmqueen
 import util
+import gen_decomposition  # For ga_wmc_factor
 
 """"
 Definition and analysis of 1091 probabilistic inference benchmarks.
@@ -147,28 +149,55 @@ def plot_inference_cactus(ax):
     d4_times = wmc_data["d4"].get_times()
 
     # Colors from https://projects.susielu.com/viz-palette
-    plot_cactus_line(
-        ax, htd_times, label="FT+htd", color="#ffd700", linestyle="--", linewidth=2
+    ax.plot(
+        *util.cactus(htd_times),
+        label="FT+htd",
+        color="#ffd700",
+        linestyle="--",
+        linewidth=2,
     )
-    plot_cactus_line(
-        ax, flow_times, label="FT+Flow", color="#ffb14e", linestyle=":", linewidth=2
+
+    ax.plot(
+        *util.cactus(flow_times),
+        label="FT+Flow",
+        color="#ffb14e",
+        linestyle=":",
+        linewidth=2,
     )
-    plot_cactus_line(
-        ax, tamaki_times, label="FT+Tamaki", color="#fa8775", linestyle="-", linewidth=2
+    ax.plot(
+        *util.cactus(tamaki_times),
+        label="FT+Tamaki",
+        color="#fa8775",
+        linestyle="-",
+        linewidth=2,
     )
-    plot_cactus_line(
-        ax, cachet_times, label="cachet", color="#dd0f0f", linestyle="--", linewidth=2
+    ax.plot(
+        *util.cactus(cachet_times),
+        label="cachet",
+        color="#dd0f0f",
+        linestyle="--",
+        linewidth=2,
     )
-    plot_cactus_line(
-        ax, minic2d_times, label="miniC2D", color="#ea5f94", linestyle=":", linewidth=2
+    ax.plot(
+        *util.cactus(minic2d_times),
+        label="miniC2D",
+        color="#ea5f94",
+        linestyle=":",
+        linewidth=2,
     )
-    plot_cactus_line(
-        ax, d4_times, label="d4", color="#9d02d7", linestyle="-", linewidth=2
+    ax.plot(
+        *util.cactus(d4_times), label="d4", color="#9d02d7", linestyle="-", linewidth=2
     )
-    plot_cactus_line(
-        ax,
-        util.vbs(
-            flow_times, htd_times, tamaki_times, cachet_times, minic2d_times, d4_times
+    ax.plot(
+        *util.cactus(
+            util.vbs(
+                flow_times,
+                htd_times,
+                tamaki_times,
+                cachet_times,
+                minic2d_times,
+                d4_times,
+            )
         ),
         label="VBS",
         linestyle="--",
@@ -176,17 +205,7 @@ def plot_inference_cactus(ax):
         linewidth=2,
     )
 
-    ax.set_xlabel("Solved instance")
-    ax.set_ylabel("Solving time (s)")
-    ax.set_xlim(left=0, right=1100)
-    ax.set_ylim(bottom=0, top=1000)
-    ax.legend(
-        borderaxespad=0,
-        handletextpad=0.2,
-        labelspacing=0.4,
-        handlelength=2,
-        frameon=False,
-    )
+    util.set_cactus_axes(ax, 1091, TIMEOUT, legend_args={"loc": "upper left"})
 
 
 def generate_wmc_plots(output):
@@ -197,5 +216,98 @@ def generate_wmc_plots(output):
     f.save(0.45, "3/cachet_inference_cactus")
 
 
+def generate_width_plots(output):
+    wmc_widths = gen_decomposition.ga_wmc_factor.extract_best_decompositions_wmc()[
+        "Carving"
+    ]
+
+    def plot_width_cactus_line(ax, times, **kwargs):
+        completed_widths = [
+            int(w) for w, t in zip(wmc_widths, times) if t < 1000 and not math.isnan(w)
+        ]
+        completed_widths = sorted(completed_widths)
+        x, y = [], []
+        for i, width in enumerate(completed_widths):
+            if (
+                i == len(completed_widths) - 1
+                or completed_widths[i + 1] > completed_widths[i]
+            ):
+                x += [width]
+                y += [i]
+        ax.plot(x, y, **kwargs)
+
+    f, ax = output.figure(ncols=1)
+    plot_width_cactus_line(
+        ax,
+        [999] * len(wmc_widths),
+        label="All benchmarks",
+        color="#000000",
+        linestyle=":",
+        linewidth=2,
+    )
+    plot_width_cactus_line(
+        ax,
+        wmc_data["factor_htd"].get_times(),
+        label="FT+htd",
+        color="#ffd700",
+        linestyle="--",
+        linewidth=2,
+    )
+    plot_width_cactus_line(
+        ax,
+        wmc_data["factor_flow"].get_times(),
+        label="FT+Flow",
+        color="#ffb14e",
+        linestyle=":",
+        linewidth=2,
+    )
+    plot_width_cactus_line(
+        ax,
+        wmc_data["factor_tamaki"].get_times(),
+        label="FT+Tamaki",
+        color="#fa8775",
+        linestyle="-",
+        linewidth=2,
+    )
+    plot_width_cactus_line(
+        ax,
+        wmc_data["cachet"].get_times(),
+        label="cachet",
+        color="#dd0f0f",
+        linestyle="--",
+        linewidth=2,
+    )
+    plot_width_cactus_line(
+        ax,
+        wmc_data["minic2d"].get_times(),
+        label="miniC2D",
+        color="#ea5f94",
+        linestyle=":",
+        linewidth=2,
+    )
+    plot_width_cactus_line(
+        ax,
+        wmc_data["d4"].get_times(),
+        label="d4",
+        color="#9d02d7",
+        linestyle="-",
+        linewidth=2,
+    )
+    ax.set_xlabel("Upper bound on carving width")
+    ax.set_ylabel("Number of solved benchmarks")
+    ax.set_xlim(left=9, right=50)
+    ax.set_ylim(bottom=0, top=1100)
+    ax.legend(
+        borderaxespad=0,
+        handletextpad=0.2,
+        labelspacing=0.4,
+        handlelength=2,
+        frameon=False,
+        loc="upper left",
+    )
+    f.save(0.55, "3/cachet_inference_carving_cactus")
+
+
 if __name__ == "__main__":
     generate_wmc_plots(util.output_pdf())
+    generate_width_plots(util.output_pdf())

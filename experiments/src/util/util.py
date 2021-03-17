@@ -101,7 +101,7 @@ def set_cactus_axes(ax, num_benchmarks, timeout, legend_args=iter({})):
         "loc": "lower right",
     }
     default_legend_args.update(legend_args)
-    ax.legend(legend_args)
+    ax.legend(**default_legend_args)
 
 
 class Figure:

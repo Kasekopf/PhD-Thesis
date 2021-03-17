@@ -112,5 +112,5 @@ venv.bak/
 *.zip
 
 experiments/data
-experiments/benchmarks
+experiments/benchmarks/*
 experiments/figures_pdf

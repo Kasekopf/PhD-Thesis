@@ -184,7 +184,7 @@ def plot_graph_analysis_ft_wmc(ax):
     ax.set_ylabel("Number of benchmarks")
 
 
-def generate_decomposition_plots(output):
+def gen(output):
     f, ax = output.figure(ncols=1)
     plot_graph_analysis_vertex_cover(ax)
     f.save(0.6, "3/appendix_vertex_cover_width")
@@ -199,4 +199,4 @@ def generate_decomposition_plots(output):
 
 
 if __name__ == "__main__":
-    generate_decomposition_plots(util.output_pdf())
+    gen(util.output_pdf())

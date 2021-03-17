@@ -208,20 +208,13 @@ def plot_inference_cactus(ax):
     util.set_cactus_axes(ax, 1091, TIMEOUT, legend_args={"loc": "upper left"})
 
 
-def generate_wmc_plots(output):
-    analyze_wmc_benchmarks()
+def plot_by_widths(ax):
 
-    f, ax = output.figure(ncols=1)
-    plot_inference_cactus(ax)
-    f.save(0.45, "3/cachet_inference_cactus")
-
-
-def generate_width_plots(output):
     wmc_widths = gen_decomposition.ga_wmc_factor.extract_best_decompositions_wmc()[
         "Carving"
     ]
 
-    def plot_width_cactus_line(ax, times, **kwargs):
+    def plot_width_cactus_line(times, **kwargs):
         completed_widths = [
             int(w) for w, t in zip(wmc_widths, times) if t < 1000 and not math.isnan(w)
         ]
@@ -236,9 +229,7 @@ def generate_width_plots(output):
                 y += [i]
         ax.plot(x, y, **kwargs)
 
-    f, ax = output.figure(ncols=1)
     plot_width_cactus_line(
-        ax,
         [999] * len(wmc_widths),
         label="All benchmarks",
         color="#000000",
@@ -246,7 +237,6 @@ def generate_width_plots(output):
         linewidth=2,
     )
     plot_width_cactus_line(
-        ax,
         wmc_data["factor_htd"].get_times(),
         label="FT+htd",
         color="#ffd700",
@@ -254,7 +244,6 @@ def generate_width_plots(output):
         linewidth=2,
     )
     plot_width_cactus_line(
-        ax,
         wmc_data["factor_flow"].get_times(),
         label="FT+Flow",
         color="#ffb14e",
@@ -262,7 +251,6 @@ def generate_width_plots(output):
         linewidth=2,
     )
     plot_width_cactus_line(
-        ax,
         wmc_data["factor_tamaki"].get_times(),
         label="FT+Tamaki",
         color="#fa8775",
@@ -270,7 +258,6 @@ def generate_width_plots(output):
         linewidth=2,
     )
     plot_width_cactus_line(
-        ax,
         wmc_data["cachet"].get_times(),
         label="cachet",
         color="#dd0f0f",
@@ -278,7 +265,6 @@ def generate_width_plots(output):
         linewidth=2,
     )
     plot_width_cactus_line(
-        ax,
         wmc_data["minic2d"].get_times(),
         label="miniC2D",
         color="#ea5f94",
@@ -286,7 +272,6 @@ def generate_width_plots(output):
         linewidth=2,
     )
     plot_width_cactus_line(
-        ax,
         wmc_data["d4"].get_times(),
         label="d4",
         color="#9d02d7",
@@ -305,9 +290,19 @@ def generate_width_plots(output):
         frameon=False,
         loc="upper left",
     )
+
+
+def gen(output):
+    analyze_wmc_benchmarks()
+
+    f, ax = output.figure(ncols=1)
+    plot_inference_cactus(ax)
+    f.save(0.45, "3/cachet_inference_cactus")
+
+    f, ax = output.figure(ncols=1)
+    plot_by_widths(ax)
     f.save(0.55, "3/cachet_inference_carving_cactus")
 
 
 if __name__ == "__main__":
-    generate_wmc_plots(util.output_pdf())
-    generate_width_plots(util.output_pdf())
+    gen(util.output_pdf())

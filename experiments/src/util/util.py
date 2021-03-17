@@ -1,7 +1,7 @@
 import matplotlib as mpl
 
 
-def set_figure_size(height_ratio, width=650, overrides=None):
+def set_figure_size(height_ratio, width=433.62, overrides=None):
     """
     Set the figure size used to export matplotlib figures.
 
@@ -86,7 +86,7 @@ def set_cactus_axes(ax, num_benchmarks, timeout, legend_args=iter({})):
     :param legend_args: A dictionary of extra parameters for the legend
     :return: None
     """
-    ax.set_yscale("log", nonposy="mask")
+    ax.set_yscale("log", nonpositive="mask")
     ax.set_ylim(bottom=0.005, top=timeout)
     ax.set_xlim(left=0, right=num_benchmarks)
 

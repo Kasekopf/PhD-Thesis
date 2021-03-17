@@ -124,7 +124,7 @@ def plot_vertex_rank(experiment_infos, ax):
     ax.set_ylabel("Median max rank")
 
 
-def generate_vertex_cover_plots(output):
+def gen(output):
     DisplayInfo = collections.namedtuple(
         "DisplayInfo", ["name", "data", "color", "marker"]
     )
@@ -150,4 +150,4 @@ def generate_vertex_cover_plots(output):
 
 
 if __name__ == "__main__":
-    generate_vertex_cover_plots(util.output_pdf())
+    gen(util.output_pdf())

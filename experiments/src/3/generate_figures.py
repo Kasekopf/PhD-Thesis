@@ -1,55 +1,14 @@
 import collections
 import math
-import matplotlib as mpl
-
-mpl.use("pdf")
-import matplotlib.pyplot as plt
 import os
 import slurmqueen
 
+import util
+
+output = util.output_pdf()
+
 BASE_EXPERIMENT_DIR = "../../data/3"
 TIMEOUT = 1000
-
-"""
-Setup style and sizes for generating PGF figures
-INCLUDED FROM http://bkanuka.com/articles/native-latex-plots/
-"""
-
-
-def figure_size(scale, ratio):
-    fig_width_pt = 650
-    inches_per_pt = 1.0 / 72.27  # Convert pt to inch
-    golden_mean = (
-        ratio  # (math.sqrt(5.0)-1.0)/2.0   # Aesthetic ratio (you could change this)
-    )
-    fig_width = fig_width_pt * inches_per_pt * scale  # width in inches
-    fig_height = fig_width * golden_mean + 0.1  # height in inches
-    fig_size = [fig_width, fig_height]
-    return fig_size
-
-
-def set_figure_height(ratio):
-    pgf_with_latex = {  # setup matplotlib to use latex for output
-        "pgf.texsystem": "pdflatex",  # change this if using xetex or lautex
-        "text.usetex": True,  # use LaTeX to write all text
-        "font.family": "serif",
-        "font.serif": [],  # blank entries should cause plots to inherit fonts from the document
-        "font.sans-serif": [],
-        "font.monospace": [],
-        "axes.labelsize": 10,  # LaTeX default is 10pt font.
-        "legend.fontsize": 9,
-        "xtick.labelsize": 9,
-        "ytick.labelsize": 9,
-        "figure.figsize": figure_size(0.5, ratio),  # default fig size of 0.9 textwidth
-        "pgf.preamble": "\n".join(
-            [
-                r"\usepackage[utf8x]{inputenc}",  # use utf8 fonts becasue your computer can handle it :)
-                r"\usepackage[T1]{fontenc}",  # plots will be generated using this preamble
-            ]
-        ),
-    }
-    mpl.rcParams.update(pgf_with_latex)
-
 
 """"
 Definition and analysis of benchmarks counting the number of vertex covers of
@@ -758,53 +717,35 @@ def generate_vertex_cover_plots():
             "LG+Flow", extract_vertex_medians(vertex_cover_line_flow), "#ffb14e", "*"
         ),
     ]
-    set_figure_height(0.55)
-    f, ax = plt.subplots(ncols=1)
+    f, ax = output.figure(ncols=1)
     plot_vertex_runtime(vertex_experiments, ax)
-    f.tight_layout()
-    plt.savefig("../../figures_pdf/3/vertex_cover_time.pdf")
-    print("Saved figures/vertex_cover_time.pdf")
+    f.save(0.55, "3/vertex_cover_time")
 
-    set_figure_height(0.45)
-    f, ax = plt.subplots(ncols=1)
+    f, ax = output.figure(ncols=1)
     plot_vertex_rank(vertex_experiments[-4:], ax)
-    f.tight_layout()
-    plt.savefig("../../figures_pdf/3/vertex_cover_rank.pdf")
-    print("Saved figures/vertex_cover_rank.pdf")
+    f.save(0.45, "3/vertex_cover_rank")
 
 
 def generate_wmc_plots():
     analyze_wmc_benchmarks()
 
-    set_figure_height(0.45)
-    f, ax = plt.subplots(ncols=1)
+    f, ax = output.figure(ncols=1)
     plot_inference_cactus(ax)
-    f.tight_layout()
-    plt.savefig("../../figures_pdf/3/cachet_inference_cactus.pdf")
-    print("Saved figures/cachet_inference_cactus.pdf")
+    f.save(0.45, "3/cachet_inference_cactus")
 
 
 def generate_appendix_plots():
-    set_figure_height(0.6)
-    f, ax = plt.subplots(ncols=1)
+    f, ax = output.figure(ncols=1)
     plot_graph_analysis_vertex_cover(ax)
-    f.tight_layout()
-    plt.savefig("../../figures_pdf/3/appendix_vertex_cover_width.pdf")
-    print("Saved figures/appendix_vertex_cover_width.pdf")
+    f.save(0.6, "3/appendix_vertex_cover_width")
 
-    set_figure_height(0.6)
-    f, ax = plt.subplots(ncols=1)
+    f, ax = output.figure(ncols=1)
     plot_graph_analysis_lg_wmc(ax)
-    f.tight_layout()
-    plt.savefig("../../figures_pdf/3/appendix_wmc_lg_width.pdf")
-    print("Saved figures/appendix_wmc_lg_width.pdf")
+    f.save(0.6, "3/appendix_wmc_lg_width")
 
-    set_figure_height(0.6)
-    f, ax = plt.subplots(ncols=1)
+    f, ax = output.figure(ncols=1)
     plot_graph_analysis_ft_wmc(ax)
-    f.tight_layout()
-    plt.savefig("../../figures_pdf/3/appendix_wmc_ft_width.pdf")
-    print("Saved figures/appendix_wmc_ft_width.pdf")
+    f.save(0.6, "3/appendix_wmc_ft_width")
 
 
 def generate_width_plots():
@@ -829,8 +770,7 @@ def generate_width_plots():
                 y += [i]
         ax.plot(x, y, **kwargs)
 
-    set_figure_height(0.55)
-    f, ax = plt.subplots(ncols=1)
+    f, ax = output.figure(ncols=1)
     plot_width_cactus_line(
         ax,
         ga_wmc_factor,
@@ -906,13 +846,9 @@ def generate_width_plots():
         frameon=False,
         loc="upper left",
     )
-    f.tight_layout()
-    plt.savefig("../../figures_pdf/3/cachet_inference_carving_cactus.pdf")
-    print("Saved figures/cachet_inference_carving_cactus.pdf")
+    f.save(0.55, "3/cachet_inference_carving_cactus")
 
 
-if not os.path.exists("figures"):
-    os.makedirs("figures")
 generate_vertex_cover_plots()
 generate_wmc_plots()
 generate_appendix_plots()

@@ -1,2 +1,2 @@
-from util import *
-from config import *
+from util.util import *
+from util.config import *

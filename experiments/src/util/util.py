@@ -1,7 +1,7 @@
 import matplotlib as mpl
 
 
-def set_figure_size(height_ratio, width=300, overrides=None):
+def set_figure_size(height_ratio, width=650, overrides=None):
     """
     Set the figure size used to export matplotlib figures.
 
@@ -20,8 +20,8 @@ def set_figure_size(height_ratio, width=300, overrides=None):
         "font.serif": [],  # blank entries should cause plots to inherit fonts from the document
         "font.sans-serif": [],
         "font.monospace": [],
-        "axes.labelsize": 9,  # LaTeX default is 10pt font.
-        "legend.fontsize": 8,
+        "axes.labelsize": 10,  # LaTeX default is 10pt font.
+        "legend.fontsize": 9,
         "xtick.labelsize": 9,
         "ytick.labelsize": 9,
         "figure.figsize": [
@@ -105,14 +105,26 @@ def set_cactus_axes(ax, num_benchmarks, timeout, legend_args=iter({})):
 
 
 class Figure:
-    def __init__(self, base, base_dir):
+    def __init__(self, base, base_dir, suffix):
         self.__base = base
         self.__base_dir = base_dir
+        self.__suffix = suffix
 
-    def save(self, height_ratio, name):
+    def save(self, height_ratio, name, verbose=True):
+        """
+        Save this figure to a file, relative to the output directory.
+
+        :param height_ratio: The ratio of height/width to use
+        :param name: String name to save to (file type will be added)
+        :param verbose: True if confirmation should be printed
+        :return:
+        """
         self.__base.tight_layout()
         set_figure_size(height_ratio)
-        self.__base.savefig(self.__base_dir / name)
+        path = self.__base_dir / (name + "." + self.__suffix)
+        self.__base.savefig(path)
+        if verbose:
+            print("Saved " + str(path))
 
 
 class FigureOutput:
@@ -122,7 +134,8 @@ class FigureOutput:
 
         self.__plt = plt
         self.__base_dir = base_dir
+        self.__suffix = type
 
     def figure(self, *args, **kwargs):
         f, axs = self.__plt.subplots(*args, **kwargs)
-        return Figure(f, self.__base_dir), axs
+        return Figure(f, self.__base_dir, self.__suffix), axs

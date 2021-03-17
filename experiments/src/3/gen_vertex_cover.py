@@ -29,7 +29,9 @@ class VertexCoverData:
 
         if len(data) != 2100:
             print(
-                "Only {0}/2100 datapoints observed for {1}".format(len(data), instance)
+                "Only {0}/2100 datapoints observed for {1}".format(
+                    len(data), self.__instance
+                )
             )
 
         # Set the total time to TIMEOUT for all experiments that did not return a count (includes timeout, memout, etc.)

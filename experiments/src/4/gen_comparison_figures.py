@@ -153,9 +153,9 @@ def plot_comparison_exp(ax):
 
 
 def gen(output):
-    f, ax = output.figure(ncols=1, nrows=1)
+    f, ax = output.figure(0.5, ncols=1, nrows=1)
     vbs_existing = plot_comparison_exp(ax)
-    f.save(0.5, "4/comparison")
+    f.save("4/comparison")
 
     hl = dpmc_configs[-1].times()
     hl_best = 0

@@ -295,13 +295,13 @@ def plot_by_widths(ax):
 def gen(output):
     analyze_wmc_benchmarks()
 
-    f, ax = output.figure(ncols=1)
+    f, ax = output.figure(0.45, ncols=1)
     plot_inference_cactus(ax)
-    f.save(0.45, "3/cachet_inference_cactus")
+    f.save("3/cachet_inference_cactus")
 
-    f, ax = output.figure(ncols=1)
+    f, ax = output.figure(0.55, ncols=1)
     plot_by_widths(ax)
-    f.save(0.55, "3/cachet_inference_carving_cactus")
+    f.save("3/cachet_inference_carving_cactus")
 
 
 if __name__ == "__main__":

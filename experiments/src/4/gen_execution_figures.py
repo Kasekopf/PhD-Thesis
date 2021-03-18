@@ -283,9 +283,9 @@ def gen_performance_table():
 def gen(output):
     factors = compute_optimal_performance_factors(10 ** (-29), 1, 150)
     print(factors)
-    f, ax = output.figure(ncols=1, nrows=1)
+    f, ax = output.figure(0.4, ncols=1, nrows=1)
     plot_exec_experiments(ax, factors=factors)
-    f.save(0.4, "4/execution")
+    f.save("4/execution")
 
 
 if __name__ == "__main__":

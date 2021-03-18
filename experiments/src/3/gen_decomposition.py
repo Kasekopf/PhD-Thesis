@@ -185,17 +185,17 @@ def plot_graph_analysis_ft_wmc(ax):
 
 
 def gen(output):
-    f, ax = output.figure(ncols=1)
+    f, ax = output.figure(0.6, ncols=1)
     plot_graph_analysis_vertex_cover(ax)
-    f.save(0.6, "3/appendix_vertex_cover_width")
+    f.save("3/appendix_vertex_cover_width")
 
-    f, ax = output.figure(ncols=1)
+    f, ax = output.figure(0.6, ncols=1)
     plot_graph_analysis_lg_wmc(ax)
-    f.save(0.6, "3/appendix_wmc_lg_width")
+    f.save("3/appendix_wmc_lg_width")
 
-    f, ax = output.figure(ncols=1)
+    f, ax = output.figure(0.6, ncols=1)
     plot_graph_analysis_ft_wmc(ax)
-    f.save(0.6, "3/appendix_wmc_ft_width")
+    f.save("3/appendix_wmc_ft_width")
 
 
 if __name__ == "__main__":

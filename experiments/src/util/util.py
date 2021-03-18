@@ -112,17 +112,15 @@ class Figure:
         self.__base_dir = base_dir
         self.__suffix = suffix
 
-    def save(self, height_ratio, name, verbose=True):
+    def save(self, name, verbose=True):
         """
         Save this figure to a file, relative to the output directory.
 
-        :param height_ratio: The ratio of height/width to use
         :param name: String name to save to (file type will be added)
         :param verbose: True if confirmation should be printed
         :return:
         """
         self.__base.tight_layout()
-        set_figure_size(height_ratio)
         path = self.__base_dir / (name + "." + self.__suffix)
         if not os.path.exists(path.parent):
             os.makedirs(path.parent)
@@ -140,6 +138,17 @@ class FigureOutput:
         self.__base_dir = base_dir
         self.__suffix = fig_type
 
-    def figure(self, *args, **kwargs):
+    def figure(self, height_ratio, *args, **kwargs):
+        """
+        Create a new Figure.
+
+        Matplotlib is somewhat stateful, so it is best to finish and save a Figure before creating the next.
+
+        :param height_ratio: The ratio of height/width to use
+        :param args: Passed to matplotlib.pyplot.subplots (typically nco
+        :param kwargs: Passed to matplotlib.pyplot.subplots (typically 'ncol' or 'nrow')
+        :return: A new Figure object to use, together with the axes of the figure
+        """
+        set_figure_size(height_ratio)
         f, axs = self.__plt.subplots(*args, **kwargs)
         return Figure(f, self.__base_dir, self.__suffix), axs

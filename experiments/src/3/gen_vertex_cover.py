@@ -140,13 +140,13 @@ def gen(output):
         DisplayInfo("GN", vertex_cover_data["kcmr_gn"], "#c7a441", ">"),
         DisplayInfo("LG+Flow", vertex_cover_data["line_flow"], "#ffb14e", "*"),
     ]
-    f, ax = output.figure(ncols=1)
+    f, ax = output.figure(0.55, ncols=1)
     plot_vertex_runtime(vertex_experiments, ax)
-    f.save(0.55, "3/vertex_cover_time")
+    f.save("3/vertex_cover_time")
 
-    f, ax = output.figure(ncols=1)
+    f, ax = output.figure(0.45, ncols=1)
     plot_vertex_rank(vertex_experiments[-4:], ax)
-    f.save(0.45, "3/vertex_cover_rank")
+    f.save("3/vertex_cover_rank")
 
 
 if __name__ == "__main__":

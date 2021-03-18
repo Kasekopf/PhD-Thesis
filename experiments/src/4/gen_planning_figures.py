@@ -102,9 +102,9 @@ def plot_planning_exp(ax):
 
 
 def gen(output):
-    f, ax = output.figure(ncols=1, nrows=1)
+    f, ax = output.figure(0.4, ncols=1, nrows=1)
     plot_planning_exp(ax)
-    f.save(0.4, "4/planning")
+    f.save("4/planning")
 
 
 if __name__ == "__main__":

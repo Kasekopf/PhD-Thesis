@@ -29,4 +29,6 @@ def output_pgf():
     """
     Get a way to output figures as .pgf (default ../../../figures).
     """
-    return pathlib.Path(__file__).parent.parent.parent.parent.absolute() / "figures_pgf"
+    return util.FigureOutput(
+        "pgf", pathlib.Path(__file__).parent.parent.parent.parent.absolute() / "figures"
+    )

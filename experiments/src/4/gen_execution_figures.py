@@ -1,15 +1,21 @@
-import util
-import config
-import gen_planning_figures as planning
+import collections
 import math
 import slurmqueen
 
+import gen_planning_figures as planning
+import util
+
+
+Executor = collections.namedtuple("Planner", ["name", "label"])
+
+executors = [Executor("tensor", "tensor"), Executor("dmc", "DMC")]
+
 
 class FullConfig:
-    def __init__(self, planner, executer, color):
+    def __init__(self, planner, executor, color):
         self.planner = planner
-        self.executer = executer
-        self.name = executer.name + "/" + planner.name
+        self.executor = executor
+        self.name = executor.name + "/" + planner.name
         self.color = color
 
 
@@ -17,11 +23,14 @@ COSTS = {"tensor": lambda t: t.flops, "dmc": lambda t: 2 ** t.add}
 
 
 full_configs = [
-    FullConfig(config.planners[-4], config.executers[0], "blue"),
-    FullConfig(config.planners[-2], config.executers[0], "green"),
-    FullConfig(config.planners[-4], config.executers[1], "black"),
-    FullConfig(config.planners[-2], config.executers[1], "orange"),
+    FullConfig(planning.planners[-4], executors[0], "blue"),
+    FullConfig(planning.planners[-2], executors[0], "green"),
+    FullConfig(planning.planners[-4], executors[1], "black"),
+    FullConfig(planning.planners[-2], executors[1], "orange"),
 ]
+
+
+timeout = 100
 
 
 class ExecutionData:
@@ -31,7 +40,7 @@ class ExecutionData:
 
     def get_contraction_times(self):
         contraction_times = {}
-        if self.__full_config.executer.name == "tensor":
+        if self.__full_config.executor.name == "tensor":
             data = self.__instance.query(
                 "SELECT [<] as [Join Tree], [Total Time] FROM data WHERE Count > 0"
             )
@@ -94,8 +103,6 @@ execution_data = {
     for full in full_configs
 }
 
-timeout = 100
-
 
 def estimate(performance_factor, cost_function):
     def do(trees):
@@ -147,7 +154,7 @@ def PAR2_score(full, min_x, max_x, num_datapoints):
         performance_factor = pow(2, math.log2(min_x) + i * stride)
         number_complete = 0
         for t in do_simulation(
-            data, estimate(performance_factor, COSTS[full.executer.name])
+            data, estimate(performance_factor, COSTS[full.executor.name])
         ):
             if t < timeout:
                 number_complete += t
@@ -168,7 +175,7 @@ def completed_score(full, min_x, max_x, num_datapoints):
         performance_factor = pow(2, math.log2(min_x) + i * stride)
         number_complete = 0
         for t in do_simulation(
-            data, estimate(performance_factor, COSTS[full.executer.name])
+            data, estimate(performance_factor, COSTS[full.executor.name])
         ):
             if t < timeout:
                 number_complete += 1
@@ -197,7 +204,7 @@ def plot_exec_experiments(ax, factors):
     datas = []
     dmc_datas = []
     for full in full_configs:
-        label = full.executer.label + "+" + full.planner.method
+        label = full.executor.label + "+" + full.planner.method
         if full.planner.name in ["htd", "flow", "tamaki"]:
             plot_line(
                 ax,
@@ -211,7 +218,7 @@ def plot_exec_experiments(ax, factors):
             res = plot_line(
                 ax,
                 full,
-                estimate(factors[full.name], COSTS[full.executer.name]),
+                estimate(factors[full.name], COSTS[full.executor.name]),
                 label=label + " (cost)",
                 linestyle="-",
                 color=full.color,
@@ -237,7 +244,7 @@ def plot_exec_experiments(ax, factors):
                 linewidth=1,
             )
         datas.append(res)
-        if full.executer.name == "dmc":
+        if full.executor.name == "dmc":
             dmc_datas.append(res)
 
     ax.plot(
@@ -260,14 +267,14 @@ def plot_exec_experiments(ax, factors):
 def gen_performance_table():
     factors = compute_optimal_performance_factors(10 ** (-21), 1, 400)
     table = ""
-    for planner in config.planners:
+    for planner in planning.planners:
         table += " & \\pkg{" + planner.label + "}"
     table += "\\\\ \\hline \n"
-    for executer in config.executers:
-        table += "\\pkg{" + executer.label + "}"
+    for executor in executors:
+        table += "\\pkg{" + executor.label + "}"
 
-        for planner in config.planners:
-            factor = factors[planner.name + "/" + executer.name]
+        for planner in planning.planners:
+            factor = factors[planner.name + "/" + executor.name]
             table += " & $" + f"{factor:.2}".replace("e-", "\cdot 10^{-") + "}$"
         table += "\\\\ \\hline \n"
     return table

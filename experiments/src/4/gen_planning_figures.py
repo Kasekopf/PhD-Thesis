@@ -1,6 +1,48 @@
+import collections
 import slurmqueen
+
 import util
-import config
+
+
+Planner = collections.namedtuple("Planner", ["name", "line", "method"])
+lg_planners = [
+    Planner(
+        "htd",
+        {"label": "LG+htd", "color": "#ffd700", "linestyle": "--", "linewidth": 1},
+        "LG",
+    ),
+    Planner(
+        "flow",
+        {
+            "label": "LG+FlowCutter",
+            "color": "#ffb14e",
+            "linestyle": ":",
+            "linewidth": 1,
+        },
+        "LG",
+    ),
+    Planner(
+        "tamaki",
+        {"label": "LG+Tamaki", "color": "#ea5f94", "linestyle": "-", "linewidth": 1},
+        "LG",
+    ),
+]
+
+
+htb_planners = [
+    Planner(
+        str(ch) + str(cv),
+        {"color": "#c0c0ff", "linestyle": "-", "linewidth": 1},
+        "HTB",
+    )
+    # ch and cv are ordered so that (4, -5) is drawn last
+    for ch in [3, 5, 6, 4]
+    for cv in [3, 4, 5, 6, -4, -6, -5]
+]
+htb_planners[-1].line.update({"label": "Best HTB", "color": "#20a9b4"})  # (4, -5)
+htb_planners[0].line.update({"label": "Non-best HTB"})
+
+planners = htb_planners + lg_planners
 
 timeout = 100
 
@@ -42,30 +84,16 @@ class PlanningData:
                 "SELECT [Log], [cf] as [<], [store] FROM data ORDER BY [<]"
             )
 
-    def load_all_trees(self, executor):
-        data = self.__instance.query("SELECT [formula], [Log], [store] FROM data")
-        for formula, store, raw_log in zip(data["formula"], data["store"], data["Log"]):
-            if raw_log is None:
-                continue
-            log = eval(raw_log)
-            for i, entry in enumerate(log):
-                yield [
-                    *executor.valuate_args(
-                        formula, store.lstrip("/") + "/" + str(i + 1) + ".jt"
-                    ),
-                    slurmqueen.experiment.Arg.private("|jt_time", entry[0]),
-                ]
-
 
 planning_data = {
     planner.name: PlanningData(util.data_dir("4/planning/" + planner.name), planner)
-    for planner in config.planners
+    for planner in planners
 }
 
 
 def plot_planning_exp(ax):
     goal_width = 30
-    for planner in config.planners:
+    for planner in planners:
         times = planning_data[planner.name].threshold_times(
             goal_width, default_val=timeout
         )

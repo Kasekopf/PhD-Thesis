@@ -1,0 +1,71 @@
+
+
+
+
+
+
+\section{Additional Experimental Evaluation}
+\label{appendix:exp}
+% Our \procount{} source code and experimental data are available in a public repository (\url{https://github.com/vardigroup/DPMC/tree/v2.0.0/experiments}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Experiment 1: Comparing Planners}
+
+Figure \ref{figPlanningA} illustrates how the planner \Lg{} compares to the planner \htb{} across several settings.
+\Lg{} is an \emph{anytime} tool, which outputs better and better project-join trees the longer it runs.
+In Experiment 1, within 100 seconds, each \Lg{} setting may produce several project-join trees (of decreasing widths) for a single benchmark.
+Figure \ref{figPlanningA} plots the time of the first such project-join tree of width at most \maxWidth.
+\htb{} is a \emph{one-shot} tool, which outputs only one project-join tree for each benchmark.
+\begin{figure}[H]
+    \centering
+    \input{figures/6/figPlanningA.pgf}
+    \caption{
+        Experiment 1 compares the tree-decomposition-based planner \Lg{} to the constraint-satisfaction-based planner \htb{}. 
+        \Lg{} can be used with a tree decomposer (\flowcutter{} \cite{strasser2017computing}, \htd{} \cite{abseher2017htd}, or \tamaki{} \cite{tamaki2019positive}).
+        \htb{} requires a variable-ordering heuristic (\mcs{} \cite{tarjan1984simple}, \lexp/\lexm{} \cite{koster2001treewidth}, or \minfill{} \cite{dechter2003constraint}) and a clause-ordering heuristic (\be{} \cite{dechter1999bucket} or \bm{} \cite{bouquet1999gestion}).
+        A planner ``solves'' a benchmark when it eventually finds a project-join tree of width \maxWidth{} or lower.
+        \Lg{} is an anytime tool that can output several trees (of decreasing widths) for each benchmark.
+        On this plot, for each \Lg{} benchmark, we use the time of the first tree whose width is at most \maxWidth.
+        In contrast, in Figure \ref{figPlanning}, we discard an \Lg{} benchmark when the first tree has width over \maxWidth, even if a later tree has width at most \maxWidth.
+    }
+    \label{figPlanningA}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Experiment 2: Comparing Execution Heuristics}
+
+Figure \ref{figExecutionA} shows the performance of four ADD variable-ordering heuristics with the executor \dmc{} in 100 seconds (execution time only, excluding planning time).
+The graded project-join trees here are taken from Experiment 1.
+Recall that \Lg{} is an anytime tool that may produce several project-join trees (of decreasing widths) for each benchmark.
+We measure the execution time using the first tree and the last tree produced within 100 seconds for each benchmark.
+\begin{figure}[H]
+    \centering
+    \input{figures/6/figExecutionA.pgf}
+    \caption{
+        Experiment 2 compares various variable-ordering heuristics (\mcs{}, \lexp, \lexm, and \minfill{}) for the ADD-based executor \dmc.
+        The graded project-join trees here were produced by the planner \Lg{} with the tree decomposer \flowcutter{} from Experiment 1.
+        \Lg{} is an anytime tool that may produce several trees of decreasing widths per benchmark.
+        Nevertheless, across all four variable-ordering heuristics, there is little difference in execution time between using the first tree and using the last tree (planning time is excluded).
+        % This behavior for \dmc{} has been observed in prior work \cite{dudek2020dpmc}.
+    }
+    \label{figExecutionA}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Experiment 3: Comparing Weighted Projected Model Counters}
+
+Figure \ref{figSolvingA} illustrates how six combinations of three \Lg{} tree-decomposition tools (\flowcutter{}, \htd, and \tamaki) and two \dmc{} variable-ordering heuristics (\mcs{} and \lexp) compare in 1000 seconds.
+We exclude the planner \htb{} because it is slower than \Lg{} in Experiment 1.
+We also exclude the variable-ordering heuristics \lexm{} and \minfill{} because they are slower than \mcs{} and \lexp{} in Experiment 2.
+\begin{figure}[H]
+    \centering
+    \input{figures/6/figSolvingA.pgf}
+    \caption{
+        This plot compares different combinations of an \Lg{} tree decomposer (\flowcutter{}, \htd{}, or \tamaki{}) and a \dmc{} variable-ordering heuristic (\mcs{} or \lexp) for our framework \procount.
+        We choose \Lg{} with \flowcutter{} and \dmc{} width \mcs{} as the representative setting of \procount{} to compete with existing projected model counters.
+    }
+    \label{figSolvingA}
+\end{figure}

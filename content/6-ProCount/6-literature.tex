@@ -1,0 +1,24 @@
+
+
+
+
+\section{Related Work}
+
+There are several recent tools for weighted projected model counting.
+For example, \dfp{} uses decision decomposable negation normal form \cite{lagniez2019recursive}, \projmc{} leverages disjunctive decomposition \cite{lagniez2019recursive}, and \ssat{} combines counting with SAT techniques \cite{lee2017solving}. 
+While our focus in this work is on (deterministic) exact weighted projected model counting, it is worth mentioning that various relaxations have also been studied, e.g., probabilistic \cite{sharma2019ganak}, approximate \cite{ermon2013taming,fremont2017maximum,soos2019bird}, or unweighted \cite{zawadzki2013generalization,aziz2015projected,mohle2018dualizing,hecher2020taming} projected model counting.
+
+Our proposed graded project-join trees can be seen as a specialization of \emph{structure trees} \cite{stearns2002exploiting} to the case of projected model counting. Sterns and Hunt \cite{stearns2002exploiting} suggest constructing structure trees by manually modifying tree decomposers to consider only structure trees respecting the variable quantification order (i.e., to consider gradedness directly). In this work, we take a different approach by using existing tools for standard project-join trees (in particular, tree decomposers) in a black-box way. This is crucial for the practical success of our tool, as we can leverage continual progress in tree decomposition. 
+
+Projected model counting is also a special case of the \emph{functional aggregate query (FAQ)} problem \cite{abo2016faq}. Our graded project-join trees are a special case of FAQ variable orders. \textbf{Theorem 7.5} of \cite{abo2016faq} gives an algorithm for constructing a FAQ variable orders from a sequence of tree decompositions, which, in the context of projected model counting, is equivalent to the technique we discussed in Section \ref{sec:planning:free} of ignoring relevant variables while planning to project irrelevant variables. In contrast, our approach can potentially find lower-width graded project-join trees by incorporating relevant variables even when planning to project irrelevant variables. It may be possible to lift this improvement to the FAQ framework in future work.
+
+In some sense, projected model counting on propositional formulas is a dual problem of \emph{maximum a posteriori hypothesis (MAP)} \cite{murphy2012machine,maua2015complexity,xue2016solving} on Bayesian networks \cite{pearl1985bayesian}: a projected model count has the form $\sum_X \max_Y f(X, Y)$, while a MAP probability has the form $\max_Y \sum_X f(X, Y)$.
+% The decision version of MAP is NP\textsuperscript{PP}-complete \cite{park2004complexity}.
+Both problems can be solved using variable elimination, but an elimination order may not freely interleave $X$ variables with $Y$ variables.
+A valid variable order induces an \emph{evaluation tree} (similar to a project-join tree%
+% in which each internal node projects out exactly one variable%
+) \cite{park2004complexity}.
+% The time complexity of exact algorithms is exponential in the width of a valid variable order.
+As mentioned in \cite{park2004complexity}, exact MAP algorithms construct evaluation trees using constraint-satisfaction heuristics (similar to our planner \htb).
+Our work goes further by constructing low-width graded project-join trees using tree-decomposition techniques (with our planner \Lg) and by performing efficient computations using compact ADDs (with our executor \Dmc).
+% To adapt our framework for MAP, we can simply swap $\Sigma$-variables with $\exists$-variables. 

@@ -1,0 +1,177 @@
+\section{Experimental Evaluation}
+\label{sec:procount:experiments}
+
+To implement our projected model counter \procount, we modify the unprojected model counter \dpmc{}, which is based on ungraded project-join trees \cite{dudek2020dpmc}.
+The \dpmc{} framework includes: 
+(1) the \Lg{} planner that uses tree-decomposition techniques, 
+(2) the \htb{} planner that uses constraint-satisfaction heuristics, and
+(3) the \dmc{} executor that uses \emph{algebraic decision diagrams (ADDs)}.
+We generalize these three components to support graded project-join trees and projected model counting.
+
+We conduct three computational experiments to address three following research questions.
+\begin{enumerate}
+    \item[RQ1] In the planning phase (for constructing project-join trees), how do tree-decomposition techniques compare to constraint-satisfaction heuristics?
+    \item[RQ2] In the execution phase, how do different ADD variable orders compare?
+    \item[RQ3] How does \procount{} compare to other exact weighted projected tools?
+\end{enumerate}
+
+To answer RQ1, in Experiment 1 we compare the planner \Lg{} (which uses tree decompositions) to \htb{} (which uses constraint-satisfaction heuristics).
+\Lg{} uses the tree decomposers \flowcutter{} \cite{strasser2017computing}, \htd{} \cite{abseher2017htd}, and \tamaki{} \cite{tamaki2019positive}.
+\htb{} implements four heuristics for variable ordering: maximal-cardinality search (\mcs{}) \cite{tarjan1984simple}, lexicographic search for perfect/minimal orders (\lexp/\lexm{}) \cite{koster2001treewidth}, and min-fill (\minfill{}) \cite{dechter2003constraint}.
+\htb{} also implements two clause-ordering heuristics: bucket elimination (\be) \cite{dechter1999bucket} and Bouquet's Method (\bm) \cite{bouquet1999gestion}%
+% as well as two clause clustering heuristics \List{} and \tree{} \cite{dudek2020addmc}
+.
+
+To answer RQ2, in Experiment 2 we compare variable-ordering heuristics for the ADD-based executor \dmc.
+An ADD \cite{bahar1997algebraic} is a directed acyclic graph that compactly represents a pseudo-Boolean function.
+% Each internal node of an ADD corresponds to an input variable of the function.
+An ADD requires a variable order, which strongly influences the compactness of the ADD.
+\dmc{} implements four variable-ordering heuristics (see above): \mcs, \lexp, \lexm, and \minfill{}.
+
+To answer RQ3, in Experiment 3 we compare \procount{} to state-of-the-art exact weighted projected model counters \dfp{} \cite{lagniez2019recursive}, \projmc{} \cite{lagniez2019recursive}, and \ssat{} \cite{lee2017solving}.
+% We do not consider tools that are probabilistic, approximate, or unweighted.
+
+%\dfp{} compiles Boolean formulas into decision decomposable negation normal form,
+%\projmc{} uses disjunctive decomposition,
+%and \ssat{} solves random-exist stochastic SAT by combining counting with SAT techniques.
+
+We use \benchmarks{} CNF benchmarks gathered from two families.
+The first family contains \wapsBenchmarks{} formulas and was used for weighted projected sampling \cite{gupta2019waps}.
+For each benchmark in this family, a positive literal $x$ has weight $0 < W_x(\set{x}) < 1$, and a negative literal $\neg x$ has weight $W(\emptyset) = 1 - W_x(\set{x})$.
+The second family contains \birdBenchmarks{} formulas and was used for unweighted projected model counting \cite{soos2019bird}.
+We add weights to this family by randomly assigning $W_x(\set{x}) = 0.4$ and $W_x(\emptyset) = 0.6$ or vice versa to each variable $x$.
+All \benchmarks{} benchmarks are satisfiable, as verified by the SAT solver \sat{} \cite{soos2009extending}.
+
+We run all experiments on single CPU cores of a Linux cluster with Intel Xeon E5-2650v2 processors (2.60-GHz) and 30 GB of RAM.
+All code and data are available (\url{https://github.com/vardigroup/DPMC/tree/v2.0.0}).
+
+\noindent
+% \the\columnwidth    \\ % 347.12354pt
+% \the\textwidth      \\ % 347.12354pt
+% \the\linewidth      \\ % 347.12354pt
+% \the\hsize          \\ % 347.12354pt
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Experiment 1: Comparing Planners}
+
+In this experiment, we run all configurations of the planners \Lg{} and \htb{} once on each CNF benchmark with a timeout of 100 seconds.
+We present results in Figure \ref{figPlanning}.
+Each point $(x, y)$ on a plotted curve indicates that, within $x$ seconds on each of $y$ benchmarks, the first graded project-join tree produced by the corresponding planner has width at most \maxWidth{}.
+We choose \maxWidth{} because previous work shows that executors do not handle larger project-join trees well \cite{dudek2019efficient,dudek2020dpmc}. % JD: This is more true for tensors than for ADDs, let's just leave it out
+% Figure \ref{figPlanning} is qualitatively similar for other width cutoffs.
+
+While \Lg{} is an \emph{anytime} tool that produces several trees (of decreasing widths) for each benchmark, for all experiments in the main paper, we use only the first tree produced on each benchmark.
+We find that this does not significantly affect the performance of \procount{}; see Appendix \ref{appendix:exp} for more detail.
+
+The tree-decomposition-based planner \Lg{} outputs more low-width trees than the constraint-satisfaction-based planner \htb{}.
+Moreover, for \Lg{}, the tree decomposer \flowcutter{} is faster than \htd{} and \tamaki{}.
+Thus we use \Lg{} with \flowcutter{} in \procount{} for later experiments.
+\begin{figure}[t]
+    \centering
+    \input{figures/6/figPlanning.pgf}
+    \caption{
+        Experiment 1 compares the tree-decomposition-based planner \Lg{} to the constraint-satisfaction-based planner \htb{}.
+	    A planner ``solves'' a benchmark when it finds a project-join tree of width \maxWidth{} or lower.
+        % \Lg{} invokes a tree decomposer (\flowcutter{}, \htd{}, or \tamaki{}).
+        % \Lg{} is an \emph{anytime} tool that produces several trees (of decreasing widths) for each benchmark.
+        % We only show an \Lg{} data point if the first tree produced has width at most \maxWidth{}%
+        % (we discard an \Lg{} data point when the first tree has width over \maxWidth, even if a later tree has width at most \maxWidth)%
+        % .
+        % \htb{} requires a variable-ordering heuristic (\mcs{}, \lexp, \lexm, or \minfill{}) and a clause-ordering heuristic (\be{} or \bm).
+        For \htb, we only show the variable-ordering heuristic \mcs{}; the \lexp{}, \lexm{}, and \minfill{} curves are qualitatively similar.
+    }
+    \label{figPlanning}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Experiment 2: Comparing Execution Heuristics}
+
+In this experiment, we take the 346 graded project-join trees produced by \Lg{} with \flowcutter{} in Experiment 1 % (107 trees of widths 1-30 and 239 trees of widths 31-99)
+and run \dmc{} once for 100 seconds with each of four ADD variable-ordering heuristics. 
+We present the execution time of each heuristic (excluding planning time) in Figure \ref{figExecution}. 
+We observe that \mcs{} and \lexp{} outperform \lexm{} and \minfill{}.
+We use \dmc{} with \mcs{} in \procount{} for Experiment 3.
+\begin{figure}[t]
+    \centering
+    \input{figures/6/figExecution.pgf}
+    \caption{
+        Experiment 2 compares variable-ordering heuristics (\mcs{}, \lexp, \lexm, and \minfill{}) for the ADD-based executor \dmc.
+        \mcs{} and \lexp{} are significantly faster than \lexm{} and \minfill{}.
+        % The graded project-join trees here were produced by the planner \Lg{} with the tree decomposer \flowcutter{} from Experiment 1. %JD: Don't need to repeat this
+    }
+    \label{figExecution}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Experiment 3: Comparing Weighted Projected Model Counters}
+
+Informed by Experiments 1 and 2, we choose \Lg{} with \flowcutter{} as the planner and \dmc{} with \mcs{} as the executor for our framework \procount.
+We compare \procount{} with the weighted projected model counters \dfp{}, \projmc{}, and \ssat{}.
+Since all benchmarks are satisfiable
+% (checked by the SAT solver \sat{} \cite{soos2009extending})
+with positive literal weights, the model counts must be positive.
+Thus, for all tools, we exclude outputs that are zero (possible floating-point underflow).
+We are confident that the remaining results are correct.
+Differences in model counts among tools are less than $10^{-6}$.
+
+Figure \ref{figSolving} shows the performance of \procount{}, \dfp{}, \projmc{}, and \ssat{} with a 1000-second timeout. 
+Additional statistics are given in Table \ref{tableSolving}. 
+Of \benchmarks{} benchmarks, 390 are solved by at least one of four tools.
+\procount{} achieves the shortest solving time on 131 benchmarks, including \dpmcUniqueBenchmarks{} solved by none of the other three tools.
+Between the two \emph{virtual best solvers} in Figure \ref{figSolving}, \vbs1 (all four tools) is significantly faster than \vbs0 (three existing tools, without \procount).
+\begin{figure}[t]
+    \centering
+    \input{figures/6/figSolving.pgf}
+    \caption{
+        Experiment 3 compares our framework \procount{} to the state-of-the-art exact weighted projected model counters \dfp, \projmc{}, and \ssat{}.
+        \vbs0 is the virtual best solver of the three existing tools, excluding \procount.
+        \vbs1 includes all four tools.
+        Adding \procount{} significantly improves the portfolio of projected model counters.
+    }
+    \label{figSolving}
+\end{figure}
+\begin{table}[t]
+    \centering
+    \caption{
+        Experiment 3 compares our framework \procount{} to the state-of-the-art exact weighted projected model counters \dfp{}, \projmc{}, and \ssat{}. 
+        For each solver, the PAR-2 score is the cumulative solving time of completed benchmarks plus twice the 1000-second timeout for each unsolved benchmark.
+        There are \solvedBenchmarks{} benchmarks solved by at least one of four tools.
+        By including \procount, the portfolio of tools solves \dpmcUniqueBenchmarks{} more benchmarks and achieves shorter solving time on 87 other benchmarks.
+    }
+    \begin{tabular}{|l|r|r|r|r|} \hline
+        \multirow{2}{*}{Tool} & \multicolumn{3}{c|}{Number of benchmarks solved (of \benchmarks)} & \multirow{2}{*}{PAR-2 score} \\ \cline{2-4}
+        & Uniquely (solved by no other) & In shortest time & In total & \\ \hline
+        \procount & \dpmcUniqueBenchmarks & \dpmcFastestBenchmarks & 283 & 1139215 \\ \hline
+        \dfp{} & 50 & 235 & 345 & 1021809 \\ \hline
+        \projmc{} & 0 & 8 & 275 & 1157018 \\ \hline
+        \ssat{} & 1 & 16 & 154 & 1408853 \\ \hline
+        \vbs0 & - & - & 346 & 1018784 \\ \hline
+        \vbs1 & - & - & 390 & 933494 \\ \hline
+    \end{tabular}
+    \label{tableSolving}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Project-Join Tree Width and Computation Time}
+
+To identify which type of benchmarks can be solved efficiently by \procount{}, we study how the performance of each projected model counter varies with the widths of graded project-join trees.
+In particular, for each benchmark, we consider the width of the first graded project-join tree produced by the planner \Lg{} in Experiment 1.
+% For those 346 project-join trees, the widths range from 1 to 99. Each such project-join tree was produced in less than 29 seconds. % JD: This info was already in 5.2
+Figure \ref{time_vs_width} shows how these widths relate to PAR-2 scores of projected model counters. 
+\procount{} seems to be the fastest solver on instances for which there exist graded project-join trees of widths between 50 and 100.
+\begin{figure}[t]
+    \centering
+    \input{figures/6/figWidths.pgf}
+    \caption{
+        A plot of mean PAR-2 scores (in seconds) against mean project-join tree widths.
+        On this plot, each projected model counter (\procount{}, \dfp{}, \projmc, or \ssat) is represented by a curve, on which a point $(x, y)$ indicates that $x$ is the central moving average of 10 consecutive project-join tree widths ($1 \le w_1 < w_2 < \ldots < w_{10} \le 99$) and $y$ is the average PAR-2 score of the benchmarks whose project-join trees have widths $w$ where $w_1 \le w \le w_{10}$.
+        We observe that the performance of \procount{} degrades as the project-join tree width increases.
+        However, \procount{} tends to be the fastest solver on benchmarks whose graded project-join trees have widths roughly between 50 and 100.
+    }
+    \label{time_vs_width}
+\end{figure}

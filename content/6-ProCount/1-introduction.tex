@@ -1,0 +1,57 @@
+
+
+
+
+
+
+
+\section{Introduction}
+
+\emph{Weighted projected model counting} is a fundamental problem in artificial intelligence, with applications in planning \cite{aziz2015projected}, formal verification \cite{klebanov2013sat}, and reliability estimation \cite{duenas2017counting}. Counting is also closely connected to sampling
+\cite{jerrum1986random}, a problem of major interest in probabilistic reasoning \cite{kelly2019adaptive}.
+The input is a set of constraints, whose variables are divided into \emph{relevant variables} $X$ and \emph{irrelevant variables} $Y$.
+The goal is to compute the weighted number of assignments to $X$ that, together with some assignment to $Y$, satisfy the constraints.
+This problem is complete for the complexity class \#P\textsuperscript{NP[1]} 
+% (solvable by a polynomially bounded counting Turing machine with one query to an NP-complete oracle)
+\cite{zawadzki2013generalization}, and
+there are recent tools for exact weighted projected model counting \cite{lagniez2019recursive,lee2017solving}.
+
+% unweighted tools: \cite{zawadzki2013generalization,aziz2015projected,mohle2018dualizing,hecher2020taming}
+
+Dynamic programming is a powerful technique that has been applied across computer science \cite{bellman1966dynamic}.
+The key idea is to solve a large problem by solving many smaller subproblems, and then combining partial solutions into the final result.
+Dynamic programming is a natural framework to solve a variety of problems defined on sets of constraints, as subproblems can be formed by partitioning the constraints.
+This framework has been instantiated into algorithms for database-query optimization \cite{mcmahan2004projection}, SAT solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, QBF evaluation \cite{charwat2016bdd}, model counting \cite{bacchus2009solving,samer2010algorithms,jegou2016improving,dudek2020dpmc,fichte2020exploiting}, and projected model counting \cite{fichte2020counting}.
+
+Recently, a unifying framework based on \emph{project-join trees} for dynamic-programming algorithms was proposed \cite{dudek2020dpmc}. 
+The key idea is to consider project-join trees as \emph{execution plans} and decompose dynamic-programming algorithms into two phases: a \emph{planning phase}, where a project-join tree is constructed from an input problem instance, and an \emph{execution phase}, where the project-join tree is used to compute the result. 
+The project-join-tree-based model counter \dpmc{} \cite{dudek2020dpmc} was found to be competitive with state-of-the-art exact weighted model counters \cite{
+    % dudek2020addmc, % ADDMC
+    % dudek2019efficient, % TensorOrder
+    sang2004combining, % Cachet
+    darwiche2004new, % C2D
+    lagniez2017improved, % d4
+    oztok2015top% miniC2D
+}.
+%MYV: Say something about competition?
+Notably, \dpmc{} subsumes \addmc{} \cite{dudek2020addmc}, which tied with \df{} \cite{lagniez2017improved} for first place of the weighted track of the 2020 Model Counting Competition \cite{fichte2020model}.
+
+We adapt this framework for weighted projected model counting. The central challenge is that there are two kinds of variables: relevant and irrelevant. This contrasts with model counting, where all variables are relevant and can be treated similarly. This challenge also occurs for other problems.
+For example, in Boolean functional synthesis \cite{tabajara2017factored}, some variables are \emph{free} and must not be projected out. 
+Our solution is to model multiple types of variables by requiring the project-join tree to be \emph{graded}, meaning that irrelevant variables must be projected before relevant variables. Our main theoretical contribution is a novel algorithm to construct graded project-join trees from standard project-join trees. This has two primary advantages. 
+
+The first advantage is that the construction of graded project-join trees can be done by using existing tools for standard project-join trees \cite{dudek2020dpmc} in a black-box way. Tools exist to construct standard project-join trees with tree decompositions \cite{robertson1991graph} or with constraint-satisfaction heuristics \cite{tarjan1984simple,koster2001treewidth,dechter2003constraint,dechter1999bucket,bouquet1999gestion}.
+We can thus easily leverage all current and future work in tree-decomposition solvers \cite{strasser2017computing,abseher2017htd,tamaki2019positive} and constraint-satisfaction heuristics to produce graded project-join trees. This is crucial for the practical success of our tool.
+
+The second advantage to our approach is in the simplicity of the algorithm. Given a project-join tree, its gradedness can be easily verified. 
+Moreover, the algorithm to compute the projected model count from a graded project-join tree is straightforward. This gives us confidence in the correctness of our implementation. 
+During our experimental evaluation, we found correctness errors in \dfp{} \cite{lagniez2019recursive}, \projmc{} \cite{lagniez2019recursive}, and \ssat{} \cite{lee2017solving} that we reported to the authors, who then fixed the tools. 
+We believe that this work is a step towards a certificate for the verification of projected model counters, similar to SAT solver certificates \cite{wetzler2014drat}.
+
+The primary contribution of this work is a dynamic-programming framework for weighted projected model counting based on project-join trees. In particular:
+\begin{enumerate}
+    \item We show that project-join trees can be used to compute weighted projected model counts, provided that the project-join trees are graded.
+    \item We prove that building graded project-join trees and project-join trees with free variables can be reduced to building standard project-join trees.
+    \item We find that project-join-tree-based algorithms make a significant contribution to the portfolio of exact weighted projected model counters (\dfp{}, \projmc{}, and \ssat{}).
+    Our tool, \procount{}, achieves the shortest solving time on \dpmcFastestBenchmarks{} benchmarks of \solvedBenchmarks{} benchmarks solved by at least one tool, from \benchmarks{} benchmarks in total.
+\end{enumerate}

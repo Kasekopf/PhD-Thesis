@@ -1,0 +1,203 @@
+
+
+
+
+
+
+
+
+
+\section{Building Graded Project-Join Trees}
+
+We now show how building graded project-join trees can be reduced to building ungraded project-join trees. 
+This allows us to use prior work on ungraded project-join trees \cite{dudek2020dpmc} to directly compute graded project-join trees.
+
+As a building block, we first show how constructing project-join trees with free variables can be reduced to constructing ungraded project-join trees. This both illustrates the key ideas of our approach and appears as a subroutine in the larger graded reduction.
+
+\subsection{From Free Project-Join Trees to Ungraded Project-Join Trees}
+\label{sec:planning:free}
+Project-join trees project out every variable in the set of corresponding clauses. This is desirable for applications where all variables are processed in the same way, e.g., model counting. In many other applications, however, it is desirable to process a set of clauses while leaving specified \emph{free variables} untouched. 
+ 
+We model free variables by ensuring that they are projected in the project-join tree as late as possible, at the root node. Thus free variables must be ``kept alive'' throughout the entire tree.
+\begin{definition}
+\label{def:free}
+Let $F$ be a set of variables, and let $\T = (T, r, \gamma, \pi)$ be a project-join tree. We say $\T$ is \emph{$F$-free} if $F = \pi(r)$.
+\end{definition}
+
+Note that Definition \ref{def:free} is a much stronger restriction than Definition \ref{def:graded}. 
+In particular, if a project-join tree $\T$ of a CNF formula $\phi$ is $F$-free, then $\T$ is also $(F, \vars(\phi) \setminus F)$-graded.
+
+We now reduce the problem of building $F$-free project-join trees to building ungraded project-join trees. One approach is to build a project-join tree while ignoring all variables in $F$, then insert the variables in $F$ as projections at the root. 
+However, building minimal-width project-join trees while ignoring variables may not produce minimal-width $F$-free project-join trees for the full formula.
+
+Instead, we adapt a similar reduction in the context of tensor networks \cite{dudek2019efficient} for the context of project-join trees. 
+The key idea is to add to $\phi$ a \emph{virtual clause} that contains all variables in $F$. 
+For a set $Z$ of variables, let $\func{virtual}(Z)$ denote a fresh clause with variables $Z$. 
+Project-join trees of $\phi \cup \{\func{virtual}(F)\}$ can then be used to find $F$-free project-join trees of $\phi$. 
+This virtual clause can be viewed as a goal atom in \tool{DataLog} \cite{lloyd2012foundations}.
+
+We present this reduction as Algorithm \ref{alg_planning_free}. The input is a project-join tree $\T$ of $\phi \cup \{C_F\}$, where $C_F$ is a fresh clause with variables $\vars(C_F) = F$. 
+On lines \ref{line_pi_prime_init}-\ref{line_pi_prime_union}, we rotate $\T$ (without increasing the width) so that the leaf $s$ corresponding to $C_F$ becomes the root. 
+We then remove $s$ and obtain a project-join tree of $\phi$. Projecting $F$ at the new root still does not increase the width.
+\begin{algorithm}[t]
+\caption{Building an $F$-free project-join tree of $\phi$}
+\label{alg_planning_free}
+    \DontPrintSemicolon
+    \KwIn{$\phi$: a CNF formula}
+    \KwIn{$F$: a subset of $\vars(\phi)$}
+    \KwIn{$\T = (T, r, \gamma, \pi)$: a project-join tree of $\phi \cup \{C_F\}$, where $C_F = \func{virtual}(F)$ is a virtual clause with variables $F$}
+    \KwOut{an $F$-free project-join tree of $\phi$}
+    %$C_F \gets \func{FreshClause}(F)$ \tcp{Build a new clause with variables $F$}
+    %$(T, r, \gamma, \pi) \gets \func{ProjectJoinTree}(\phi \cup \{C_F\})$ \tcp{Build a project-join tree for $\phi \cup \{C_F\}$} \label{alg_planning_free_subcall}
+    $s \gets \gamma^{-1}(C_F)$ \tcp{$s$ will be the root node of the returned project-join tree}
+    $\pi' \gets$ a mapping where $\pi'(n) = \emptyset$ for all $n \in \V{T} \setminus \Lv{T}$ \tcp{$\pi'$ will be the labeling function of the returned project-join tree} \label{line_pi_prime_init}
+    \For{\upshape $y \in \vars(\phi) \setminus F$}{
+        $\phi_y = \{ C \in \phi : y \in \vars(C)\}$\;
+        $i \gets$ lowest common ancestor of $\set{ \gamma^{-1}(C) : C \in \phi_y }$ in the rooted tree $(T, s)$\;
+        $\pi'(i) \gets \pi'(i) \cup \{y\}$ \tcp{project out $y$ at the lowest allowable node} \label{line_pi_prime_union}
+    }
+    $\pi'(s) \gets F$ \label{line_pi_F} \tcp{project out variables in $F$ at the new root $s$}
+    $\gamma' \gets \gamma \setminus \set{s \mapsto C_F}$ \tcp{$\gamma'$ is the bijection $\gamma$ without the pair $(s, C_F)$}
+    \Return{$(T, s, \gamma', \pi')$}
+\end{algorithm}
+
+
+% \begin{algorithm}[!t]
+% \caption{Framework for building an $F$-free project-join tree of $\phi$}
+% \label{alg_planning_overall}
+%     \DontPrintSemicolon
+%     \KwIn{$\phi$: a CNF formula}
+%     \KwIn{$F$: a subset of $\vars(\phi)$}
+%     \KwOut{an $F$-free project-join tree of $\phi$}
+%     $C_F \gets \func{FreshClause}(F)$ \tcp{Build a new clause with variables $F$}
+%     $(T, r, \gamma, \pi) \gets \func{ProjectJoinTree}(\phi \cup \{C_F\})$ \tcp{Build a project-join tree for $\phi \cup \{C_F\}$}
+%     $s \gets \text{parent of}~\gamma^{-1}(C_F)~\text{in}~(T, r)$\;
+%     $\pi' \gets \func{EarliestProjection}(T, s, \gamma)$ \tcp{Project each variable as early as possible in $(T, s, \gamma)$}
+%     $\pi'(s) \gets \pi'(s) \setminus F$\;
+%     $s' \gets \internalNode(\{s\}, F)$ \tcp{Ensure that $(T, s', \gamma, \pi')$ is $F$-free}
+%     $\text{Remove}~\gamma^{-1}(C_F)~\text{from}~(T, s, \gamma, \pi')$\;
+%     \Return{$(T, s, \gamma', \pi')$}
+% \end{algorithm}
+
+We state the correctness of Algorithm \ref{alg_planning_free} in the following theorem. In particular, the width of the output $F$-free project join tree is no worse than the width of the unrestricted input tree.
+\begin{theorem}\label{thm:planning_free_correctness}
+Let $\phi$ be a CNF formula and let $F \subseteq \vars(\phi)$. 
+If $\T$ is a project-join tree of $\phi \cup \{\func{virtual}(F)\}$, then Algorithm \ref{alg_planning_free} returns an $F$-free project-join tree of $\phi$ of width at most $\func{width}(\T)$.
+\end{theorem}
+% \begin{proof}[Proof] 
+% First, let $\T = (T, r, \gamma, \pi)$ be a project-join tree of $\phi \cup \{C_F\}$ of width at most $w$. The key idea is to re-root $\T$ so that the leaf labeled by $\C_F$ becomes the new root. Formally, let $s \in \V{T}$ be the parent of $\gamma^{-1}(C_F)$. Then there exists $\pi': \V{T} \setminus \Lv{T} \to 2^{\vars(\phi)}$ so that $\T' = (T, s, \gamma, \pi')$ is a project-join tree of $\phi \cup \{C_F\}$ of width at most $w$. Moreover, by Property 2 of project-join trees $F \subseteq \pi'(s)$.
+
+% Conversely, let $\T$ be an $F$-free project-join tree of $\phi$ of width at most $w$. Produce $\T'$ by attaching a new leaf node labeled by $C_F$ to the root of $\T$. Since $\T$ is $F$-free, $\T'$ is indeed a project-join tree of $\phi \cup \{C_F\}$ of width at most $w$.
+% \end{proof}
+
+We also prove that Algorithm \ref{alg_planning_free} is optimal. That is, a minimal-width project-join tree for $\phi \cup \{C_F\}$ produces a minimal-width $F$-free project-join tree for $\phi$. 
+\begin{theorem}
+\label{thm:planning_free_optimal}
+Let $\phi$ be a CNF formula, let $F \subseteq \vars(\phi)$, and let $w$ be a positive integer. % Define $C_F$ to be a fresh clause with $\vars(C_F) = \vars(N) \cap X$.
+If there is an $F$-free project-join tree of $\phi$ of width $w$, then there is a project-join tree of $\phi \cup \{\func{virtual}(F)\}$ of width $w$.
+\end{theorem}
+% \begin{theorem}\label{thm:free_reduction}
+% Let $\phi$ be a CNF formula, let $F \subseteq \vars(\phi)$, and let $w$ be a positive integer. 
+% Define $C_F$ to be a new clause with $\vars(C_F) = F$.
+
+% Then there is an $F$-free project-join tree of $\phi$ of width at most $w$ if and only if there is a project-join tree of $\phi \cup \{C_F\}$ of width at most $w$.
+% \end{theorem}
+% \begin{proof}[Proof] 
+% First, let $\T = (T, r, \gamma, \pi)$ be a project-join tree of $\phi \cup \{C_F\}$ of width at most $w$. The key idea is to re-root $\T$ so that the leaf labeled by $\C_F$ becomes the new root. Formally, let $s \in \V{T}$ be the parent of $\gamma^{-1}(C_F)$. Then there exists $\pi': \V{T} \setminus \Lv{T} \to 2^{\vars(\phi)}$ so that $\T' = (T, s, \gamma, \pi')$ is a project-join tree of $\phi \cup \{C_F\}$ of width at most $w$. Moreover, by Property 2 of project-join trees $F \subseteq \pi'(s)$.
+
+% Conversely, let $\T$ be an $F$-free project-join tree of $\phi$ of width at most $w$. Produce $\T'$ by attaching a new leaf node labeled by $C_F$ to the root of $\T$. Since $\T$ is $F$-free, $\T'$ is indeed a project-join tree of $\phi \cup \{C_F\}$ of width at most $w$.
+% \end{proof}
+
+\subsection{From Graded Project-Join Trees to Ungraded Project-Join Trees}
+%\cite{dudek2020dpmc} contained two algorithms for constructing ungraded project-join trees: an algorithm based on heuristics from constraint programming, and an algorithm based on tree decompositions. In this section, we adapt these algorithms to construct $(X,Y)$-graded project-join trees from a given instance of weighted projected model counting $(X, Y, \phi, W)$.
+
+In this section, we use free project-join trees as a building block to construct graded project-join trees. We present this framework as Algorithm \ref{alg_planning_graded}. The key idea is to create a graded project-join tree by combining many free project-join trees for subformulas. We first combine clauses to remove $Y$ variables, then we combine project-join-tree components to remove $X$ variables.
+\begin{algorithm}[t]
+\caption{Framework for building a graded project-join tree}
+\label{alg_planning_graded}
+    \DontPrintSemicolon
+    \KwIn{$X$: a set of $\Sigma$-variables}
+    \KwIn{$Y$: a set of $\exists$-variables ($X \cap Y = \varnothing$)}
+    \KwIn{$\phi$: a CNF formula where $\vars(\phi) = X \cup Y$}
+    \KwOut{$\T$: an $(X, Y)$-graded project-join tree of $\phi$}
+    $partition \gets \func{GroupBy}(\phi, Y)$ \label{alg_line_graded_group} \tcp{group clauses that share $Y$ variables}
+    \For{$N \in partition$}{ \label{alg_line_graded_loop}
+        $\T_N \gets \func{BuildComponent}(N, \vars(N) \cap X)$ \label{alg_line_graded_project_y} \tcp{build a $(\vars(N) \cap X)$-free project-join tree of $N$}
+        $\T_N \gets \T_N$ with all projections at the root of $\T_N$ removed \label{alg_line_projections_removed}\;
+        $C_N \gets \func{virtual}(\vars(N) \cap X)$ \label{alg_line_graded_virtual}\;    
+    }
+    $\T \gets \func{BuildComponent}(\{C_N : N \in partition\}, \emptyset)$ \label{alg_line_graded_project_x} \tcp{build a project-join tree from virtual clauses $C_N$}
+    \For{$N \in partition$ \label{alg_line_graded_hookup_start}} {
+        $\ell_N \gets$ leaf of $\T$ corresponding to $C_N$\;
+        $\T \gets \T$ with $\ell_N$ replaced by $\T_N$ \label{alg_line_graded_hookup_end}\;
+    }
+    \Return{$\T$}\;
+\end{algorithm}
+
+In detail, on line \ref{alg_line_graded_group}, we partition the clauses of $\phi$ into blocks that share $Y$ variables.
+On line \ref{alg_line_graded_project_y}, we find a project-join tree $\T_N$ for each block $N$. This tree must keep all $X$ variables free, i.e., must be $(\vars(N)\cap X)$-free. The trees $\{\T_N\}$ collectively project out all $Y$ variables. On line \ref{alg_line_graded_project_x}, we construct a project-join tree $\T$ that will guide the combination of all trees in $\{\T_N\}$ while projecting out all $X$ variables, where each $\T_N$ is represented by the virtual clause $C_N$. 
+On lines \ref{alg_line_graded_hookup_start}-\ref{alg_line_graded_hookup_end}, we hook the trees in $\{\T_N\}$ together as indicated by $\T$.
+
+% Line \ref{alg_line_graded_virtual}) constructs a virtual clause $C_N$ that contains the $X$ variables that result from combining all clauses in $N$ and projecting out all $Y$ variables. 
+
+% into two stages. In the first stage, we combine clauses in order to project out all variables in $Y$ while leaving variables in $X$ untouched. In the second stage, we combine clauses in order to project out all variables in $X$. This two-stage structure ensures that all projections of $Y$ variables appear below projections of $X$ variables in the resulting project-join tree, and hence the resulting project-join tree is graded.
+
+The function $\func{GroupBy}(\phi, Y)$ in Algorithm \ref{alg_planning_graded} partitions the clauses of $\phi$ so that every pair of clauses that share a variable from $Y$ appear together in the same block of the partition.
+Formally:
+\begin{definition}
+\label{def:groupby}
+Let $\phi$ be a set of clauses, and let $Y$ be a subset of $\vars(\phi)$.
+Define $\sim_Y \subseteq \phi \times \phi$ to be the relation such that, for clauses $c, c' \in \phi$, we have $c \sim_Y c'$ if and only if $(\vars(c) \cap \vars(c') \cap Y) \ne \emptyset$. Then $\func{GroupBy}(\phi, Y)$ is the set of equivalence classes of the reflexive transitive closure of $\sim_Y$.
+\end{definition}
+
+The intuition is that two clauses in the same block in $\func{GroupBy}(\phi, Y)$ must be combined to project out all variables in $Y$.
+Conversely, clauses that appear in separate blocks need not be combined in order to project out all variables in $Y$. 
+
+% Each block $N \in \func{GroupBy}(\phi, Y)$ in the partition indicates a subset of variables of $X$, namely $\vars(N) \cap X$. Since all clauses in $N$ must be combined before variables in $X$ can be projected, it follows that all variables in $\vars(N) \cap X$ must appear together in some node of every $(X,Y)$-graded project join tree for $\phi$. This gives us a lower bound on the width of possible project-join trees, as follows:
+% \begin{theorem}
+% Let $(X, Y, \phi, W)$ be an instance of weighted projected model counting and let $\T$ be a $(X, Y)$-graded project-join tree of $\phi$. For each $N \in \func{GroupBy}(\phi, Y)$, the width of $\T$ is at least $|\vars(N) \cap X|$.
+% \end{theorem}
+
+In Algorithm \ref{alg_planning_graded}, each function call $\func{BuildComponent}(\alpha, F)$ returns an $F$-free project-join tree of $\alpha$, where $\alpha$ is a set of clauses and $F \subseteq \vars(\alpha)$.
+$\func{BuildComponent}$ can be implemented by implementing Algorithm \ref{alg_planning_free} on top of an algorithm for building ungraded project-join trees. 
+For example, in Section \ref{sec:experiments}, we consider two implementations of Algorithm \ref{alg_planning_graded} built on top of the two algorithms to construct standard project-join trees \cite{dudek2020dpmc} discussed at the end of Section \ref{sec_ungraded_trees}.
+
+% existing algorithms for ungraded project-join trees \cite{dudek2020dpmc}.
+
+% The signature of the function $\func{BuildComponent}$ in Algorithm \ref{alg_planning_overall} is given in Algorithm \ref{alg_planning_sig}. 
+% Implementations of this function signature add nodes to $\T$ in order to combine all nodes of $R$ while leaving the variables in $F$ untouched. 
+% The key idea is to treat variables in $F$ as \emph{free} while combining the nodes of $R$. In the remainder of this section, we discuss two algorithms that implement $\func{BuildComponent}$ based on the algorithms from \cite{dudek2020dpmc}.
+
+We next state the correctness of Algorithm \ref{alg_planning_graded} and show that the width of the output graded project join tree is no worse than the widths of the trees used for the components. Formally:
+\begin{theorem}
+\label{thm:planning_graded_correctness}
+Let $\phi$ be a CNF formula, let $\{X, Y\}$ be a partition of $\vars(\phi)$, and let $w$ be a positive integer. 
+Assume each call to $\func{BuildComponent}(\alpha, F)$ returns an $F$-free project-join tree for $\alpha$ of width at most $w$. 
+Then Algorithm \ref{alg_planning_graded} returns an $(X,Y)$-graded project-join tree for $\phi$ of width at most $w$.
+\end{theorem}
+
+Although Algorithm \ref{alg_planning_graded} constructs a sequence of small ungraded project-join trees, it is sufficient to compute a single ungraded project-join tree from which all smaller trees can be extracted. This is demonstrated by the following theorem.
+\begin{theorem}
+\label{thm:graded_from_virtual}
+Let $\phi$ be a CNF formula, let $\{X, Y\}$ be a partition of $\vars(\phi)$, and let $w$ be a positive integer. Let $\psi = \phi \cup \{\func{virtual}(\vars(N)\cap X) : N \in \func{GroupBy}(\phi, Y)\}$.
+% For each $N \in \func{GroupBy}(\phi, Y)$, define $C_N$ to be a new clause with $\vars(C_N) = \vars(N) \cap X$.
+If there is a project-join tree $\T'$ for $\psi$ of width $w$, then there is an $(X,Y)$-graded project-join tree for $\phi$ of width at most $w$.
+\end{theorem}
+% \begin{proof}[Proof Sketch]
+% We can implement $\func{BuildComponent}$ for Algorithm \ref{alg_planning_graded} using $\T'$. Consider the $\func{BuildComponent}(N, \vars(N) \cap X)$ on line \ref{alg_line_graded_project_y} for some $N \in \func{GroupBy}(\phi, Y)$. Since $N \cup \{C_N\}$ is a subset of the leaves of $T'$, considering
+% \end{proof}
+The key idea of the proof is to answer every $\func{BuildComponent}$ call in Algorithm \ref{alg_planning_graded} by extracting a subtree of $\T'$ and applying Theorem \ref{thm:planning_free_correctness}. % If $\func{GroupBy}(\phi, Y)$ has only one block, then Theorem \ref{thm:graded_from_virtual} is equivalent to Theorem \ref{thm:planning_free_correctness}.
+
+We show in the following theorem that this approach is optimal. Thus $(X,Y)$-graded project-join trees of $\phi$ are equivalent to project-join trees of $\psi$.
+\begin{theorem}
+\label{thm:planning_graded_optimal}
+Let $\phi$ be a CNF formula, let $\{X, Y\}$ be a partition of $\vars(\phi)$, and let $w$ be a positive integer. Let $\psi = \phi \cup \{\func{virtual}(\vars(N)\cap X) : N \in \func{GroupBy}(\phi, Y)\}$. % For each $N \in \func{GroupBy}(\phi, Y)$, define $C_N$ to be a new clause with $\vars(C_N) = \vars(N) \cap X$.
+If there is an $(X,Y)$-graded project-join tree for $\phi$ of width $w$, then there is a project-join tree for $\psi$ of width $w$.
+\end{theorem}
+% \begin{proof}[Proof Idea]
+% In the ``if'' direction, let $\T$ be a project-join tree of $\phi \cup \{C_N : N \in \func{GroupBy}(\phi, Y)\}$. For each $N \in \func{GroupBy}(\phi, Y)$ let $\T_N$ be the subtree of $\T$ containing only the leaves for $N \cup \{C_N\}$, call it $\T_N$. Apply Theorem \ref{thm:free_reduction} to $\T_N$ to get a $(\vars(N) \cap X)$-free project-join tree for $N$, call it $\T_N'$. Finally, let $\T'$ be the subtree of $\T$ containing only the virtual clauses as leaves. Replace the leaf for each virtual clause $C_N$ with $\T_N'$.
+
+% In the ``only if'' direction, one can prove for each $N \in \func{GroupBy}(\phi, Y)$ that there must be some node $n_N$ in the $(X,Y)$-graded tree with $\vars(N) \cap X \subseteq \vars(n_N)$. Add each $C_N$ as a child of $n_N$. 
+% \end{proof}
+
+%To conclude, we compare this theoretical result to a different algorithm for (unweighted) projected counting \cite{fichte2018exploiting}. This algorithm runs on a formula $\varphi$ in time $2^{2^{O(k)}}} \cdot p(\varphi)$, where $p$ scales polynomially in the size of $\varphi$ and $k$ is the \emph{primal treewidth} \cite{samer2010algorithms} of $\varphi$. Moreover, assuming the exponential time hypothesis \cite{impagliazzo2001problems} the double exponential is unavoidable in general. On the other hand, by Theorem 5 of Dudek et. al \cite{dudek2020dpmc} and Theorem 7 our algorithm runs in time $2^{O(k')}$, where $k'$ is the primal treewidth of $\psi$. While $k'$ is larger than $k$ (and, in the worst case, $k' = \max(k, |X|)$), on many problems $k'$ is much smaller than $2^k$. 

@@ -3,17 +3,27 @@
 %% math
 
 \newcommand{\pars}[1]{\left( #1 \right)}
+\newcommand{\brackets}[1]{\left[ #1 \right]}
 \newcommand{\size}[1]{\left| #1 \right|}
 \newcommand{\seq}[1]{\langle #1 \rangle}
 \newcommand{\set}[1]{\left\{ #1 \right\}}
+\DeclareMathOperator*{\argmax}{argmax}
+\renewcommand{\Sigma}{\Upsigma}
+
+% For big \exist
+\newcommand\ScaleExists[1]{\vcenter{\hbox{\scalefont{#1}$\exists$}}}
+\DeclareMathOperator*\exist{
+  \vphantom\sum
+  \mathchoice{\ScaleExists{2}}{\ScaleExists{1.4}}{\ScaleExists{1}}{\ScaleExists{0.75}}
+}
 
 %% numbers
 \newcommand{\Set}[1]{\mathbb{#1}}
 \newcommand{\R}{\Set{R}}
 \newcommand{\Z}{\Set{Z}}
 \newcommand{\N}{\Set{N}}
-\newcommand{\B}{\Set{B}}
-\renewcommand{\B}{\set{0, 1}}
+\newcommand{\B}{\set{0, 1}}
+\newcommand{\Rnn}{\mathbb{R}^{\ge 0}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% formatting
@@ -22,6 +32,7 @@
 \newcommand{\eg}{e.g.}
 \newcommand{\ie}{i.e.}
 \newcommand{\st}{s.t.}
+\newcommand{\resp}{resp.}
 
 \newcommand{\textdef}[1]{\emph{#1}}
 
@@ -31,6 +42,7 @@
 
 \newcommand{\proj}{\exists}
 \renewcommand{\proj}{\sum}
+\newcommand{\rand}{\rotatebox[origin=c]{180}R} % randomized quantifier
 
 \newcommand{\heuristic}[1]{\textbf{#1}}
 
@@ -87,6 +99,12 @@
 \newcommand{\minictd}{\tool{miniC2D}}
 \newcommand{\reasoner}{\tool{d-DNNF-reasoner}}
 \newcommand{\sylvan}{\tool{Sylvan}}
+\newcommand{\procount}{\tool{ProCount}}
+\newcommand{\dfp}{\tool{D4\textsubscript{P}}}
+\newcommand{\projmc}{\tool{projMC}}
+\newcommand{\ssat}{\tool{reSSAT}}
+\newcommand{\sat}{\tool{CryptoMiniSat}}
+\newcommand{\vbs}[1]{\tool{VBS#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -94,6 +112,7 @@
 \renewcommand{\phi}{\varphi}
 
 \newcommand{\mult}{\cdot}
+\newcommand{\add}{\bigoplus}
 
 \newcommand{\func}[1]{\monospace{#1}}
 
@@ -112,6 +131,9 @@
 \newcommand{\chosenCluster}{\func{ChosenCluster}}
 \newcommand{\nodeValuation}{\func{NodeValuation}}
 
+\newcommand{\existCluster}{\func{ExistCluster}}
+\newcommand{\sumCluster}{\func{SumCluster}}
+
 \newcommand{\Htb}{\tool{HTB}}
 \newcommand{\Lg}{\tool{LG}}
 \newcommand{\Dmc}{\tool{DMC}}
@@ -125,3 +147,34 @@
 
 \newcommand{\piMap}{\overset{\pi}{\mapsto}}
 \newcommand{\gammaMap}{\overset{\gamma}{\mapsto}}
+
+\newcommand{\be}{\heuristic{BE}}
+\newcommand{\bm}{\heuristic{BM}}
+
+\newcommand{\List}{\heuristic{List}}
+\newcommand{\tree}{\heuristic{Tree}}
+
+\newcommand{\mcs}{\heuristic{MCS}}
+\newcommand{\lexp}{\heuristic{LP}}
+\newcommand{\lexm}{\heuristic{LM}}
+\newcommand{\minfill}{\heuristic{MF}}
+
+% For projected counting
+\newcommand{\D}[1]{\mathcal{D} \pars{#1}} % existential internal nodes
+\newcommand{\A}[1]{\mathcal{A} \pars{#1}} % additive internal nodes
+\newcommand{\In}[2]{\mathcal{N}_{#1} \pars{#2}} % internal nodes
+\newcommand{\I}{\mathcal{I}} % internal nodes
+\newcommand{\T}{\mathcal{T}} % project-join tree
+\newcommand{\pia}{\pi_X}
+\newcommand{\pid}{\pi_Y}
+\newcommand{\sumMap}{\overset{\pia}{\mapsto}}
+\newcommand{\existMap}{\overset{\pid}{\mapsto}}
+\newcommand{\leafMap}{\overset{\gamma}{\mapsto}}
+\newcommand{\birdBenchmarks}{759} % excluding 42 unsatisfiable benchmarks
+\newcommand{\wapsBenchmarks}{90} % all sat
+\newcommand{\benchmarks}{849}
+\newcommand{\solvedBenchmarks}{390}
+\newcommand{\dpmcFastestBenchmarks}{131}
+\newcommand{\dpmcUniqueBenchmarks}{44}
+\newcommand{\maxWidth}{30}
+\newcommand{\wpmc}{WPMC}

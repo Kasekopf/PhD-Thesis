@@ -158,7 +158,7 @@ Conversely, clauses that appear in separate blocks need not be combined in order
 % Let $(X, Y, \phi, W)$ be an instance of weighted projected model counting and let $\T$ be a $(X, Y)$-graded project-join tree of $\phi$. For each $N \in \func{GroupBy}(\phi, Y)$, the width of $\T$ is at least $|\vars(N) \cap X|$.
 % \end{theorem}
 
-In Algorithm \ref{alg_planning_graded}, each function call $\func{BuildComponent}(\alpha, F)$ returns an $F$-free project-join tree of $\alpha$, where $\alpha$ is a set of clauses and $F \subseteq \vars(\alpha)$.
+In Algorithm \ref{alg_planning_graded}, each call to $\func{BuildComponent}(\alpha, F)$ returns an $F$-free project-join tree of $\alpha$, where $\alpha$ is a set of clauses and $F \subseteq \vars(\alpha)$.
 $\func{BuildComponent}$ can be implemented by implementing Algorithm \ref{alg_planning_free} on top of an algorithm for building ungraded project-join trees. 
 For example, in Section \ref{sec:experiments}, we consider two implementations of Algorithm \ref{alg_planning_graded} built on top of the two algorithms to construct standard project-join trees \cite{dudek2020dpmc} discussed at the end of Section \ref{sec_ungraded_trees}.
 

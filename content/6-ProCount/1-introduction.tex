@@ -23,7 +23,7 @@ The key idea is to solve a large problem by solving many smaller subproblems, an
 Dynamic programming is a natural framework to solve a variety of problems defined on sets of constraints, as subproblems can be formed by partitioning the constraints.
 This framework has been instantiated into algorithms for database-query optimization \cite{mcmahan2004projection}, SAT solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, QBF evaluation \cite{charwat2016bdd}, model counting \cite{bacchus2009solving,samer2010algorithms,jegou2016improving,dudek2020dpmc,fichte2020exploiting}, and projected model counting \cite{fichte2020counting}.
 
-Recently, a unifying framework based on \emph{project-join trees} for dynamic-programming algorithms was proposed \cite{dudek2020dpmc}. 
+Recently, a unifying framework for dynamic-programming algorithms based on \emph{project-join trees} was proposed \cite{dudek2020dpmc}. 
 The key idea is to consider project-join trees as \emph{execution plans} and decompose dynamic-programming algorithms into two phases: a \emph{planning phase}, where a project-join tree is constructed from an input problem instance, and an \emph{execution phase}, where the project-join tree is used to compute the result. 
 The project-join-tree-based model counter \dpmc{} \cite{dudek2020dpmc} was found to be competitive with state-of-the-art exact weighted model counters \cite{
     % dudek2020addmc, % ADDMC

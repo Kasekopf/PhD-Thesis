@@ -10,7 +10,7 @@ We generalize these three components to support graded project-join trees and pr
 
 We conduct three computational experiments to address three following research questions.
 \begin{enumerate}
-    \item[RQ1] In the planning phase (for constructing project-join trees), how do tree-decomposition techniques compare to constraint-satisfaction heuristics?
+    \item[RQ1] In the planning phase, how do tree-decomposition techniques compare with constraint-satisfaction heuristics?
     \item[RQ2] In the execution phase, how do different ADD variable orders compare?
     \item[RQ3] How does \procount{} compare to other exact weighted projected tools?
 \end{enumerate}
@@ -143,7 +143,7 @@ Between the two \emph{virtual best solvers} in Figure \ref{figSolving}, \vbs1 (a
     }
     \begin{tabular}{|l|r|r|r|r|} \hline
         \multirow{2}{*}{Tool} & \multicolumn{3}{c|}{Number of benchmarks solved (of \benchmarks)} & \multirow{2}{*}{PAR-2 score} \\ \cline{2-4}
-        & Uniquely (solved by no other) & In shortest time & In total & \\ \hline
+        & By no other & In shortest time & In total & \\ \hline
         \procount & \dpmcUniqueBenchmarks & \dpmcFastestBenchmarks & 283 & 1139215 \\ \hline
         \dfp{} & 50 & 235 & 345 & 1021809 \\ \hline
         \projmc{} & 0 & 8 & 275 & 1157018 \\ \hline

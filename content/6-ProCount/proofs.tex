@@ -136,9 +136,9 @@ To do this, if $S$ is a project-join tree and $n$ is a node of $S$, define $\fun
 
 Consider an arbitrary node $n \in \V{T} \setminus \{s\}$. Define:
 \begin{align*}
-    A(n) &= \set{ y : \exists \ell \in \Lv{T} \text{ s.t. $\ell$ is a descendant of $n$ in the rooted tree $(T, s)$ and } y \in \func{rel}_{\T'}(\gamma'(\ell)) } \\
-    B(n) &= \set{ x \in \vars(\phi) : \exists \ell, \ell' \in \Lv{T} \text{ s.t. $n$ is between $\ell, \ell'$ in $(T, r)$ and } x \in \func{rel}_{\T}(\gamma(\ell)) \cap \func{rel}_{\T}(\gamma(\ell')) } \\
-    B'(n) &= \set{ x \in \vars(\phi) : \exists \ell, \ell' \in \Lv{T} \text{ s.t. $n$ is between $\ell, \ell'$ in $(T, s)$ and } x \in \func{rel}_{\T'}(\gamma'(\ell)) \cap \func{rel}_{\T'}(\gamma'(\ell')) }
+    A(n) &= \{ y : \exists \ell \in \Lv{T} \text{ s.t. $\ell$ is a descendant of $n$ in the rooted tree $(T, s)$ and } \\&y \in \func{rel}_{\T'}(\gamma'(\ell)) \} \\
+    B(n) &= \{ x \in \vars(\phi) : \exists \ell, \ell' \in \Lv{T} \text{ s.t. $n$ is between $\ell, \ell'$ in $(T, r)$ and } \\&x \in \func{rel}_{\T}(\gamma(\ell)) \cap \func{rel}_{\T}(\gamma(\ell')) \} \\
+    B'(n) &= \{ x \in \vars(\phi) : \exists \ell, \ell' \in \Lv{T} \text{ s.t. $n$ is between $\ell, \ell'$ in $(T, s)$ and } \\&x \in \func{rel}_{\T'}(\gamma'(\ell)) \cap \func{rel}_{\T'}(\gamma'(\ell')) \}
 \end{align*}
 Note that a node $n$ is \emph{between} $\ell, \ell' \in \V{T}$ if $n$ is on the unique shortest path between $\ell$ and $\ell'$. There are several key relationships among $A(n)$, $B(n)$, $B'(n)$, $\func{rel}_{\T}(n)$, and $\func{rel}_{\T'}(n)$: 
 \begin{enumerate}

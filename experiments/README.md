@@ -5,6 +5,7 @@ Code for generating all plots in the thesis. This requires the following python 
 
 ## Setup
 Experimental data and benchmarks must be downloaded separately. Expected file structure is:
+```
 experiments
 |  data
 |  |  3
@@ -17,6 +18,7 @@ experiments
 |  |  pseudoweighted
 |  src
 |  |  ...
+```
 
 ## Usage
 To generate all figures as .pgf in [/figures](figures), use make:

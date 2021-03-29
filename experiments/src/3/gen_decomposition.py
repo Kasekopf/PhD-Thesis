@@ -49,6 +49,36 @@ class DecompositionData:
             )
         return data.sort_values("|benchmark")
 
+    def threshold_times(self, method, width, default_val=None):
+        """
+        For each log, find the time at which the solver first found a contraction tree of max-rank at or below [width].
+
+        :param width: The bound on max-rank to check.
+        :param default_val: The time to use if the solver never finds a good enough contraction tree
+        :return: A list of times
+        """
+        data = self.__instance.query(
+            'SELECT [Log] FROM data WHERE [method] ="'
+            + method
+            + '" ORDER BY [|benchmark] DESC'
+        )
+        result = []
+        for log in data["Log"]:
+            best_width = None
+            found = False
+            if log is not None:
+                for time, widths in eval(log):
+                    if best_width is None or widths["Carving"] < best_width:
+                        if widths["Carving"] <= width and (
+                            best_width is None or best_width > width
+                        ):
+                            result.append(time)
+                            found = True
+                            break
+            if not found:
+                result.append(default_val)
+        return result
+
 
 ga_vertex_cover_line = DecompositionData(
     util.data_dir("3/appendix_graph_analysis/cubic_vertex_cover/line")
@@ -166,6 +196,43 @@ def plot_graph_analysis_ft_wmc(ax):
     ax.set_ylabel("Number of benchmarks")
 
 
+def plot_planning_fig(axs):
+    for ax, width in zip(axs, [30, 25, 20]):
+        ax.plot(
+            *util.cactus(
+                ga_wmc_factor.threshold_times("factor-htd", width, default_val=TIMEOUT)
+            ),
+            label="FT+htd",
+            color="#ffd700",
+            linestyle="--",
+            linewidth=2,
+        )
+
+        ax.plot(
+            *util.cactus(
+                ga_wmc_factor.threshold_times("factor-Flow", width, default_val=TIMEOUT)
+            ),
+            label="FT+Flow",
+            color="#ffb14e",
+            linestyle=":",
+            linewidth=2,
+        )
+        ax.plot(
+            *util.cactus(
+                ga_wmc_factor.threshold_times(
+                    "factor-Tamaki", width, default_val=TIMEOUT
+                )
+            ),
+            label="FT+Tamaki",
+            color="#fa8775",
+            linestyle="-",
+            linewidth=2,
+        )
+        util.set_cactus_axes(
+            ax, 1091, TIMEOUT, legend_args={"loc": "lower right"}, bottom=0.1
+        )
+
+
 def gen(output):
     f, ax = output.figure(0.6, ncols=1)
     plot_graph_analysis_vertex_cover(ax)
@@ -178,6 +245,10 @@ def gen(output):
     f, ax = output.figure(0.6, ncols=1)
     plot_graph_analysis_ft_wmc(ax)
     f.save("3/appendix_wmc_ft_width")
+
+    f, axs = output.figure(1, nrows=3)
+    plot_planning_fig(axs)
+    f.save("3/tree_solver_analysis")
 
 
 if __name__ == "__main__":

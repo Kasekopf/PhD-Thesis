@@ -183,15 +183,7 @@ def plot_performance_graph(ax, min_x, max_x, num_datapoints):
     ax.set_xlim(left=min_x, right=max_x)
     ax.set_xlabel("Performance factor")
     ax.set_ylabel("Par-2 Score")
-
-    ax.legend(
-        borderaxespad=0,
-        handletextpad=0.2,
-        labelspacing=0.4,
-        handlelength=2,
-        frameon=False,
-        loc="lower right",
-    )
+    util.set_legend(ax, loc="lower right")
 
 
 def gen_performance_table():

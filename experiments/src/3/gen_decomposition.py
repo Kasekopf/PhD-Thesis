@@ -89,13 +89,7 @@ def plot_graph_analysis_vertex_cover(ax):
             label=exp_info.name,
         )
 
-    ax.legend(
-        borderaxespad=0,
-        handletextpad=0.2,
-        labelspacing=0.4,
-        handlelength=2,
-        frameon=False,
-    )
+    util.set_legend(ax, loc="upper left")
     ax.set_xticks([50, 100, 150, 200, 250])
     ax.set_xlabel("$n$: Number of vertices")
     ax.set_ylabel("Width of decomposition")
@@ -131,13 +125,7 @@ def plot_graph_analysis_lg_wmc(ax):
         label=[d.name for d in bars_to_display],
     )
 
-    ax.legend(
-        borderaxespad=0,
-        handletextpad=0.2,
-        labelspacing=0.4,
-        handlelength=2,
-        frameon=False,
-    )
+    util.set_legend(ax, loc="upper right")
     ax.set_xticks([0, 50, 100, 150, 200])
     ax.set_xticklabels(["0", "50", "100", "150", "$200+$"])
 
@@ -170,13 +158,7 @@ def plot_graph_analysis_ft_wmc(ax):
         label=[d.name for d in bars_to_display],
     )
 
-    ax.legend(
-        borderaxespad=0,
-        handletextpad=0.2,
-        labelspacing=0.4,
-        handlelength=2,
-        frameon=False,
-    )
+    util.set_legend(ax, loc="upper right")
     ax.set_xticks([0, 10, 20, 30, 40, 50])
     ax.set_xticklabels(["0", "10", "20", "30", "40", "$50+$"])
 

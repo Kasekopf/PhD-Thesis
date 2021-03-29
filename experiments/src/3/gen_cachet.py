@@ -282,14 +282,7 @@ def plot_by_widths(ax):
     ax.set_ylabel("Number of solved benchmarks")
     ax.set_xlim(left=9, right=50)
     ax.set_ylim(bottom=0, top=1100)
-    ax.legend(
-        borderaxespad=0,
-        handletextpad=0.2,
-        labelspacing=0.4,
-        handlelength=2,
-        frameon=False,
-        loc="upper left",
-    )
+    util.set_legend(ax, loc="upper left")
 
 
 def gen(output):

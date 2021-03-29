@@ -82,13 +82,7 @@ def plot_vertex_runtime(experiment_infos, ax):
             label=exp_info.name,
         )
 
-    ax.legend(
-        borderaxespad=0,
-        handletextpad=0.2,
-        labelspacing=0.4,
-        handlelength=2,
-        frameon=False,
-    )
+    util.set_legend(ax, loc="upper left")
     ax.set_xlabel("$n$: Number of vertices")
     ax.set_ylabel("Median solving time (s)")
     ax.set_yscale("log", nonpositive="mask")
@@ -112,13 +106,7 @@ def plot_vertex_rank(experiment_infos, ax):
             label=exp_info.name,
         )
 
-    ax.legend(
-        borderaxespad=0,
-        handletextpad=0.2,
-        labelspacing=0.4,
-        handlelength=2,
-        frameon=False,
-    )
+    util.set_legend(ax, loc="upper left")
     ax.set_xticks([50, 100, 150, 200, 250])
     ax.set_xlabel("$n$: Number of vertices")
     ax.set_ylabel("Median max rank")

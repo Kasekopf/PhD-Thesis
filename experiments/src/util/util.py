@@ -77,23 +77,13 @@ def vbs(*times_by_solver):
     return [min(times_by_benchmark) for times_by_benchmark in zip(*times_by_solver)]
 
 
-def set_cactus_axes(ax, num_benchmarks, timeout, legend_args=iter({}), bottom=0.005):
+def set_legend(ax, **legend_args):
     """
-    Set up a graph as a cactus plot.
-
+    Create a legend in a uniform style
     :param ax: The graph to use
-    :param num_benchmarks: The maximum number of benchmarks (right edge of graph)
-    :param timeout: The maximum running time (top of graph)
     :param legend_args: A dictionary of extra parameters for the legend
-    :param bottom: The bottom of the y-axis (default: 0.005)
     :return: None
     """
-    ax.set_yscale("log", nonpositive="mask")
-    ax.set_ylim(bottom=bottom, top=timeout)
-    ax.set_xlim(left=0, right=num_benchmarks)
-
-    ax.set_ylabel("Longest solving time (s)")
-    ax.set_xlabel("Number of benchmarks solved")
     default_legend_args = {
         "borderaxespad": 0,
         "handletextpad": 0.2,
@@ -104,6 +94,28 @@ def set_cactus_axes(ax, num_benchmarks, timeout, legend_args=iter({}), bottom=0.
     }
     default_legend_args.update(legend_args)
     ax.legend(**default_legend_args)
+
+
+def set_cactus_axes(ax, num_benchmarks, timeout, legend_args=None, bottom=0.005):
+    """
+    Set up a graph as a cactus plot.
+
+    :param ax: The graph to use
+    :param num_benchmarks: The maximum number of benchmarks (right edge of graph)
+    :param timeout: The maximum running time (top of graph)
+    :param legend_args: A dictionary of extra parameters for the legend
+    :param bottom: The bottom of the y-axis (default: 0.005)
+    :return: None
+    """
+    if legend_args is None:
+        legend_args = {}
+    ax.set_yscale("log", nonpositive="mask")
+    ax.set_ylim(bottom=bottom, top=timeout)
+    ax.set_xlim(left=0, right=num_benchmarks)
+
+    ax.set_ylabel("Longest solving time (s)")
+    ax.set_xlabel("Number of benchmarks solved")
+    set_legend(ax, **legend_args)
 
 
 class Figure:
@@ -126,7 +138,9 @@ class Figure:
             os.makedirs(path.parent)
         self.__base.savefig(path)
         if verbose:
-            print("Saved " + str(path))
+            print(
+                'Saved File "' + str(path) + '", line 1'
+            )  # Generates clickable link in PyCharm
 
 
 class FigureOutput:

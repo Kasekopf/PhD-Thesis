@@ -21,7 +21,7 @@ experiments
 ```
 
 ## Usage
-To generate all figures as .pgf in [/figures](figures), use make:
+To generate all figures as .pgf in [/figures](../figures), use make:
 ```
 make figures
 ```

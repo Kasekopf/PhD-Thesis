@@ -2,7 +2,7 @@
 
 An \emph{algebraic decision diagram (ADD)} is a compact representation of a pseudo-Boolean function as a directed acyclic graph \cite{bahar1997algebraic}.
 For functions with logical structure, an ADD representation can be exponentially smaller than the explicit representation.
-Originally designed for matrix multiplication and shortest path algorithms, ADDs have also been used for Bayesian inference \cite{chavira2007compiling,gogate2011approximation}, stochastic planning \cite{hoey1999spudd}, model checking \cite{kwiatkowska2007stochastic}, and model counting \cite{fargier2014knowledge,dudek2020addmc}.
+Originally designed for matrix multiplication and shortest path algorithms, ADDs have also been used for Bayesian inference \cite{chavira2007compiling,gogate2011approximation}, stochastic planning \cite{hoey1999spudd}, model checking \cite{kwiatkowska2007stochastic}, and model counting \cite{fargier2014knowledge,DPV20}.
 
 Formally, an ADD is a tuple $(X, S, \sigma, G)$, where $X$ is a set of Boolean variables, $S$ is an arbitrary set (called the \textdef{carrier set}), $\sigma: X \to \N$ is an injection (called the \textdef{diagram variable order}), and $G$ is a rooted directed acyclic graph satisfying the following three properties.
 First, every leaf node of $G$ is labeled with an element of $S$.
@@ -16,21 +16,21 @@ ADDs can be minimized in polynomial time, so it is typical to only work with can
 
 Several packages exist for efficiently manipulating ADDs.
 For example, \cudd{} \cite{somenzi2015cudd} implements both product and projection on ADDs in polynomial time (in the size of the ADD representation).
-\cudd{} was used as the primary data structure for weighted model counting in \cite{dudek2020addmc}.
+\cudd{} was used as the primary data structure for weighted model counting in \cite{DPV20}.
 In this work, we also use ADDs with \cudd{} to compute $W$-valuations.
 
-\Mcs{} was the best diagram variable order on a set of standard weighted model counting benchmarks in \cite{dudek2020addmc}.
+\Mcs{} was the best diagram variable order on a set of standard weighted model counting benchmarks in \cite{DPV20}.
 So we use \Mcs{} as the diagram variable order in this work.
 Note that all other heuristics discussed in Section \ref{sec_csp} for cluster variable order could also be used as heuristics for diagram variable order.
 % JD: We only consider MCS in Section 6, so this paragraph is not really needed
 % One challenge in using ADDs is choosing the diagram variable order.
 % The choice of diagram variable order can have a dramatic impact on the size of the ADD; some variable orders may produce ADDs that are exponentially smaller than others for the same real-valued function.
-% A variety of techniques exist in prior work to heuristically find diagram variable orders \cite{tarjan1984simple,koster2001treewidth,dechter2003constraint}.
+% A variety of techniques exist in prior work to heuristically find diagram variable orders \cite{tarjan1984simple,koster2001treewidth,dechter03}.
 % Moreover, since binary decision diagrams (BDDs) \cite{bryant1986graph} can be seen as ADDs with carrier set $S = \set{0, 1}$, there is significant overlap with the techniques to find variable orders for BDDs.
 % All cluster-variable-order heuristics discussed in Section \ref{sec_csp} (\Random, \Mcs, \Invmcs, \Lexp, \Invlexp, \Lexm, \Invlexm, \Minfill, and \Invminfill) can also be used as diagram-variable-order heuristics.
-% In \cite{dudek2020addmc}, \Mcs{} was the best diagram variable order on a set of standard weighted model counting benchmarks.
+% In \cite{DPV20}, \Mcs{} was the best diagram variable order on a set of standard weighted model counting benchmarks.
 
-% ADDs were explored for weighted model counting in a dynamic-programming framework in \cite{dudek2020addmc}.
+% ADDs were explored for weighted model counting in a dynamic-programming framework in \cite{DPV20}.
 % In detail, their model-counting algorithm essentially combines Algorithm \ref{alg_csp_jt} and Algorithm \ref{alg_jt_wmc}, using ADDs as the primary data structure.
 % Their two best heuristic configurations have \Mcs{} as the diagram variable order.
 % The other diagram variable orders they investigated were \Invmcs, \Lexp, \Invlexp, \Lexm, \Invlexm, and \Random.

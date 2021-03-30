@@ -28,7 +28,7 @@ $\proj_X f \equiv \proj_{x_1} \proj_{x_2} \ldots \proj_{x_n} f$.
 Our convention is that $\proj_\emptyset f \equiv f$.
 
 When performing a product followed by a projection, it is sometimes possible to perform the projection first.
-This is known as \emph{early projection} \cite{mcmahan2004projection}.
+This is known as \emph{early projection} \cite{MPPV04}.
 \begin{theorem}[Early Projection]
 \label{thm_early_proj}
     Let $X$ and $Y$ be sets of variables.
@@ -36,7 +36,7 @@ This is known as \emph{early projection} \cite{mcmahan2004projection}.
     % As a corollary, for all $X' \subseteq X \setminus Y$,
     % $$\exists_{X'} (A \mult B) = \pars{\exists_{X'} A} \mult B.$$
 \end{theorem}
-Early projection is a key technique in symbolic computation in a variety of settings, including database-query optimization \cite{kolaitis2000conjunctive}, symbolic model checking \cite{burch1991symbolic}, satisfiability solving \cite{pan2005symbolic}, and model counting \cite{dudek2020addmc}.
+Early projection is a key technique in symbolic computation in a variety of settings, including database-query optimization \cite{KV00}, symbolic model checking \cite{burch1991symbolic}, satisfiability solving \cite{pan2005symbolic}, and model counting \cite{DPV20}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -83,7 +83,7 @@ In a rooted tree $(T, r)$, each node $n \in \V{T}$ has a (possibly empty) set of
 
 %% Vu: the following paragraph reveals our identities and is unsuitable for blind review
 % Although Binary Decision Diagrams (BDDs) have been previously used for constrained counting \cite{lobbing1996number,minato1993zero}, these approaches require constructing a monolithic (possibly exponentially-sized) BDD representing the input formula $F$ as an intermediate step and so quickly become infeasible in practice.
-% In recent work \cite{dudek2020addmc} We proposed to modify these approaches to construct an ADD representing the formula $F$, with the weight function giving the value of each leaf node of the ADD.
+% In recent work \cite{DPV20} We proposed to modify these approaches to construct an ADD representing the formula $F$, with the weight function giving the value of each leaf node of the ADD.
 % To make this approach successful, we developed algebraic techniques of ``early quantification'', for ADDs, extending those developed for BDDs \cite{burch1991symbolic,tabajara2017factored}.
 % The goal is to iteratively reduce the size of the ADD during the construction and therefore avoid constructing the entire ADD at once.
 % We showed that this approach provides significant speedups over prior techniques that use BDDs for constrained counting.
@@ -93,24 +93,24 @@ In a rooted tree $(T, r)$, each node $n \in \V{T}$ has a (possibly empty) set of
 % \paragraph\textbf{{Tensors}}
 
 % A tensor is a multi-dimensional generalization of a matrix.
-% Tensor are widely used in data analysis \cite{cichocki2014era}, signal and image processing \cite{cichocki2015tensor}, quantum physics \cite{arad2010quantum}, quantum chemistry \cite{smilde2005multi}, and many other areas of science.
-% Given the diverse applications of tensors and tensor networks, a variety of tools \cite{baumgartner2005synthesis,kjolstad2017tensor} exist to manipulate them efficiently.
+% Tensor are widely used in data analysis \cite{Cichocki14}, signal and image processing \cite{cichocki2015tensor}, quantum physics \cite{arad2010quantum}, quantum chemistry \cite{smilde2005multi}, and many other areas of science.
+% Given the diverse applications of tensors and tensor networks, a variety of tools \cite{baumgartner2005synthesis,KKCLA17} exist to manipulate them efficiently.
 
 % Tensors can be used to represent pseudo-Boolean functions in a dense way.
 % Tensors are particularly efficient at computing the \emph{contraction} of two pseudo-Boolean functions: given two functions $f: 2^X \to \R$ and $g: 2^Y \to \R$, their contraction is the pseudo-Boolean function $\proj_{X \cap Y} f \cdot g$.
-% The contraction of two tensors can be implemented as matrix multiplication and so leverage significant work in high-performance computing on matrix multiplication on CPUs \cite{lawson1979basic} and GPUs \cite{fatahalian2004understanding}.
+% The contraction of two tensors can be implemented as matrix multiplication and so leverage significant work in high-performance computing on matrix multiplication on CPUs \cite{LHKK77} and GPUs \cite{FSH04}.
 
 % A tensor network is a representation of a complex tensor by interconnected, simpler tensors.
 % The problem of \emph{tensor-network contraction}, given a tensor network, is to compute explicitly the tensor represented by the network.
 % For a more formal definition of tensors, tensor networks, and tensor-network contraction, see \cite{arad2010quantum}.
-% Given the diverse applications of tensors and tensor networks, a variety of tools \cite{baumgartner2005synthesis,kjolstad2017tensor} exist to manipulate them efficiently.
+% Given the diverse applications of tensors and tensor networks, a variety of tools \cite{baumgartner2005synthesis,KKCLA17} exist to manipulate them efficiently.
 
-% An algorithm to reduce constrained counting (with a constant weight function) to tensor-network contraction was proposed recently \cite{biamonte2015tensor}.
-% The analysis of this algorithm has so far been purely theoretical, focusing, particularly, on identifying classes of formulas $F$ for which the corresponding tensor-network contraction can be performed in polynomial time \cite{biamonte2015tensor}.
-% We have recently explored implementing this algorithm on top of state-of-the-art tools for tensor-network contraction \cite{baumgartner2005synthesis,kjolstad2017tensor} to obtain a tool for constrained counting \cite{dudek2019efficient}.
+% An algorithm to reduce constrained counting (with a constant weight function) to tensor-network contraction was proposed recently \cite{BMT15}.
+% The analysis of this algorithm has so far been purely theoretical, focusing, particularly, on identifying classes of formulas $F$ for which the corresponding tensor-network contraction can be performed in polynomial time \cite{BMT15}.
+% We have recently explored implementing this algorithm on top of state-of-the-art tools for tensor-network contraction \cite{baumgartner2005synthesis,KKCLA17} to obtain a tool for constrained counting \cite{DDV19}.
 
 % Algorithms for tensor network contraction rely on finding a good order to contract the tensors of the tensor network.
-% This problem is closely connected to join-query optimization in database theory \cite{wong1976decomposition,mcmahan2004projection}, but this connection was largely unexplored by prior work.
-% The connection between Boolean satisfiability (and hence constrained counting) and join-query optimization has been explored previously \cite{dalmau2002constraint}.
-% By improving the connection between tensor-network contraction and constrained counting, we aimed to use results from join-query optimization (in particular, on using graph decompositions \cite{greco2018structural,mcmahan2004projection}) to improve tensor-network contraction both for constrained counting and for more general problems.
+% This problem is closely connected to join-query optimization in database theory \cite{wong1976decomposition,MPPV04}, but this connection was largely unexplored by prior work.
+% The connection between Boolean satisfiability (and hence constrained counting) and join-query optimization has been explored previously \cite{DKV02}.
+% By improving the connection between tensor-network contraction and constrained counting, we aimed to use results from join-query optimization (in particular, on using graph decompositions \cite{GLST17,MPPV04}) to improve tensor-network contraction both for constrained counting and for more general problems.
 % We showed tensor networks are a significant novel addition to the portfolio of constrained-counting algorithms.

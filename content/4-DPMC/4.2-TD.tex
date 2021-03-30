@@ -1,10 +1,10 @@
 \subsection{Planning with Anytime Tree-Decomposition Tools}
 \label{sec_td}
 
-In join-query optimization, \emph{tree decompositions} can be used to compute join trees \cite{dalmau2002constraint,mcmahan2004projection}.
-Tree decompositions \cite{robertson1991graph} decompose graphs into tree structures.
-% A central technique in join-query optimization uses \emph{tree decompositions} to compute join trees \cite{dalmau2002constraint,mcmahan2004projection}.
-% Tree decompositions \cite{robertson1991graph} offer a way to decompose a graph into a tree structure.
+In join-query optimization, \emph{tree decompositions} can be used to compute join trees \cite{DKV02,MPPV04}.
+Tree decompositions \cite{RS91} decompose graphs into tree structures.
+% A central technique in join-query optimization uses \emph{tree decompositions} to compute join trees \cite{DKV02,MPPV04}.
+% Tree decompositions \cite{RS91} offer a way to decompose a graph into a tree structure.
 % Formally:
 \begin{definition}[Tree Decomposition]
 	A \emph{tree decomposition} $(S, \chi)$ of a graph $G$ is a tree $S$ with a labeling function $\chi : \V{S} \to 2^{\V{G}}$ where:
@@ -21,11 +21,11 @@ Tree decompositions \cite{robertson1991graph} decompose graphs into tree structu
 	% $$width_t(S, \chi) = \max_{n \in \V{S}} | \chi(n) | - 1.$$
 \end{definition}
 
-In particular, join-query optimization uses tree decompositions of the \emph{join graph} to find optimal join trees \cite{dalmau2002constraint,mcmahan2004projection}.
+In particular, join-query optimization uses tree decompositions of the \emph{join graph} to find optimal join trees \cite{DKV02,MPPV04}.
 The \emph{join graph} of a project-join query consists of all attributes of a database as vertices and all tables as cliques.
-In this approach, tree decompositions of the join graph of a query are used to find optimal project-join trees; see Algorithm 3 of \cite{mcmahan2004projection}.
-Similarly, tree decompositions of the \emph{primal graph} of a factor graph, which consists of all variables as vertices and all factors as cliques, can be used to find variable elimination orders \cite{kask2005unifying}.
-This technique has also been applied in the context of tensor networks \cite{morgenstern2008ltl,dudek2019efficient}.
+In this approach, tree decompositions of the join graph of a query are used to find optimal project-join trees; see Algorithm 3 of \cite{MPPV04}.
+Similarly, tree decompositions of the \emph{primal graph} of a factor graph, which consists of all variables as vertices and all factors as cliques, can be used to find variable elimination orders \cite{KDLD05}.
+This technique has also been applied in the context of tensor networks \cite{morgenstern2008ltl,DDV19}.
 
 Translated to model counting, this technique allows us to use tree decompositions of the \textdef{Gaifman graph} of a CNF formula to compute project-join trees.
 The Gaifman graph of a CNF formula $\phi$, denoted $\gaifman(\phi)$, has a vertex for each variable of $\phi$, and two vertices are adjacent if the corresponding variables appear together in some clause of $\phi$.
@@ -73,9 +73,9 @@ We formalize this in the following theorem.
     Then Algorithm \ref{alg_td_to_join} returns a project-join tree of $\phi$ of width at most $w+1$.
 \end{theorem}
 The key idea is that, for each node $n \in \V{S}$, the label $\chi(n)$ is a bound on the variables that appear in all nodes returned by $\func{Process}(n, \cdot)$.
-Theorem \ref{thm_td_to_join} allows us to leverage state-of-the-art anytime tools for finding tree decompositions \cite{tamaki2019positive,strasser2017computing,abseher2017htd} to construct project-join trees, which we do in Section \ref{sec_experiments_planning}.
+Theorem \ref{thm_td_to_join} allows us to leverage state-of-the-art anytime tools for finding tree decompositions \cite{Tamaki17,strasser2017computing,AMW17} to construct project-join trees, which we do in Section \ref{sec_experiments_planning}.
 
-On the theoretical front, it is well-known that tree decompositions of the Gaifman graph are actually equivalent to project-join trees \cite{mcmahan2004projection}.
+On the theoretical front, it is well-known that tree decompositions of the Gaifman graph are actually equivalent to project-join trees \cite{MPPV04}.
 That is, one can go in the other direction as well: given a project-join tree of $\phi$, one can construct a tree decomposition of $\gaifman(\phi)$ of equivalent width.
 Formally:
 \begin{theorem}
@@ -83,4 +83,4 @@ Formally:
     Let $\phi$ be a CNF formula and $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$ of width $w$.
     Then there is a tree decomposition of $\gaifman(\phi)$ of width $w-1$.
 \end{theorem}
-Theorem \ref{thm_join_to_td} is Lemma 1 of \cite{mcmahan2004projection} and can be seen as the inverse of Theorem \ref{thm_td_to_join}.
+Theorem \ref{thm_join_to_td} is Lemma 1 of \cite{MPPV04} and can be seen as the inverse of Theorem \ref{thm_td_to_join}.

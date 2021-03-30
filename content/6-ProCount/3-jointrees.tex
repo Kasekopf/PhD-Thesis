@@ -72,10 +72,10 @@ The \emph{size} of a node $n$, $\func{size}(n)$, is $\size{\vars(n)}$ for leaf n
 The \emph{width} of a project-join tree $\T = (T, r, \gamma, \pi)$ is $\func{width}(\T) \equiv \max_{n \in \V T} \func{size}(n)$. 
 
 Two algorithms have been proposed to construct project-join trees \cite{dudek2020dpmc}.
-The first, \Lg{}, uses \emph{tree decompositions} \cite{robertson1991graph}, following similar work in join-query optimization \cite{dalmau2002constraint,mcmahan2004projection}. The second,
-\htb{}, uses \emph{bucket elimination} \cite{dechter1999bucket} and \emph{Bouquet's Method} \cite{bouquet1999gestion} with various constraint-satisfaction heuristics:  \emph{maximum-cardinality search} \cite{tarjan1984simple}, \emph{lexicographic search for perfect/minimal orders} \cite{koster2001treewidth}, and \emph{min-fill} \cite{dechter2003constraint}.
+The first, \Lg{}, uses \emph{tree decompositions} \cite{RS91}, following similar work in join-query optimization \cite{DKV02,MPPV04}. The second,
+\htb{}, uses \emph{bucket elimination} \cite{dechter99} and \emph{Bouquet's Method} \cite{bouquet1999gestion} with various constraint-satisfaction heuristics:  \emph{maximum-cardinality search} \cite{tarjan1984simple}, \emph{lexicographic search for perfect/minimal orders} \cite{koster2001treewidth}, and \emph{min-fill} \cite{dechter03}.
 
-%, one using constraint-satisfaction heuristics and anoth using tree decompositions (in \cite{dudek2019efficient,fichte2020exploiting}).
+%, one using constraint-satisfaction heuristics and anoth using tree decompositions (in \cite{DDV19,fichte2020exploiting}).
 % Notice that Equation \eqref{eqn_valuation} applies $\Sigma$-projection with the additive variables and $\exists$-projection with the disjunctive variables, unlike the algorithm in \cite{dudek2020dpmc} (where all variables are additive, so only $\Sigma$-projection is needed).
 
 

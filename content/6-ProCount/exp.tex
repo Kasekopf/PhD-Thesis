@@ -22,8 +22,8 @@ Figure \ref{figPlanningA} plots the time of the first such project-join tree of 
     \input{figures/6/figPlanningA.pgf}
     \caption{
         Experiment 1 compares the tree-decomposition-based planner \Lg{} to the constraint-satisfaction-based planner \htb{}. 
-        \Lg{} can be used with a tree decomposer (\flowcutter{} \cite{strasser2017computing}, \htd{} \cite{abseher2017htd}, or \tamaki{} \cite{tamaki2019positive}).
-        \htb{} requires a variable-ordering heuristic (\mcs{} \cite{tarjan1984simple}, \lexp/\lexm{} \cite{koster2001treewidth}, or \minfill{} \cite{dechter2003constraint}) and a clause-ordering heuristic (\be{} \cite{dechter1999bucket} or \bm{} \cite{bouquet1999gestion}).
+        \Lg{} can be used with a tree decomposer (\flowcutter{} \cite{strasser2017computing}, \htd{} \cite{AMW17}, or \tamaki{} \cite{Tamaki17}).
+        \htb{} requires a variable-ordering heuristic (\mcs{} \cite{tarjan1984simple}, \lexp/\lexm{} \cite{koster2001treewidth}, or \minfill{} \cite{dechter03}) and a clause-ordering heuristic (\be{} \cite{dechter99} or \bm{} \cite{bouquet1999gestion}).
         A planner ``solves'' a benchmark when it eventually finds a project-join tree of width \maxWidth{} or lower.
         \Lg{} is an anytime tool that can output several trees (of decreasing widths) for each benchmark.
         On this plot, for each \Lg{} benchmark, we use the time of the first tree whose width is at most \maxWidth.

@@ -1,9 +1,9 @@
 \subsection{Planning with One-Shot Constraint-Satisfaction Heuristics}
 \label{sec_csp}
 
-A variety of constraint-satisfaction heuristics for model counting were presented in a single algorithmic framework by \cite{dudek2020addmc}.
-These heuristics have a long history in constraint programming \cite{dechter2003constraint}, database-query optimization \cite{mcmahan2004projection}, and propositional reasoning \cite{pan2005symbolic}.
-In this section, we adapt the framework of \cite{dudek2020addmc} to produce project-join trees.
+A variety of constraint-satisfaction heuristics for model counting were presented in a single algorithmic framework by \cite{DPV20}.
+These heuristics have a long history in constraint programming \cite{dechter03}, database-query optimization \cite{MPPV04}, and propositional reasoning \cite{pan2005symbolic}.
+In this section, we adapt the framework of \cite{DPV20} to produce project-join trees.
 This algorithm is presented as Algorithm \ref{alg_csp_jt}, which constructs a project-join tree of a CNF formula using constraint-satisfaction heuristics.
 The functions $\clusterVarOrder$, $\clauseRank$, and $\chosenCluster$ represent heuristics for fine-tuning the specifics of the algorithm.
 Before discussing the various heuristics, we assert the correctness of Algorithm \ref{alg_csp_jt} in the following theorem.
@@ -60,10 +60,10 @@ These invariants are sufficient to prove that Algorithm \ref{alg_csp_jt} indeed 
 All heuristics we use in this work satisfy the conditions of Theorem \ref{thm_csp_jt}.
 
 There are a variety of heuristics to fine-tune Algorithm \ref{alg_csp_jt}.
-For the function $\clusterVarOrder$, we consider the heuristics \Random, \Mcs{} (\textdef{maximum-cardinality search} \cite{tarjan1984simple}), \Lexp/\Lexm{} (\textdef{lexicographic search for perfect/minimal orders} \cite{koster2001treewidth}), and \Minfill{} (\textdef{minimal fill-in} \cite{dechter2003constraint}) as well as their inverses (\Invmcs, \Invlexp, \Invlexm, and \Invminfill).
-Heuristics for $\clauseRank$ include \Be{} (\textdef{bucket elimination} \cite{dechter1999bucket}) and \Bm{} (\textdef{Bouquet's Method} \cite{bouquet1999gestion}).
-For $\chosenCluster$, the heuristics we use are \ListH{} and \TreeH{} \cite{dudek2020addmc}.
+For the function $\clusterVarOrder$, we consider the heuristics \Random, \Mcs{} (\textdef{maximum-cardinality search} \cite{tarjan1984simple}), \Lexp/\Lexm{} (\textdef{lexicographic search for perfect/minimal orders} \cite{koster2001treewidth}), and \Minfill{} (\textdef{minimal fill-in} \cite{dechter03}) as well as their inverses (\Invmcs, \Invlexp, \Invlexm, and \Invminfill).
+Heuristics for $\clauseRank$ include \Be{} (\textdef{bucket elimination} \cite{dechter99}) and \Bm{} (\textdef{Bouquet's Method} \cite{bouquet1999gestion}).
+For $\chosenCluster$, the heuristics we use are \ListH{} and \TreeH{} \cite{DPV20}.
 We combine $\clauseRank$ and $\chosenCluster$ as \textdef{clustering heuristics}: $\Be-\ListH$, $\Be-\TreeH$, $\Bm-\ListH$, and $\Bm-\TreeH$.
-These heuristics are described in \cite{dudek2020addmc}%
+These heuristics are described in \cite{DPV20}%
 % and in Appendix \ref{sec_csp_heuristics}
 .

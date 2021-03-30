@@ -5,7 +5,7 @@ In model counting, a Boolean formula is often given in conjunctive normal form (
 For each clause $c \in \phi$, define $\vars(c)$ to be the set of variables appearing in $c$.
 Then $c$ represents a Boolean function over $\vars(c)$. Similarly, $\phi$ represents a Boolean function over $\vars(\phi) \equiv \bigcup_{c \in \phi} \vars(c)$.
 
-It is well-known that weighted model counting can be performed through a sequence of projections and joins on pseudo-Boolean functions \cite{dudek2020addmc,dudek2019efficient}.
+It is well-known that weighted model counting can be performed through a sequence of projections and joins on pseudo-Boolean functions \cite{DPV20,DDV19}.
 Given a CNF formula $\phi$ and a literal-weight function $W$ over a set $X$ of variables, the corresponding weighted model count can be computed as follows:
 \begin{equation}
 \label{eq_factored_wmc}
@@ -17,12 +17,12 @@ Given a CNF formula $\phi$ and a literal-weight function $W$ over a set $X$ of v
 \end{equation}
 
 By taking advantage of the associative and commutative properties of multiplication as well as the commutative property of projection, we can rearrange Equation \eqref{eq_factored_wmc} to apply early projection.
-It was shown in \cite{dudek2020addmc} that early projection can significantly reduce computational cost.
+It was shown in \cite{DPV20} that early projection can significantly reduce computational cost.
 There are a variety of possible rearrangements of Equation \eqref{eq_factored_wmc} of varying costs.
-Although \cite{dudek2020addmc} considered several heuristics for performing this rearrangement (using bucket elimination \cite{dechter1999bucket} and Bouquet's Method \cite{bouquet1999gestion}), they did not attempt to analyze rearrangements.
+Although \cite{DPV20} considered several heuristics for performing this rearrangement (using bucket elimination \cite{dechter99} and Bouquet's Method \cite{bouquet1999gestion}), they did not attempt to analyze rearrangements.
 
 In this work, we aim to analyze the quality of the rearrangement, in isolation from the underlying implementation and data structure used for Equation \eqref{eq_factored_wmc}.
-This approach has been highly successful for database-query optimization \cite{mcmahan2004projection}, where the central object of theoretical reasoning is the \emph{query plan}.
+This approach has been highly successful for database-query optimization \cite{MPPV04}, where the central object of theoretical reasoning is the \emph{query plan}.
 The approach has also seen similar success in Bayesian network inference \cite{darwiche1998dynamic}.
 
 We model a rearrangement of Equation \eqref{eq_factored_wmc} as a \emph{project-join tree}:
@@ -70,8 +70,8 @@ See Figure \ref{fig_join_tree} for a graphical example of a project-join tree.
 \label{fig_join_tree}
 \end{figure}
 
-Project-join trees have previously been studied in the context of database-query optimization \cite{mcmahan2004projection}.
-Project-join trees are closely related to contraction trees in the context of tensor networks \cite{evenbly2014improving,dudek2019efficient}.
+Project-join trees have previously been studied in the context of database-query optimization \cite{MPPV04}.
+Project-join trees are closely related to contraction trees in the context of tensor networks \cite{EP14,DDV19}.
 Once a rearrangement of Equation \eqref{eq_factored_wmc} has been represented by a project-join tree, we can model the computation process according to the rearrangement.
 In particular, given a literal-weight function $W = \prod_{x \in X} W_x$, we define the $W$-\emph{valuation} of each node $n \in \V{T}$ as a pseudo-Boolean function associated with $n$.
 The $W$-valuation of a node $n \in \V{T}$ is denoted $f^W_n$ and defined as follows:
@@ -115,18 +115,18 @@ To characterize the difficulty of $W$-valuation, we define the \emph{size} of a 
 The \emph{width} of a project-join tree $(T, r, \gamma, \pi)$ is $\func{width}(T) \equiv \max_{n \in \V T} \func{size}(n)$.
 We see in Section \ref{sec_experiments} how the width impacts the computation of $W$-valuations.
 
-% Project-join trees are related to \emph{variable elimination} on factor graphs \cite{kask2005unifying,bacchus2009solving}, which uses tree decompositions of the primal graph of a factor graph.
+% Project-join trees are related to \emph{variable elimination} on factor graphs \cite{KDLD05,BDP09}, which uses tree decompositions of the primal graph of a factor graph.
 
-% To do this, we separate the algorithm of \cite{dudek2020addmc} into two phases.
+% To do this, we separate the algorithm of \cite{DPV20} into two phases.
 % First, in the \emph{planning} phase, we produce a rearrangement of Equation \eqref{eq_factored_wmc}.
 % Second, we construct a project-join tree $(T, r, \gamma, \pi)$ of $\phi$.
 % We discuss algorithms for constructing project-join trees in Section \ref{sec_planning}.
 % Second, in the \emph{execution} phase, compute $f^W_r$ by following Equation \eqref{eq_valuation}.
 
-% Although \cite{dudek2020addmc} considered various heuristics for performing this rearrangement (using bucket elimination \cite{dechter1999bucket} and Bouquet's Method \cite{bouquet1999gestion}), they did not specifically analyze the quality of the rearrangement is isolation from the underlying data structures.
+% Although \cite{DPV20} considered various heuristics for performing this rearrangement (using bucket elimination \cite{dechter99} and Bouquet's Method \cite{bouquet1999gestion}), they did not specifically analyze the quality of the rearrangement is isolation from the underlying data structures.
 
 % As noted in Section \ref{sec_prelim}, if $\phi: 2^X \to \{0,1\}$ is a Boolean formula and $W: 2^X \to \R$ is a pseudo-Boolean function, then $W(\phi) = \left(\sum_X (\phi \mult W) \right)(\emptyset)$.
-% Moreover, \cite{dudek2020addmc} observed that, $\phi$ and $W$ can both be given in factored forms $\phi = \prod_{C_i} C_i$ (\ie, as a set of clauses) and $W = \prod_{x \in X}$ (\ie, as a literal-weight function).
+% Moreover, \cite{DPV20} observed that, $\phi$ and $W$ can both be given in factored forms $\phi = \prod_{C_i} C_i$ (\ie, as a set of clauses) and $W = \prod_{x \in X}$ (\ie, as a literal-weight function).
 
 % In this section, we define a project-join tree.
 % We then show how a project-join tree can be used to perform weighted model counting.

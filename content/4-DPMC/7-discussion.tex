@@ -2,40 +2,40 @@
 \label{sec_discussion}
 
 In this work, we introduced the concept of project-join trees for weighted model counting.
-These trees are at the center of a dynamic-programming framework that unifies and generalizes several model counting algorithms, including those based on ADDs \cite{dudek2020addmc}, tensors \cite{dudek2019efficient}, and database management systems \cite{fichte2020exploiting}.
+These trees are at the center of a dynamic-programming framework that unifies and generalizes several model counting algorithms, including those based on ADDs \cite{DPV20}, tensors \cite{DDV19}, and database management systems \cite{fichte2020exploiting}.
 This framework performs model counting in two phases.
 First, the planning phase produces a project-join tree from a CNF formula.
 Second, the execution phase uses the project-join tree to guide the dynamic-programming computation of the model count of the formula \wrt{} a literal-weight function.
 The current implementation of our dynamic-programming model-counting framework \Dpmc{} includes two planners (\Htb{} and \Lg) and two executors (\Dmc{} and \Tensor{}).
 
 For the planning phase, we implemented \Htb{} based on constraint-satisfaction heuristics
-\cite{tarjan1984simple,koster2001treewidth,dechter2003constraint,dechter1999bucket,bouquet1999gestion}
-and \Lg{} based on tree-decomposition tools \cite{strasser2017computing,tamaki2019positive,abseher2017htd}.
+\cite{tarjan1984simple,koster2001treewidth,dechter03,dechter99,bouquet1999gestion}
+and \Lg{} based on tree-decomposition tools \cite{strasser2017computing,Tamaki17,AMW17}.
 Our empirical work indicates that tree-decomposition tools tend to produce project-join trees of lower widths in shorter times.
 This is a significant finding with applications beyond model counting, \eg, in Boolean functional synthesis \cite{tabajara2017factored}.
 
-For the execution phase, we implemented \Dmc{} based on ADDs \cite{dudek2020addmc,somenzi2015cudd} and \Tensor{} based on tensors \cite{dudek2019efficient,numpy}.
+For the execution phase, we implemented \Dmc{} based on ADDs \cite{DPV20,somenzi2015cudd} and \Tensor{} based on tensors \cite{DDV19,numpy}.
 Empirically, we observed that (sparse) ADDs outperform (dense) tensors on single CPU cores.
 Whether this holds for richer architectures as well is a subject for future work.
 We will also consider adding to our framework an executor based on databases (\eg, \cite{fichte2020exploiting}).
 
-We showed that our dynamic-programming model-counting framework \Dpmc{} is competitive with state-of-the-art tools (\cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{lagniez2017improved}, and \minictd{} \cite{oztok2015top}).
+We showed that our dynamic-programming model-counting framework \Dpmc{} is competitive with state-of-the-art tools (\cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{LM17}, and \minictd{} \cite{OD15}).
 Although no single model counter dominates,
 \Dpmc{} considerably improves the virtual best solver and thus is valuable as part of the portfolio.
 
 In this work, we did not consider preprocessing of benchmarks.
-For example, \cite{dudek2019efficient} found that preprocessing (called \pkg{FT}, based on a technique to reduce variable occurrences using tree decompositions of the incidence graph \cite{samer2010constraint}) significantly improved tensor-network-based approaches for weighted model counting.
-Moreover, \cite{fichte2019improved} and \cite{dudek2020parallel} observed that the \tool{pmc} preprocessor \cite{lagniez2014preprocessing} notably improved the running time of some dynamic-programming-based model counters.
+For example, \cite{DDV19} found that preprocessing (called \pkg{FT}, based on a technique to reduce variable occurrences using tree decompositions of the incidence graph \cite{SS10_2}) significantly improved tensor-network-based approaches for weighted model counting.
+Moreover, \cite{fichte2019improved} and \cite{dudek2020parallel} observed that the \tool{pmc} preprocessor \cite{LM14} notably improved the running time of some dynamic-programming-based model counters.
 We expect these techniques to also improve \tool{DPMC}.
 
 A promising future research direction is multicore programming.
 Our planning tool \Lg{} can be improved to run back-end tree-decomposition solvers in parallel, as in \cite{dudek2020parallel}.
 We can also make the execution tool \Dmc{} support multicore ADD packages (\eg, \sylvan{} \cite{van2015sylvan}).
 Our other executor, \Tensor{}, is built on top of \Numpy{} \cite{numpy} and should be readily parallelizable (\eg, using techniques from \cite{dudek2020parallel}).
-We can then compare \Dpmc{} to parallel solvers (\eg, \cite{dal2018parallel,burchard2015laissez}).
+We can then compare \Dpmc{} to parallel solvers (\eg, \cite{dal2018parallel,BSB15}).
 
 %%MYV: Added
-Finally, decision diagrams have been widely used in artificial intelligence in the context of \emph{knowledge compilation}, where formulas are compiled into a tractable form in an early phase to support efficient query processing \cite{koriche2013knowledge,lagniez2017improved,darwiche2004new,oztok2015top}.
+Finally, decision diagrams have been widely used in artificial intelligence in the context of \emph{knowledge compilation}, where formulas are compiled into a tractable form in an early phase to support efficient query processing \cite{koriche2013knowledge,LM17,darwiche2004new,OD15}.
 Our work opens up an investigation into the combination of knowledge compilation and dynamic programming.
 The focus here is on processing a single model-counting query.
 Exploring how dynamic programming can also be leveraged to handle several queries is another promising research direction.

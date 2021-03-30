@@ -1,24 +1,24 @@
 \section{Introduction}
 \label{sec_intro}
-\textdef{Model counting} is a fundamental problem in artificial intelligence, with applications in machine learning, probabilistic reasoning, and verification \cite{domshlak2007probabilistic,gomes2009model,naveh2007constraint}.
+\textdef{Model counting} is a fundamental problem in artificial intelligence, with applications in machine learning, probabilistic reasoning, and verification \cite{DH07,GSS08,naveh2007constraint}.
 Given an input set of constraints, with the focus in this paper on Boolean constraints, the model-counting problem is to count the number of satisfying assignments.
-Although this problem is \#P-Complete \cite{valiant1979complexity}, a variety of tools exist that can handle industrial sets of constraints, \eg, \cite{sang2004combining,oztok2015top,darwiche2004new,lagniez2017improved}.
+Although this problem is \#P-Complete \cite{Valiant79}, a variety of tools exist that can handle industrial sets of constraints, \eg, \cite{sang2004combining,OD15,darwiche2004new,LM17}.
 
-Dynamic programming is a powerful technique that has been applied across computer science \cite{bellman1966dynamic}, including to model counting \cite{bacchus2009solving,samer2010algorithms,jegou2016improving}.
+Dynamic programming is a powerful technique that has been applied across computer science \cite{bellman1966dynamic}, including to model counting \cite{BDP09,SS10,jegou2016improving}.
 The key idea is to solve a large problem by solving a sequence of smaller subproblems and then incrementally combining these solutions into the final result.
 Dynamic programming provides a natural framework to solve a variety of problems defined on sets of constraints: subproblems can be formed by partitioning the constraints.
-This framework has been instantiated into algorithms for database-query optimization \cite{mcmahan2004projection}, satisfiability solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, and QBF evaluation \cite{charwat2016bdd}.
+This framework has been instantiated into algorithms for database-query optimization \cite{MPPV04}, satisfiability solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, and QBF evaluation \cite{charwat2016bdd}.
 
-Dynamic programming has also been the basis of several tools for model counting \cite{dudek2020addmc,dudek2019efficient,dudek2020parallel,fichte2020exploiting}.
-Although each tool uses a different data structure--algebraic decision diagrams (ADDs) \cite{dudek2020addmc}, tensors \cite{dudek2019efficient,dudek2020parallel}, or database tables \cite{fichte2020exploiting}--the overall algorithms have similar structure.
+Dynamic programming has also been the basis of several tools for model counting \cite{DPV20,DDV19,dudek2020parallel,fichte2020exploiting}.
+Although each tool uses a different data structure--algebraic decision diagrams (ADDs) \cite{DPV20}, tensors \cite{DDV19,dudek2020parallel}, or database tables \cite{fichte2020exploiting}--the overall algorithms have similar structure.
 % Also, decomposition techniques have seen many applications in model counting, cf.~\cite{jegou2016improving} and the reference therein. %JD: Moved the citation to paragraph 2 instead
 The goal of this work is to unify these approaches into a single conceptual framework: \emph{project-join trees}.
 Project-join trees are not an entirely new idea.
-Similar concepts have been used in constraint programming (as join trees \cite{dechter1989tree}), probabilistic inference (as cluster trees \cite{shachter1994global}), and database-query optimization (as join-expression trees \cite{mcmahan2004projection}).
+Similar concepts have been used in constraint programming (as join trees \cite{dechter1989tree}), probabilistic inference (as cluster trees \cite{SAS94}), and database-query optimization (as join-expression trees \cite{MPPV04}).
 Our original contributions include the unification of these concepts into project-join trees and the application of this unifying framework to model counting.
 
 We argue that project-join trees provide the natural formalism to describe execution plans for dynamic-programming algorithms for model counting.
-In particular, considering project-join trees as \emph{execution plans} enables us to decompose dynamic-programming algorithms such as the one in \cite{dudek2020addmc} into two phases, following the breakdown in \cite{dudek2020parallel}: a \emph{planning} phase and an \emph{execution} phase.
+In particular, considering project-join trees as \emph{execution plans} enables us to decompose dynamic-programming algorithms such as the one in \cite{DPV20} into two phases, following the breakdown in \cite{dudek2020parallel}: a \emph{planning} phase and an \emph{execution} phase.
 This enables us to study and compare different planning algorithms, different execution environments, and the interplay between planning and execution.
 Such a study is the main focus of this work.
 While the focus here is on model counting, our framework is of broader interest.
@@ -28,14 +28,14 @@ Refactoring the algorithm into a planning phase followed by an execution phase i
 The primary contribution of the work here is a dynamic-programming framework for weighted model counting based on project-join trees.
 In particular:
 \begin{enumerate}
-    \item We show that several recent algorithms for weighted model counting \cite{dudek2020addmc,dudek2019efficient,fichte2020exploiting} can be unified into a single framework using project-join trees.
+    \item We show that several recent algorithms for weighted model counting \cite{DPV20,DDV19,fichte2020exploiting} can be unified into a single framework using project-join trees.
     \item We compare the one-shot%
     \footnote{A \emph{one-shot} algorithm outputs exactly one solution and then terminates immediately.}
-    constraint-satisfaction heuristics used in \cite{dudek2020addmc} with the anytime%
-    \footnote{An \emph{anytime} algorithm outputs better and better solutions the longer it runs.} tree-decomposition tools used in \cite{dudek2019efficient} and find     tree-decomposition tools to outperform
+    constraint-satisfaction heuristics used in \cite{DPV20} with the anytime%
+    \footnote{An \emph{anytime} algorithm outputs better and better solutions the longer it runs.} tree-decomposition tools used in \cite{DDV19} and find     tree-decomposition tools to outperform
     constraint-satisfaction heuristics.
-    \item We compare (sparse) ADDs \cite{bahar1997algebraic} with (dense) tensors \cite{kjolstad2017tensor} and find that ADDs outperform tensors on single CPU cores.
-    \item We find that project-join-tree-based algorithms contribute to a portfolio of model counters containing \cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{lagniez2017improved}, and \minictd{} \cite{oztok2015top}.
+    \item We compare (sparse) ADDs \cite{bahar1997algebraic} with (dense) tensors \cite{KKCLA17} and find that ADDs outperform tensors on single CPU cores.
+    \item We find that project-join-tree-based algorithms contribute to a portfolio of model counters containing \cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{LM17}, and \minictd{} \cite{OD15}.
 \end{enumerate}
 These conclusions have significance beyond model counting.
 The superiority of anytime tree-decomposition tools over classical one-shot constraint-satisfaction heuristics can have broad applicability.

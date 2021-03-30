@@ -16,10 +16,10 @@ We conduct three computational experiments to address three following research q
 \end{enumerate}
 
 To answer RQ1, in Experiment 1 we compare the planner \Lg{} (which uses tree decompositions) to \htb{} (which uses constraint-satisfaction heuristics).
-\Lg{} uses the tree decomposers \flowcutter{} \cite{strasser2017computing}, \htd{} \cite{abseher2017htd}, and \tamaki{} \cite{tamaki2019positive}.
-\htb{} implements four heuristics for variable ordering: maximal-cardinality search (\mcs{}) \cite{tarjan1984simple}, lexicographic search for perfect/minimal orders (\lexp/\lexm{}) \cite{koster2001treewidth}, and min-fill (\minfill{}) \cite{dechter2003constraint}.
-\htb{} also implements two clause-ordering heuristics: bucket elimination (\be) \cite{dechter1999bucket} and Bouquet's Method (\bm) \cite{bouquet1999gestion}%
-% as well as two clause clustering heuristics \List{} and \tree{} \cite{dudek2020addmc}
+\Lg{} uses the tree decomposers \flowcutter{} \cite{strasser2017computing}, \htd{} \cite{AMW17}, and \tamaki{} \cite{Tamaki17}.
+\htb{} implements four heuristics for variable ordering: maximal-cardinality search (\mcs{}) \cite{tarjan1984simple}, lexicographic search for perfect/minimal orders (\lexp/\lexm{}) \cite{koster2001treewidth}, and min-fill (\minfill{}) \cite{dechter03}.
+\htb{} also implements two clause-ordering heuristics: bucket elimination (\be) \cite{dechter99} and Bouquet's Method (\bm) \cite{bouquet1999gestion}%
+% as well as two clause clustering heuristics \List{} and \tree{} \cite{DPV20}
 .
 
 To answer RQ2, in Experiment 2 we compare variable-ordering heuristics for the ADD-based executor \dmc.
@@ -58,7 +58,7 @@ All code and data are available (\url{https://github.com/vardigroup/DPMC/tree/v2
 In this experiment, we run all configurations of the planners \Lg{} and \htb{} once on each CNF benchmark with a timeout of 100 seconds.
 We present results in Figure \ref{figPlanning}.
 Each point $(x, y)$ on a plotted curve indicates that, within $x$ seconds on each of $y$ benchmarks, the first graded project-join tree produced by the corresponding planner has width at most \maxWidth{}.
-We choose \maxWidth{} because previous work shows that executors do not handle larger project-join trees well \cite{dudek2019efficient,dudek2020dpmc}. % JD: This is more true for tensors than for ADDs, let's just leave it out
+We choose \maxWidth{} because previous work shows that executors do not handle larger project-join trees well \cite{DDV19,dudek2020dpmc}. % JD: This is more true for tensors than for ADDs, let's just leave it out
 % Figure \ref{figPlanning} is qualitatively similar for other width cutoffs.
 
 While \Lg{} is an \emph{anytime} tool that produces several trees (of decreasing widths) for each benchmark, for all experiments in the main paper, we use only the first tree produced on each benchmark.

@@ -8,16 +8,16 @@ We are interested in the following experimental research questions, where we aim
     \item[(RQ3)] Are project-join-tree-based weighted model counters competitive with state-of-the-art tools?
 \end{itemize}
 
-To answer RQ1, we build two implementations of the planning phase: \Htb{} (Heuristic Tree Builder, based on \cite{dudek2020addmc}) and \Lg{} (Line Graph, based on \cite{dudek2019efficient}).
+To answer RQ1, we build two implementations of the planning phase: \Htb{} (Heuristic Tree Builder, based on \cite{DPV20}) and \Lg{} (Line Graph, based on \cite{DDV19}).
 \Htb{} implements Algorithm \ref{alg_csp_jt} and so is representative of the constraint-satisfaction approach.
 \Htb{} contains implementations of four clustering heuristics (\Be-\ListH, \Be-\TreeH, \Bm-\ListH, and \Bm-\TreeH) and nine cluster-variable-order heuristics (\Random, \Mcs, \Invmcs, \Lexp, \Invlexp, \Lexm, \Invlexm, \Minfill, and \Invminfill).
 \Lg{} implements Algorithm \ref{alg_td_to_join} and so is representative of the tree-decomposition approach.
-In order to find tree decompositions, \Lg{} leverages three state-of-the-art heuristic tree-decomposition solvers: \Flowcutter{} \cite{strasser2017computing}, \Htd{} \cite{abseher2017htd}, and \Tamaki{} \cite{tamaki2019positive}.
+In order to find tree decompositions, \Lg{} leverages three state-of-the-art heuristic tree-decomposition solvers: \Flowcutter{} \cite{strasser2017computing}, \Htd{} \cite{AMW17}, and \Tamaki{} \cite{Tamaki17}.
 These solvers are all \emph{anytime}, meaning that \Lg{} never halts but continues to produce better and better project-join trees when given additional time.
 On the other hand, \Htb{} produces a single project-join tree.
 We compare these implementations on the planning phase in Section \ref{sec_experiments_planning}.
 
-To answer RQ2, we build two implementations of the execution phase: \Dmc{} (for Diagram Model Counter, based on \cite{dudek2020addmc}) and \Tensor{} (based on \cite{dudek2019efficient}).
+To answer RQ2, we build two implementations of the execution phase: \Dmc{} (for Diagram Model Counter, based on \cite{DPV20}) and \Tensor{} (based on \cite{DDV19}).
 \Dmc{} uses ADDs as the underlying data structure with \cudd{} \cite{somenzi2015cudd}.
 \Tensor{} uses tensors as the underlying data structure with \Numpy{} \cite{numpy}.
 We compare these implementations on the execution phase in Section \ref{sec_experiments_execution}.
@@ -25,21 +25,21 @@ Since \Lg{} is an anytime tool, each execution tool must additionally determine 
 We explore options for this in Section \ref{sec_experiments_execution}.
 
 To answer RQ3, we combine each implementation of the planning phase and each implementation of the execution phase to produce model counters that use project-join trees.
-We then compare these model counters with the state-of-the-art tools \cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{lagniez2017improved}, and \minictd{} \cite{oztok2015top} in Section \ref{sec_experiments_wmc}.
+We then compare these model counters with the state-of-the-art tools \cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{LM17}, and \minictd{} \cite{OD15} in Section \ref{sec_experiments_wmc}.
 
-We use a set of \benchmarkCountAltogether{} literal-weighted model counting benchmarks from \cite{dudek2020addmc}.
+We use a set of \benchmarkCountAltogether{} literal-weighted model counting benchmarks from \cite{DPV20}.
 These benchmarks were gathered from two sources.
 First, the \classBayes{} class%
 \footnote{\urlBenchmarksBayes}
 consists of \benchmarkCountBayes{} CNF benchmarks%
-\footnote{excluding 11 benchmarks double-counted by \cite{dudek2020addmc}}
+\footnote{excluding 11 benchmarks double-counted by \cite{DPV20}}
 that encode Bayesian inference problems \cite{sang2005performing}.
 % This benchmark class is subdivided into three families: \famDqmr, \famGrid, and \famPlanRec.
 All literal weights in this class are between 0 and 1. % JD: [0, 1] looks like references; let's avoid it
 Second, the \classOther{} class%
 \footnote{\urlBenchmarksOther}
 consists of \benchmarkCountOther{} CNF benchmarks%
-\footnote{including 73 benchmarks missed by \cite{dudek2020addmc}}
+\footnote{including 73 benchmarks missed by \cite{DPV20}}
 that are divided into eight families: \famBmc, \famCircuit, \famConfig, \famHandmade, \famPlanning, \famQif, \famRandom, and \famSchedule{} \cite{clarke2001bounded,sinz2003formal,palacios2009compiling,klebanov2013sat}.
 All \classOther{} benchmarks are originally unweighted.
 As we focus in this work on weighted model counting, we generate weights for these benchmarks.
@@ -69,11 +69,11 @@ All code, benchmarks, and experimental data are available at \url{https://github
 We first compare constraint-satisfaction heuristics (\Htb) and tree-decomposition tools (\Lg) at building project-join trees of CNF formulas.
 To do this, we ran all 36 configurations of \Htb{} (combining four clustering heuristics with nine cluster-variable-order heuristics) and all three configurations of \Lg{} (choosing a tree-decomposition solver) once on each benchmark with a 100-second timeout.
 In Figure \ref{fig:planning}, we compare how long it takes various methods to find a high-quality (meaning width at most 30) project-join tree of each benchmark.
-We chose 30 for Figure \ref{fig:planning} since \cite{dudek2019efficient} observed that tensor-based approaches were unable to handle trees whose widths are above 30, but Figure \ref{fig:planning} is qualitatively similar for other choices of widths.
+We chose 30 for Figure \ref{fig:planning} since \cite{DDV19} observed that tensor-based approaches were unable to handle trees whose widths are above 30, but Figure \ref{fig:planning} is qualitatively similar for other choices of widths.
 We observe that \Lg{} is generally able to find project-join trees of lower widths than those \Htb{} is able to find.
 We therefore conclude that tree-decomposition solvers outperform constraint-satisfaction heuristics in this case.
 We observe that \Be-\TreeH{} as the clustering heuristic and \Invlexp{} as the cluster-variable-order heuristic make up the best-performing heuristic configuration from \Htb.
-This was previously observed to be the second-best heuristic configuration for weighted model counting in \cite{dudek2020addmc}.
+This was previously observed to be the second-best heuristic configuration for weighted model counting in \cite{DPV20}.
 We therefore choose \Be-\TreeH{} with \Invlexp{} as the representative heuristic configuration for \Htb{} in the remaining experiments.
 For \Lg{}, we choose \Flowcutter{} as the representative tree-decomposition tool in the remaining experiments.
 
@@ -102,10 +102,10 @@ To do this, we ran both \Dmc{} and \Tensor{} on all project-join trees generated
 The total times recorded include both the planning stage and the execution stage.
 
 Since \Lg{} is an anytime tool, it may have produced more than one project-join tree of each benchmark in Experiment 1.
-We follow \cite{dudek2019efficient} by allowing \Tensor{} and \Dmc{} to stop \Lg{} at a time proportional to the estimated cost to valuate the best-seen project-join tree.
+We follow \cite{DDV19} by allowing \Tensor{} and \Dmc{} to stop \Lg{} at a time proportional to the estimated cost to valuate the best-seen project-join tree.
 The constant of proportionality is chosen to minimize the PAR-2 score (\ie, the sum of the running times of all completed benchmarks plus twice the timeout for every uncompleted benchmark) of each executor.
 \Tensor{} and \Dmc{} use different methods for estimating cost.
-Tensors are a dense data structure, so the number of floating-point operations to valuate a project-join tree can be computed exactly as in \cite{dudek2019efficient}.
+Tensors are a dense data structure, so the number of floating-point operations to valuate a project-join tree can be computed exactly as in \cite{DDV19}.
 We use this as the cost estimator for \Tensor{}.
 ADDs are a sparse data structure, and estimating the amount of sparsity is difficult.
 It is thus hard to find a good cost estimator for \Dmc{}.
@@ -137,8 +137,8 @@ It would be interesting in the future to find better cost estimators for \Dmc{}.
 
 Finally, we compare project-join-tree-based model counters with state-of-the-art tools for weighted model counting.
 We construct four project-join-tree-based model counters by combining \Htb{} and \Lg{} (using the representative configurations from Experiment 1) with \Dmc{} and \Tensor{} (using the cost estimators for \Lg{} from Experiment 2).
-Note that \Dmc{}+\Htb{} is equivalent to \tool{ADDMC} \cite{dudek2020addmc}, and \Tensor{}+\Lg{} is equivalent to \tool{TensorOrder} \cite{dudek2019efficient}.
-We compare against the state-of-the-art model counters \cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{lagniez2017improved}, and \minictd{} \cite{oztok2015top}.
+Note that \Dmc{}+\Htb{} is equivalent to \tool{ADDMC} \cite{DPV20}, and \Tensor{}+\Lg{} is equivalent to \tool{TensorOrder} \cite{DDV19}.
+We compare against the state-of-the-art model counters \cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{LM17}, and \minictd{} \cite{OD15}.
 We ran each benchmark once with each model counter with a 1000-second timeout and recorded the total time taken.
 For the project-join-tree-based model counters, time taken includes both the planning stage and the execution stage.
 

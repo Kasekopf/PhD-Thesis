@@ -18,7 +18,7 @@ If $N$ has no free indices, the free vertex has no incident edges and the remain
 	An index $i$ is free in $N'$ if and only if $i$ appears in $N'$ and either $i$ is free in $N$ or $i$ also appears in $N \setminus N'$. Thus
     $$\tnfree{N'} = \bigcup_{A \in N'} \tdim{A} \cap \left( \tnfree{N} \cup \bigcup_{B \in N \setminus N'} \tdim{B} \right).$$
 	Since $\tdim{A} = \vinc{G}{A}$ for all $A \in N$ and $\tnfree{N} = \vinc{G}{z}$, we conclude that
-	$$\tnfree{N'} = \vinc{G}{N'} \cap (\vinc{G}{\fv} \cup \vinc{G}{N \setminus N'}) =  \vinc{G}{N'} \cap \vinc{G}{\V{G} \setminus N'}.$$\hfill$\square$
+	$$\tnfree{N'} = \vinc{G}{N'} \cap (\vinc{G}{\fv} \cup \vinc{G}{N \setminus N'}) =  \vinc{G}{N'} \cap \vinc{G}{\V{G} \setminus N'}.$$
 \end{proof}
 
 
@@ -46,7 +46,7 @@ This gives us a bijection between $\E{T'}$ and the set of recursive calls of Alg
 \end{align*}
 where the middle equality is given by applying Lemma \ref{lemma:tcn-equiv-structure} with $N' = \Lv{T_a}$.
 
-Conversely, let $S$ be a carving decomposition of $G$ of width $w$. Construct $S'$ from $S$ by removing the leaf $\fv$ (and its incident arc) from $S$. $S'$ is a contraction tree of $N$, since $S$ is a rooted binary tree (whose root is the node previously attached by an arc to $\fv$) and $\Lv{S'} = \Lv{S} \setminus \{\fv\} = N$. Moreover, applying the construction in the first half of the proof produces $S$ and so the max rank of $S'$ is $width_c(S) = w$. \hfill$\square$
+Conversely, let $S$ be a carving decomposition of $G$ of width $w$. Construct $S'$ from $S$ by removing the leaf $\fv$ (and its incident arc) from $S$. $S'$ is a contraction tree of $N$, since $S$ is a rooted binary tree (whose root is the node previously attached by an arc to $\fv$) and $\Lv{S'} = \Lv{S} \setminus \{\fv\} = N$. Moreover, applying the construction in the first half of the proof produces $S$ and so the max rank of $S'$ is $width_c(S) = w$.
 \end{proof}
 
 One corollary of Theorem \ref{thm:contraction-equiv-carving} is that tensor networks with isomorphic structure graphs have contraction trees of equal max rank. This corollary is closely related to Theorem 1 of \cite{EP14}.
@@ -84,20 +84,19 @@ Consider an arbitrary $a \in A$ and define $\chi_a: \V{T} \rightarrow 2^{\V{G}}$
 
 By repeating this process for every $a \in A$, by induction we produce in polynomial time a tree decomposition $(T', \chi')$ of width $width_t(T, \chi)$. Moreover, define the function $g: A \rightarrow \Lv{T'}$ for all $a \in A$ by $g(a) = \ell_a$ (the new leaf attached at each step). By construction, $\chi' \circ g = f$ (since each $\ell_a$ was labeled by $f(a)$) and moreover $f$ is an injection (since a new leaf was introduced at each step). It remains to make $f$ a bijection by removing leaves of $T'$.
 
-Since $f$ is an edge clique cover, properties (1) and (2) of a tree decomposition can be satisfied purely looking at the nodes of $T'$ in the range of $g$. Moreover, removing leaves of $T'$ cannot falsify property (3) of a tree decomposition. Thus we can repeatedly remove leaves of $T'$ not in the range of $g$ until we eventually reach a tree decomposition $(S, \psi)$ for $G$ whose leaves are exactly the range of $g$. After this process, $g$ is a bijection as a function onto $\Lv{S}$ and $\psi \circ f = \delta_G$. Moreover, since $\psi(\V{S}) \subseteq \chi'(\V{T'})$ it follows that $width_t(S, \psi) \leq width_t(T', \chi') = width_t(T, \chi)$ as desired. \hfill$\square$
+Since $f$ is an edge clique cover, properties (1) and (2) of a tree decomposition can be satisfied purely looking at the nodes of $T'$ in the range of $g$. Moreover, removing leaves of $T'$ cannot falsify property (3) of a tree decomposition. Thus we can repeatedly remove leaves of $T'$ not in the range of $g$ until we eventually reach a tree decomposition $(S, \psi)$ for $G$ whose leaves are exactly the range of $g$. After this process, $g$ is a bijection as a function onto $\Lv{S}$ and $\psi \circ f = \delta_G$. Moreover, since $\psi(\V{S}) \subseteq \chi'(\V{T'})$ it follows that $width_t(S, \psi) \leq width_t(T', \chi') = width_t(T, \chi)$ as desired.
 \end{proof}
 
 We now use this lemma to prove Theorem \ref{thm:carving-equiv-tree}.
 
-\begin{proof}% WLOG, we may assume that $\Line{G}$ has no vertices of degree 0 (vertices in $\Line{G}$ of degree 0 are an edge in $G$ between two vertices of degree $1$, so we can construct a carving decomposition of each pair of these vertices, use this lemma to find a carving decomposition of the remaining graph, and finally attach each carving decomposition at an arbitrary arc of $T'$ by introducing two new internal nodes).
-% TODO: Just add condition to Lemma that every node appears in A
+\begin{proof}
 First, observe that the image of $\vincf{G}: \V{G} \rightarrow \E{G}$ is an edge clique cover of $\Line{G}$. It follows by Lemma \ref{lemma:tree-simplification} that we can construct a tree decomposition $(S, \psi)$ of $\Line{G}$ and a bijection $g: \V{G} \rightarrow \Lv{S}$ such that $\psi \circ g = \vincf{G}$ and $width_t(S, \psi) \leq width_t(T, \chi)$.
 
 Construct $T'$ from $S$ by replacing every leaf $\ell \in \Lv{S}$ with $g^{-1}(\ell)$. Since $g$ is a bijection, $\Lv{T'} = \V{G}$ and so $T'$ is a carving decomposition. In order to compute the carving width of $T'$, consider an arbitrary arc $a \in \E{T'}$ and let $C_a$ be an element of the partition of $\V{G}$ defined by removing $a$. 
 
 For every edge $e \in \vinc{G}{C_a} \cap \vinc{G}{\Lv{T'} \setminus C_a}$, there must be vertices $v \in C_a$ and $w \in \Lv{T'} \setminus C_a$ that are both incident to $e$ and so $e \in \vinc{G}{v} \cap \vinc{G}{w}$. Since $\chi \circ g = \vincf{G}$, it follows that $e \in \chi(g(v)) \cap \chi(g(w))$.  Property 3 of tree decompositions implies that $e$ must also be in the label of every node in the path from $g(v)$ to $g(w)$ in $T$; in particular, $e$ must be in the label of both endpoints of $a$.
 
-Thus every element of $\vinc{G}{C_a} \cap \vinc{G}{\Lv{T'} \setminus C_a}$ must be in the label of both endpoints of $a$. It follows that $|\vinc{G}{C_a} \cap \vinc{G}{\Lv{T'} \setminus C_a}| \leq width_t(T, \chi)+1$. Hence $width_c(T') \leq width_t(T, \chi)+1$ as desired. \hfill$\square$
+Thus every element of $\vinc{G}{C_a} \cap \vinc{G}{\Lv{T'} \setminus C_a}$ must be in the label of both endpoints of $a$. It follows that $|\vinc{G}{C_a} \cap \vinc{G}{\Lv{T'} \setminus C_a}| \leq width_t(T, \chi)+1$. Hence $width_c(T') \leq width_t(T, \chi)+1$ as desired.
 \end{proof}
 
 An alternative proof of Theorem \ref{thm:carving-equiv-tree} uses Theorem 2.4 of \cite{HW18} to construct a carving decomposition $T'$ of $G$ from $T$ whose vertex congestion is $w+1$. By Lemma 2 of \cite{ACDJPS07}, it follows that the carving width of $T'$ is no more than $w+1$.

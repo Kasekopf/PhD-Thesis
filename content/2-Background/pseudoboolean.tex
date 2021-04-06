@@ -1,0 +1,39 @@
+\section{Pseudo-Boolean Functions}
+A \emph{pseudo-Boolean function} over a set $X$ of variables is a function $f: 2^X \to \R$. A Boolean formula $\phi$ over variables $X$ can be represented by a pseudo-Boolean function over $X$, denoted $[\phi]: 2^X \rightarrow \R$, where for all $\tau \in 2^X$, if $\tau$ satisfies $\phi$ then $[\phi](\tau) \equiv 1$ else $[\phi](\tau) \equiv 0$.
+
+Operations on pseudo-Boolean functions include \emph{product} and \emph{projection}.
+First, we define product.
+\begin{definition}[Product]
+\label{def_mult}
+    Let $X$ and $Y$ be sets of Boolean variables.
+    The \textdef{product} of functions $f: 2^X \to \R$ and $g: 2^Y \to \R$ is the function $f \mult g: 2^{X \cup Y} \to \R$ defined for all $\tau \in 2^{X \cup Y}$ by
+    $(f \mult g)(\tau) \equiv f(\tau \cap X) \mult g(\tau \cap Y).$
+\end{definition}
+Product generalizes conjunction of Boolean formulas: if $\alpha$ and $\beta$ are Boolean formulas, then $[\alpha] \mult [\beta] = [\alpha \land \beta]$.
+
+We need two types of projections on pseudo-Boolean functions: $\Sigma$-projection and $\exists$-projection; each eliminates a single variable. 
+We first define $\Sigma$-projection.
+\begin{definition}
+\label{def_sum}
+    Let $X$ be a set of Boolean variables, and let $x \in X$.
+    The \emph{$\Sigma$-projection} of a function $f: 2^X \to \R$ \wrt{} $x$ is the function $\Sigma_x f: 2^{X \setminus \set{x}} \to \R$ defined for all $\tau \in 2^{X \setminus \set{x}}$ by
+    $\pars{\Sigma_x f}(\tau) \equiv f(\tau) + f(\tau \cup \set{x}).$
+\end{definition}
+$\Sigma$-projection is also known as \emph{additive projection} or 
+\emph{marginalization}.
+We next define $\exists$-projection.
+\begin{definition}
+\label{def_exist}
+    Let $X$ be a set of Boolean variables, and let $x \in X$.
+    The \emph{$\exists$-projection} of a function $f: 2^X \to \R$ \wrt{} $x$ is the function $\exists_x f: 2^{X \setminus \set{x}} \to \R$ defined for all $\tau \in 2^{X \setminus \set{x}}$ by $\pars{\exists_x f}(\tau) \equiv \max(f(\tau), f(\tau \cup \set{x}))$.
+\end{definition}
+$\exists$-projection is also called \emph{disjunctive projection} and generalizes existential quantification: if $\alpha$ is a Boolean formula and $x \in \vars(\alpha)$, then $\exists_x [\alpha] = [\exists x ~ \alpha]$.
+
+% If $f: 2^X \to \B$ represents a Boolean formula, then $\exists_x f \equiv f[x \mapsto 0] \lor f[x \mapsto 1]$.
+
+$\Sigma$-projection and $\exists$-projection are each independently commutative. 
+That is, for all $x, y \in X$ and $f: 2^X \to \R$, we have that $\Sigma_x \Sigma_y f = \Sigma_y \Sigma_x f$ and $\exists_x \exists_y f = \exists_y \exists_x f$. 
+Thus, for all $X = \{x_1, \ldots, x_n\}$, define $\Sigma_X f \equiv \Sigma_{x_1} \ldots \Sigma_{x_n} f$ and $\exists_X f \equiv \exists_{x_1} \ldots \exists_{x_n} f$. 
+We also take the convention that $\Sigma_\varnothing f \equiv \exists_\varnothing f \equiv f$.
+
+In general, $\Sigma$-projection does not commute with $\exists$-projection. For example, if $f(x, y) = x \oplus y$ (XOR), then $\Sigma_x \exists_y f \neq \exists_y \Sigma_x f$.

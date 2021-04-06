@@ -10,7 +10,7 @@
     \begin{align*}
       \pars{\proj_x (A \mult B)} &(\tau)
        = (A \mult B)(\tau) + (A \mult B)(\tau \cup \set{x})
-        \tag{Definition \ref{def_proj}} \\
+        \tag{Definition \ref{def_sum}} \\
       & = A(\tau \cap X) \mult B(\tau \cap Y)+ A((\tau \cup \set{x}) \cap X) \mult B((\tau \cup \set{x}) \cap Y)
         \tag{Definition \ref{def_mult}} \\
       & = A(\tau \cap X) \mult B(\tau \cap Y)+ A((\tau \cup \set{x}) \cap X) \mult B(\tau \cap Y)
@@ -19,7 +19,7 @@
         \tag{as $x \in X$} \\
       & = (A(\tau \cap X) + A(\tau \cap X \cup \set{x})) \mult B(\tau \cap Y) \\
       & = \pars{\proj_x A}(\tau \cap X) \mult B(\tau \cap Y)
-        \tag{Definition \ref{def_proj}} \\
+        \tag{Definition \ref{def_sum}} \\
       & = \pars{\proj_x A}(\tau \cap (X \setminus \set{x})) \mult B(\tau \cap Y)
         \tag{as $x \notin \tau$} \\
       & = \pars{\pars{\proj_x A} \mult B)}(\tau)

@@ -16,9 +16,17 @@ Given a CNF formula $\phi$ and a literal-weight function $W$ over a set $X$ of v
     }(\emptyset)
 \end{equation}
 
-By taking advantage of the associative and commutative properties of multiplication as well as the commutative property of projection, we can rearrange Equation \eqref{eq_factored_wmc} to apply early projection.
-It was shown in \cite{DPV20} that early projection can significantly reduce computational cost.
-There are a variety of possible rearrangements of Equation \eqref{eq_factored_wmc} of varying costs.
+% TODO: Define W_x
+It was shown in \cite{DPV20} that the computational cost of Equation \ref{eq_factored_wmc} can be significantly reduced using \emph{early projection} \cite{MPPV04}. The key idea is that when performing a product followed by a projection, it is sometimes possible to perform the projection first. Formally:
+\begin{theorem}[Early Projection]
+\label{thm_early_proj}
+    Let $X$ and $Y$ be sets of variables.
+    For all functions $f: 2^X \to \R$ and $g: 2^Y \to \R$, if $x \in X \setminus Y$, then $\proj_x (f \mult g) = \pars{\proj_x f} \mult g.$
+\end{theorem}
+Early projection is a key technique in symbolic computation in a variety of settings, including database-query optimization \cite{KV00}, symbolic model checking \cite{burch1991symbolic}, satisfiability solving \cite{pan2005symbolic}, and model counting \cite{DPV20}.
+
+By taking advantage of the associative and commutative properties of multiplication as well as the commutative property of projection, \cite{DPV20} rearranged Equation \eqref{eq_factored_wmc} to apply early projection.
+There are a variety of possible rearrangements of Equation \eqref{eq_factored_wmc} of varying computational cost.
 Although \cite{DPV20} considered several heuristics for performing this rearrangement (using bucket elimination \cite{dechter99} and Bouquet's Method \cite{bouquet1999gestion}), they did not attempt to analyze rearrangements.
 
 In this work, we aim to analyze the quality of the rearrangement, in isolation from the underlying implementation and data structure used for Equation \eqref{eq_factored_wmc}.

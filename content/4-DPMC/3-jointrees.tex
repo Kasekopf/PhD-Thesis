@@ -17,7 +17,7 @@ Given a CNF formula $\phi$ and a literal-weight function $W$ over a set $X$ of v
 \end{equation}
 
 % TODO: Define W_x
-It was shown in \cite{DPV20} that the computational cost of Equation \ref{eq_factored_wmc} can be significantly reduced using \emph{early projection} \cite{MPPV04}. The key idea is that when performing a product followed by a projection, it is sometimes possible to perform the projection first. Formally:
+It was shown in \cite{DPV20} that the computational cost of Equation \ref{eq_factored_wmc} can be significantly reduced using \emph{early projection} \cite{MPPV04}. The key idea is that, when performing a product followed by a projection, it is sometimes possible to perform the projection first. Formally:
 \begin{theorem}[Early Projection]
 \label{thm_early_proj}
     Let $X$ and $Y$ be sets of variables.
@@ -25,11 +25,11 @@ It was shown in \cite{DPV20} that the computational cost of Equation \ref{eq_fac
 \end{theorem}
 Early projection is a key technique in symbolic computation in a variety of settings, including database-query optimization \cite{KV00}, symbolic model checking \cite{burch1991symbolic}, satisfiability solving \cite{pan2005symbolic}, and model counting \cite{DPV20}.
 
-By taking advantage of the associative and commutative properties of multiplication as well as the commutative property of projection, \cite{DPV20} rearranged Equation \eqref{eq_factored_wmc} to apply early projection.
+By taking advantage of the associative and commutative properties of multiplication as well as the commutative property of $\Sigma$-projection, \cite{DPV20} rearranged Equation \eqref{eq_factored_wmc} to apply early projection.
 There are a variety of possible rearrangements of Equation \eqref{eq_factored_wmc} of varying computational cost.
 Although \cite{DPV20} considered several heuristics for performing this rearrangement (using bucket elimination \cite{dechter99} and Bouquet's Method \cite{bouquet1999gestion}), they did not attempt to analyze rearrangements.
 
-In this work, we aim to analyze the quality of the rearrangement, in isolation from the underlying implementation and data structure used for Equation \eqref{eq_factored_wmc}.
+In this chapter, we aim to analyze the quality of the rearrangement, in isolation from the underlying implementation and data structure used for Equation \eqref{eq_factored_wmc}.
 This approach has been highly successful for database-query optimization \cite{MPPV04}, where the central object of theoretical reasoning is the \emph{query plan}.
 The approach has also seen similar success in Bayesian network inference \cite{darwiche1998dynamic}.
 
@@ -79,7 +79,7 @@ See Figure \ref{fig_join_tree} for a graphical example of a project-join tree.
 \end{figure}
 
 Project-join trees have previously been studied in the context of database-query optimization \cite{MPPV04}.
-Project-join trees are closely related to contraction trees in the context of tensor networks \cite{EP14,DDV19}.
+Project-join trees are also closely related to contraction trees in the context of tensor networks \cite{EP14,DDV19}.
 Once a rearrangement of Equation \eqref{eq_factored_wmc} has been represented by a project-join tree, we can model the computation process according to the rearrangement.
 In particular, given a literal-weight function $W = \prod_{x \in X} W_x$, we define the $W$-\emph{valuation} of each node $n \in \V{T}$ as a pseudo-Boolean function associated with $n$.
 The $W$-valuation of a node $n \in \V{T}$ is denoted $f^W_n$ and defined as follows:

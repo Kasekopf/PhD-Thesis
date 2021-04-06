@@ -1,7 +1,0 @@
-\begin{abstract}
-A promising new algebraic approach to weighted model counting makes use of tensor networks, following a reduction from weighted model counting to tensor-network contraction. Prior work has focused on analyzing the single-core performance of this approach, and demonstrated that it is an effective addition to the current portfolio of weighted-model-counting algorithms.
-
-In this work, we explore the impact of multi-core and GPU use on tensor-network contraction for weighted model counting. To leverage multiple cores, we implement a parallel portfolio of tree-decomposition solvers to find an order to contract tensors. To leverage a GPU, we use \tool{TensorFlow} to perform the contractions. We compare the resulting weighted model counter on 1914 standard weighted model counting benchmarks and show that it significantly improves the virtual best solver.
-
-% \keywords{Weighted Model Counting \and Tensor Network Contraction \and Multi-core \and GPU \and Tree Decomposition \and Branch Decomposition}
-\end{abstract}

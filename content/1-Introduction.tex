@@ -1,2 +1,49 @@
 \chapter{Introduction}
 \label{ch:intro}
+Constrained counting is a fundamental problem in artificial intelligence, with applications in probabilistic reasoning, planning, inexact computing, engineering reliability, and statistical physics \cite{Bacchus2003,DH07,GSS08,naveh2007constraint}. In constrained counting (also called weighted model counting) the task is to count the total weight, subject to a given weight function, of the set of solutions of input constraints. Even when the weight function is a constant function, constrained counting is \#P-Complete \cite{Valiant79}. Nevertheless, a variety of tools exist that can handle industrial sets of constraints, \eg, \cite{sang2004combining,OD15,darwiche2004new,LM17}. 
+
+
+Dynamic programming is a powerful technique that has been applied across computer science \cite{bellman1966dynamic}, including to model counting \cite{BDP09,SS10,jegou2016improving}.
+The key idea is to solve a large problem by solving a sequence of smaller subproblems and then incrementally combining these solutions into the final result.
+Dynamic programming provides a natural framework to solve a variety of problems defined on sets of constraints: subproblems can be formed by partitioning the constraints.
+This framework has been instantiated into algorithms for database-query optimization \cite{MPPV04}, satisfiability solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, and QBF evaluation \cite{charwat2016bdd}. 
+Dynamic programming has also been the basis of several tools for model counting \cite{DPV20,fichte2020exploiting}.
+
+
+The parallelization of neural network training and inference has seen massive research across the machine learning and high-performance computing communities \cite{ABCCDDDGII16,JYPPABBBBB17,PGMLJGKLGA19}. Consequently, GPUs give orders of magnitude of speedup over a single core for neural-network algorithms \cite{KSTKPPRS19,NRBHHJN15}. In this work, we aim to directly leverage advances in multi-core and GPU performance designed for neural-network algorithms in the service of weighted model counting.
+
+
+Dynamic programming has also been the basis of several tools for model counting \cite{DPV20,DDV19,dudek2020parallel,fichte2020exploiting}.
+Although each tool uses a different data structure--algebraic decision diagrams (ADDs) \cite{DPV20}, tensors \cite{DDV19,dudek2020parallel}, or database tables \cite{fichte2020exploiting}--the overall algorithms have similar structure.
+% Also, decomposition techniques have seen many applications in model counting, cf.~\cite{jegou2016improving} and the reference therein. %JD: Moved the citation to paragraph 2 instead
+The goal of this work is to unify these approaches into a single conceptual framework: \emph{project-join trees}.
+Project-join trees are not an entirely new idea.
+Similar concepts have been used in constraint programming (as join trees \cite{dechter1989tree}), probabilistic inference (as cluster trees \cite{SAS94}), and database-query optimization (as join-expression trees \cite{MPPV04}).
+Our original contributions include the unification of these concepts into project-join trees and the application of this unifying framework to model counting.
+
+\section{Contributions}
+The main contribution of this thesis is a clean separation of dynamic-programming algorithms for model counting into
+Planning (high-level reasoning) and Execution (low-level computation) phases.
+
+We first introduce this separation in a new model counter, \tool{TensorOrder}. This includes a reduction from weighted model counting to tensor network contraction. We also introduce a novel planning algorithm to factor tensor networks based on tree decompositions.
+
+Next, we show that introducing this separation improves an existing model counter. We unify a variety of approaches into a single conceptual framework using project-join trees. We show that replacing the existing constraint-satisfaction planner with a planner based on graph decompositions leads to a faster model counter.
+
+We next use this approach to develop a parallel model counter by separately parallelizing the planning and execution phases. To handle limited-memory environments (e.g., on a GPU), we introduce a novel technique for parallel model counting by using variable marginalization.
+
+Finally, we extend our approach to projected model counting. We present a novel algorithm for performing projected model counting with a planning and execution phase. As part of this, we introduce a novel planning algorithm that builds graded project-join trees from tree decompositions.
+
+\section{Organization}
+The remainder of this thesis is organized as follows:
+
+Chapter \ref{ch:background} presents notation and background on model counting, existing high-level planning tools (graph decompositions), and existing low-level computational tools (tensors and decision diagrams). 
+
+Chapter \ref{ch:tensors} presents a model counter \tool{TensorOrder} that uses graph decompositions for planning and tensor networks for execution. Most results in this chapter appear in \cite{DDV19}.
+
+Chapter \ref{ch:dpmc} presents a model counter \tool{DPMC} that uses graph decompositions for planning and decision diagrams for execution. Most results in this chapter appear in \cite{dudek2020dpmc}.
+
+Chapter \ref{ch:parallel} parallelizes the techniques in Chapter \ref{ch:tensors} to run on multiple CPUs, a GPU, and on a TPU. Most results in this chapter appear in \cite{dudek2020parallel}.
+
+Chapter \ref{ch:procount} generalizes the techniques in Chapter \ref{ch:dpmc} to projected model counting.
+
+Finally, Chapter \ref{ch:conclusion} summarizes the main contributions of this thesis and describes several possible future directions.

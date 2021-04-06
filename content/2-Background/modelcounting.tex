@@ -1,14 +1,14 @@
 \section{Literal-Weighted Model Counting}
 \label{sec:wmc}
-The task in weighted model counting is to count the total weight, subject to a given weight function, of the set of solutions of input constraints (typically given in CNF). We focus on so-called \emph{literal-weight functions}, where the weight of a solution can be expressed as the product of weights associated with all satisfied literals. Formally:
-\begin{definition}[Weighted Model Count]
-  Let $\varphi$ be a formula over Boolean variables $X$ and let $W: X \times \{0,1\} \rightarrow \mathbb{R}$ be a function. The \emph{(literal-)weighted model count} of $\varphi$ w.r.t. $W$ is
-  $W(\varphi) \equiv \sum_{\tau \in \domain{X}} \varphi(\tau) \cdot \prod_{x \in X} W(x, \tau(x)),$ where $[X]$ is the set of all functions from $X$ to $\{0, 1\}$.
-\end{definition}
 
-We focus in this work on weighted model counting, as opposed to \emph{unweighted model counting} where the weight function $W$ is constant. There are a variety of counters \cite{CW16,FHMW17,Thurley2006} that can perform only unweighted model counting and so we do not compare against them. Of particular note here is \tool{countAntom} \cite{BSB15}, a multi-core unweighted model counter. An interesting direction for future work is to explore the integration of weights into \tool{countAntom} and compare with tensor-network-based approaches to weighted model counting.
+The task in weighted model counting is to count the total weight, subject to a given weight function, of the set of solutions of input constraints (typically given in CNF). Formally:
+\begin{definition}[Weighted Model Count]
+  Let $\varphi$ be a formula over Boolean variables $X$ and let $W: 2^X \rightarrow \mathbb{R}$ be a function. The \emph{weighted model count} of $\varphi$ w.r.t. $W$ is
+  $W(\varphi) \equiv \sum_{\tau \in 2^X} \varphi(\tau) \cdot W(\tau).$
+\end{definition}
+$W$ is called the \emph{weight function}. We focus on the case where $W$ is a \emph{literal-weight function}, where there exist weights $W_{x,0}, W_{x,1} \in \mathbb{R}$ for each $x \in X$ so that, for all $\tau \in 2^X$, $W(\tau) = \prod_{x \in \tau} W_{x,1} \cdot \prod_{x \in X \setminus \tau} W_{x,0}$. The literal-weighted formulation is an equivalent representation of log-linear models \cite{koller2009probabilistic}. If $W$ is the constant function that always returns 1, $W(\varphi)$ is known as the \emph{unweighted model count} of $\varphi$.
+
+% TODO: Include in Ch 5?
+% We focus in this work on weighted model counting, as opposed to \emph{unweighted model counting} where the weight function $W$ is constant. There are a variety of counters \cite{CW16,FHMW17,Thurley2006} that can perform only unweighted model counting and so we do not compare against them. Of particular note here is \tool{countAntom} \cite{BSB15}, a multi-core unweighted model counter. An interesting direction for future work is to explore the integration of weights into \tool{countAntom} and compare with tensor-network-based approaches to weighted model counting.
 
 Existing approaches to weighted model counting can be split broadly into three categories: \emph{direct reasoning}, \emph{knowledge compilation}, and \emph{dynamic programming}. In counters based on direct reasoning (e.g., \tool{cachet} \cite{SBK05}), the idea is to reason directly about the CNF representation of $\varphi$. In counters based on knowledge compilation (e.g. \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}), the idea is to compile $\varphi$ into an alternative representation on which counting is easy. In counters based on dynamic programming (e.g. \tool{ADDMC} \cite{DPV20} and \tool{gpuSAT2} \cite{FHWZ18,FHZ19}), the idea is to traverse the clause structure of $\varphi$. Tensor-network approaches to counting (e.g. \tool{TensorOrder} \cite{DDV19} and this work) are also based on dynamic programming. Dynamic programming approaches often utilize graph decompositions, which we define in the next section. 
-
-% One example is \tool{cachet} \cite{SBK05}, which uses DPLL search combined with component caching and clause learning to perform weighted model counting. 
-% Dynamic programming techniques are closely related to fixed-parameter algorithms for counting \cite{FMR08,SS10}. In particular, tensor network approaches can be seen as fixed-parameter algorithms for counting parameterized by the treewidth of the incidence graph (which is the bipartite graph where both variables and clauses are vertices and edges indicate that the variable appears in the connected clause). We define graph decompositions in the following section.

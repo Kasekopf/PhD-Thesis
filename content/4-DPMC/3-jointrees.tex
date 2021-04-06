@@ -23,6 +23,10 @@ It was shown in \cite{DPV20} that the computational cost of Equation \ref{eq_fac
     Let $X$ and $Y$ be sets of variables.
     For all functions $f: 2^X \to \R$ and $g: 2^Y \to \R$, if $x \in X \setminus Y$, then $\proj_x (f \mult g) = \pars{\proj_x f} \mult g.$
 \end{theorem}
+\begin{proof}
+    By Definition \ref{def_mult} and Definition \ref{def_sum}. See \textbf{Theorem 2} of \cite{DPV20} for details.
+\end{proof}
+
 Early projection is a key technique in symbolic computation in a variety of settings, including database-query optimization \cite{KV00}, symbolic model checking \cite{burch1991symbolic}, satisfiability solving \cite{pan2005symbolic}, and model counting \cite{DPV20}.
 
 By taking advantage of the associative and commutative properties of multiplication as well as the commutative property of $\Sigma$-projection, \cite{DPV20} rearranged Equation \eqref{eq_factored_wmc} to apply early projection.

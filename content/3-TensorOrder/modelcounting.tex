@@ -1,30 +1,17 @@
 \section{From Weighted Model Counting to Tensor Networks}
 \label{sec:tensors:wmc}
-In this section, we introduce a framework for solving the problem of weighted model counting with tensor networks. The task in weighted model counting is to count the total weight, subject to a given (literal) weight function, of the set of solutions of input constraints. Formally:
-\begin{definition}[Weighted Model Count]
-  Let $\varphi$ be a formula over Boolean variables $X$ and let $W: X \times \{0,1\} \rightarrow \mathbb{R}$ be a function (called the \emph{weight function}). The \emph{weighted model count} of $\varphi$ w.r.t. $W$ is
-  $$W(\varphi) \equiv \sum_{\tau \in \domain{X}} \varphi(\tau) \cdot \prod_{x \in X} W(x, \tau(x)).$$
-\end{definition}
-
-
-% Let us first define weighted model counting. Recall that a \emph{weight function} over a set of variables $X$ is a function $W$ that assigns a (real) weight to the literals $x$ and $\neg x$ for each $x \in X$. The \emph{weight} of a model $\tau \subseteq X$ is the product of the weights of all satisfied literals, and the 
-
-% : X \cup \neg X \rightarrow \mathbb{R}$, where $\neg X = \{\neg x~:~x \in X\}$.
-
-
-% For example, consider the reduction from constrained counting to tensor network contraction \cite{BMT15}. Recall that the \emph{model count} of a formula $F$ (defined over a set of propositional variables $X$) is the number of subsets of $X$ on which $F$ evaluates to true. There is a polynomial-time algorithm to construct a tensor network whose contraction is the model count of an input formula $F$. 
-
-Note that $[X]$ is the set of all functions $\tau$ from $X$ to $\{0, 1\}$. If $W$ is the constant function that always returns 1, $W(\varphi)$ is known as the \emph{unweighted model count} of $\varphi$. Existing reductions from model counting to tensor-network contraction \cite{BMT15,KCMR18} focus on unweighted model counting. Since we are interested in the more general problem of weighted model counting, we prove that the reduction can be easily extended:
+In this section, we introduce a framework for solving the problem of weighted model counting with tensor networks. Existing reductions from model counting to tensor-network contraction \cite{BMT15,KCMR18} focus on unweighted model counting. Since we are interested in the more general problem of weighted model counting, we prove that the reduction can be easily extended:
 \begin{theorem}
 \label{thm:wmc-reduction}
-Let $\varphi$ be a CNF formula over Boolean variables $X$ and let $W$ be a weight function. One can construct in polynomial time a tensor network $N_\varphi$ such that $\tnfree{N_\varphi} = \emptyset$ and the contraction of $N_\varphi$ is $W(\varphi)$.
+Let $\varphi$ be a CNF formula over Boolean variables $X$ and let $W: 2^X \rightarrow \mathbb{R}$ be a literal-weight function. One can construct in polynomial time a tensor network $N_\varphi$ such that $\tnfree{N_\varphi} = \emptyset$ and the contraction of $N_\varphi$ is $W(\varphi)$.
 \end{theorem}
 \begin{proof}
 The key idea is to include in $N_\varphi$ a tensor $A_x$ for each variable $x \in X$ and a tensor $B_C$ for each clause $C \in \varphi$ such that the tensors share an index if and only if the corresponding variable appears in the corresponding clause.
 
-For each $C \in \varphi$, let $\support{C}$ be the set of Boolean variables that appear in $C$. Similarly, for each $x \in X$, let $\depend{x}$ be the set of clauses that contain $x$. Define $I = \{(x, C) : C \in \varphi, x \in \support{C}\}$ to be a set of indices, each with domain $\{0, 1\}$. That is, $I$ has an index for each appearance of each variable in $\varphi$.
+% TODO: Define \support in preliminaries.
+Define $I = \{(x, C) : C \in \varphi, x \in \support{C}\}$ to be a set of indices, each with domain $\{0, 1\}$. That is, $I$ has an index for each appearance of each variable in $\varphi$. We use $I$ as the set of indices in $N_\varphi$.
 
-For each $x \in X$, let $A_x: [\{x\} \times \depend{x}] \rightarrow \mathbb{R}$ be the tensor defined by $$A_x(\tau) \equiv \begin{cases}W(x, 1)&\text{if}~\tau((x,C)) = 1~\text{for all}~C \in \depend{x}\\W(x, 0)&\text{if}~\tau((x,C)) = 0~\text{for all}~C \in \depend{x}\\0&\text{otherwise.}\end{cases}$$
+Next, recall that since $W$ is a literal-weight function there exist $W_{x,0}, W_{x,1} \in \mathbb{R}$ for each $x \in X$ so that, for all $\tau \in 2^X$, $W(\tau) = \prod_{x \in \tau} W_{x,1} \cdot \prod_{x \in X \setminus \tau} W_{x,0}$. For each $x \in X$, let $\depend{x}$ be the set of clauses that contain $x$. Define $A_x: [\{x\} \times \depend{x}] \rightarrow \mathbb{R}$ to be the tensor defined by $$A_x(\tau) \equiv \begin{cases}W_{x,1}&\text{if}~\tau((x,C)) = 1~\text{for all}~C \in \depend{x}\\W_{x,0}&\text{if}~\tau((x,C)) = 0~\text{for all}~C \in \depend{x}\\0&\text{otherwise.}\end{cases}$$
 
 Next, for each $C \in \varphi$, let $B_C: [\support{C} \times \{C\}] \rightarrow \mathbb{R}$ be the tensor defined by
 $$B_C(\tau) \equiv \begin{cases}1& \text{if}~\{x: x \in \support{C}~\text{and}~\tau((x, C)) = 1\}~\text{satisfies}~C\\0&\text{otherwise.}\end{cases}$$
@@ -32,8 +19,8 @@ $$B_C(\tau) \equiv \begin{cases}1& \text{if}~\{x: x \in \support{C}~\text{and}~\
 Finally, let $N_\varphi = \{ A_x : x \in X\} \cup \{B_C : C \in \varphi\}$. Each index $(x, C) \in I$ appears exactly twice in $N_\varphi$ (in $A_x$ and $B_C$) and so is a bond index. Thus $N_\varphi$ is a tensor network with $\tnfree{N_\varphi} = \emptyset$. We now compute $\tntensor{N_\varphi}$, the contraction of $N_\varphi$. By Definition 5,
 $$\tntensor{N_\varphi}(\emptyset) = \sum_{\rho \in \domain{I}} \prod_{x \in X} A_x(\rho\restrict{\{x\} \times \depend{x}}) \cdot \prod_{C \in \varphi} B_C(\rho\restrict{\support{C} \times \{C\}}).$$
 
-To compute the term of this sum for each $\rho \in \domain{I}$, we examine if there exists some $\tau_\rho \in \domain{X}$ such that $\rho((x, C)) = \tau_\rho(x)$ for all $(x, C) \in I$. If so, then by construction $A_x(\rho\restrict{\{x\} \times \depend{x}}) = W(x, \tau_\rho(x))$ and $B_C(\rho\restrict{\support{C} \times \{C\}}) = C(\tau_\rho\restrict{\support{C}})$. On the other hand, if no such $\tau_\rho$ exists then there is some $y \in X$ such that $\rho$ is not constant on $\{y\} \times \depend{y}$. Thus by construction $A_y(\rho\restrict{\{y\} \times \depend{y}}) = 0$ and so the term in the sum for $\rho$ is 0. Hence
-$$\tntensor{N_\varphi}(\emptyset) = \sum_{\tau \in \domain{X}} \prod_{x \in X} W(x, \tau(x)) \cdot \prod_{C \in \varphi} C(\tau\restrict{\support{C}}) = W(\varphi).$$\hfill$\square$
+To compute the term of this sum for each $\rho \in \domain{I}$, we examine if there exists some $\tau_\rho \in \domain{X}$ such that $\rho((x, C)) = \tau_\rho(x)$ for all $(x, C) \in I$. If so, then by construction $A_x(\rho\restrict{\{x\} \times \depend{x}}) = W_{x, \tau_\rho(x)}$ and $B_C(\rho\restrict{\support{C} \times \{C\}}) = C(\tau_\rho\restrict{\support{C}})$. On the other hand, if no such $\tau_\rho$ exists then there is some $y \in X$ such that $\rho$ is not constant on $\{y\} \times \depend{y}$. Thus by construction $A_y(\rho\restrict{\{y\} \times \depend{y}}) = 0$ and so the term in the sum for $\rho$ is 0. Hence
+$$\tntensor{N_\varphi}(\emptyset) = \sum_{\tau \in \domain{X}} \prod_{x \in X} W_{x, \tau(x)} \cdot \prod_{C \in \varphi} C(\tau\restrict{\support{C}}) = W(\varphi).$$
 \end{proof}
 
 \begin{figure}[t]
@@ -54,7 +41,7 @@ Theorem \ref{thm:wmc-reduction} suggests that the weighted model count of $\varp
     \caption{Computing the weighted model count with a TN}
     \DontPrintSemicolon
     \KwIn{$\varphi$: a CNF formula}
-    \KwIn{$W$: a weight function}
+    \KwIn{$W$: a literal-weight function}
     \KwOut{$W(\varphi)$, the weighted model count of $\varphi$ w.r.t. $W$}
     $N_\varphi \gets \text{tensor network constructed via Theorem \ref{thm:wmc-reduction}}$\;
     $T \gets \func{FindContractionTree}(N_\varphi)$ \tcc*{e.g., \textbf{LG} or \textbf{FG}}

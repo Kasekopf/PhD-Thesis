@@ -57,20 +57,6 @@ Formally, a \textdef{literal-weight function} $W$ can be factored as $W = \prod_
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\paragraph{\textbf{Graphs}}
-
-A \emph{graph} $G$ has a
-% nonempty % Vu needs an initially empty tree
-set $\V{G}$ of vertices, a set $\E{G}$ of (undirected) edges, a function $\delta_G: \V{G} \to 2^{\E{G}}$ that gives the set of edges incident to each vertex, and a function $\epsilon_G: \E{G} \to 2^{\V{G}}$ that gives the set of vertices incident to each edge.
-Each edge must be incident to exactly two vertices, but multiple edges can exist between two vertices.
-A \emph{tree} is a simple, connected, and acyclic graph.
-A \emph{leaf} of a tree $T$ is a vertex of degree one, and we use $\Lv{T}$ to denote the set of leaves of $T$.
-We often refer to a vertex of a tree as a \emph{node} and an edge as an \emph{arc} to avoid confusion.
-A \emph{rooted tree} is a tree $T$ together with a distinguished node $r \in \V{T}$ called the \emph{root}.
-In a rooted tree $(T, r)$, each node $n \in \V{T}$ has a (possibly empty) set of \emph{children}, denoted $\C{T}{r}{n}$, which contains all nodes $n'$ adjacent to $n$ \st{} all paths from $n'$ to $r$ contain $n$.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % \paragraph\textbf{{Algebraic Decision Diagrams}}
 
 % A \emph{Binary Decision Diagram}, or BDD, is a data structure that represents a Boolean function $f : \{0, 1\}^n \to \{0, 1\}$ as a directed acyclic graph \cite{bryant1986graph}.

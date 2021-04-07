@@ -64,6 +64,9 @@ For the function $\clusterVarOrder$, we consider the heuristics \Random, \Mcs{} 
 Heuristics for $\clauseRank$ include \Be{} (\textdef{bucket elimination} \cite{dechter99}) and \Bm{} (\textdef{Bouquet's Method} \cite{bouquet1999gestion}).
 For $\chosenCluster$, the heuristics we use are \ListH{} and \TreeH{} \cite{DPV20}.
 We combine $\clauseRank$ and $\chosenCluster$ as \textdef{clustering heuristics}: $\Be-\ListH$, $\Be-\TreeH$, $\Bm-\ListH$, and $\Bm-\TreeH$.
-These heuristics are described in \cite{DPV20}%
-% and in Appendix \ref{sec_csp_heuristics}
-.
+
+The only heuristic we consider that does not appear in \cite{DPV20} is the \Minfill{} heuristic for variable order \cite{dechter03}. 
+This heuristic operates on the Gaifman graph of $\varphi$ and chooses variables one-by-one.
+Whenever a variable $v$ is chosen, we add \textdef{fill-in} edges to connect all of $v$'s neighbors in the Gaifman graph.
+At each step of the \Minfill{} heuristic, the next variable chosen is the variable that minimizes the number of fill-in edges.
+All other heuristics are described in \cite{DPV20}.

@@ -71,8 +71,8 @@ It was previously known that branch decompositions can also be used in variable 
 
 \subsection{Parallelizing the Execution Stage with TensorFlow and Slicing}
 \label{sec:parallelizing:execution}
-As discussed in Chapter \ref{ch:background}, each contraction in Algorithm \ref{alg:network-contraction} can be implemented as a matrix multiplication. % TODO: fix
-This was done in \cite{DDV19} using \tool{numpy} \cite{numpy}, and it is straightforward to adjust the implementation to leverage multiple cores with \tool{numpy} and a GPU with \tool{TensorFlow} \cite{ABCCDDDGII16}.
+As discussed in Chapter \ref{ch:background}, each contraction in Algorithm \ref{alg:network-contraction} can be implemented as a matrix multiplication.
+This was done in Chapter \ref{ch:tensors} using \tool{numpy} \cite{numpy}, and it is straightforward to adjust the implementation to leverage multiple cores with \tool{numpy} and a GPU with \tool{TensorFlow} \cite{ABCCDDDGII16}.
 
 The primary challenge that emerges when using a GPU is dealing with the small onboard memory. For example, the \tool{NVIDIA Tesla-V100} (which we use in Section \ref{sec:experiments}) has just 16GB of onboard memory. This limits the size of tensors that can be easily manipulated. A single contraction of two tensors can be performed across multiple GPU kernel calls \cite{RRBSKH08}, and similar techniques were implemented in \tool{gpusat2} \cite{FHZ19}. These techniques, however, require parts of the input tensors to be copied into and out of GPU memory, which incurs significant slowdown.
 

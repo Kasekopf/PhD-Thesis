@@ -96,9 +96,20 @@ The $W$-valuation of a node $n \in \V{T}$ is denoted $f^W_n$ and defined as foll
     \end{cases}
 \end{equation}
 
-Note that the $W$-valuation of a leaf node $n \in \Lv{T}$ is a clause $c = \gamma(n) \in \phi$, interpreted in this context as an associated function $\lambda_c : 2^{\vars(c)} \to \B$ where $\lambda_c(\tau) = 1$ if and only if the truth assignment $\tau$ satisfies $c$.
-The main idea is that the $W$-valuation at each node of $T$ is a pseudo-Boolean function computed as a subexpression of Equation \eqref{eq_factored_wmc}.
-The $W$-valuation of the root is exactly the result of Equation \eqref{eq_factored_wmc}, \ie, the weighted model count of $\phi$ \wrt{} $W$:
+Note that the $W$-valuation of a leaf node $n \in \Lv{T}$ is a clause $c = \gamma(n) \in \phi$, interpreted in this context as an associated function $\lambda_c : 2^{\vars(c)} \to \B$ where $\lambda_c(\tau) = 1$ if and only if the truth assignment $\tau$ satisfies $c$. 
+
+The main idea is that the $W$-valuation at each node of $T$ is a pseudo-Boolean function computed as a subexpression of Equation \eqref{eq_factored_wmc}. The set of variables that appear in the $W$-valuation of a node is independent of $W$.
+In particular, for each node $n \in \V{T}$, define $\vars(n)$ as follows:
+\begin{equation}
+    \vars(n) \equiv
+    \begin{cases}
+        \vars(\gamma(n)) & \text{if}~n \in \Lv{T} \\
+        \pars{\bigcup_{o \in \C{T}{r}{n}} \vars(o)} \setminus \pi(n) & \text{if}~n \notin \Lv{T}
+    \end{cases}
+\end{equation}
+For every literal-weight function $W$, the domain of the function $f^W_n$ is exactly $2^{\vars(n)}$.
+
+Moreover, the $W$-valuation of the root is exactly the result of Equation \eqref{eq_factored_wmc}, \ie, the weighted model count of $\phi$ \wrt{} $W$:
 \begin{theorem}
 \label{thm_valuation_wmc}
     Let $\phi$ be a CNF formula, $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$, and $W$ be a literal-weight function over $\vars(\phi)$.
@@ -122,36 +133,13 @@ where $P' = \bigcup_{o \in \C{T}{r}{n}} P(o)$. Moreover, observe that $P(n) = \p
 Finally, to complete the proof we observe that $P(r) = X$ and $\Phi(r) = \varphi$. It follows that $f^W_n = \proj_X \pars{ \varphi \mult \prod_{x \in X} W_x } = W(\varphi)$, as desired.
 \end{proof}
 
-% \begin{lemma}
-% \label{lemma_valuation}
-%     Let $\phi$ be a CNF formula, $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$, $W$ be a literal-weight function over $\vars(\phi)$, and $n \in \V{T}$.
-%      Then:
-% \end{lemma}
-% \begin{proof}
-% We prove this by structural induction on $n \in \V{T}$. 
-    
-% \end{proof}
-
-% Theorem \ref{thm_valuation_wmc} is a corollary of a more general statement on the valuation of nodes in a project-join trees:
-
 This gives us a two-phase algorithm for computing the weighted model count of a formula $\phi$.
 First, in the \emph{planning} phase, we construct a project-join tree $(T, r, \gamma, \pi)$ of $\phi$.
 We discuss algorithms for constructing project-join trees in Section \ref{sec_planning}.
 Second, in the \emph{execution} phase, we compute $f^W_r$ by following Equation \eqref{eq_valuation}.
 We discuss data structures for computing Equation \eqref{eq_valuation} in Section \ref{sec_execution}.
 
-When computing a $W$-valuation, the number of variables that appear in each intermediate pseudo-Boolean function has a significant impact on the runtime.
-The set of variables that appear in the $W$-valuation of a node is actually independent of $W$.
-In particular, for each node $n \in \V{T}$, define $\vars(n)$ as follows:
-\begin{equation}
-    \vars(n) \equiv
-    \begin{cases}
-        \vars(\gamma(n)) & \text{if}~n \in \Lv{T} \\
-        \pars{\bigcup_{o \in \C{T}{r}{n}} \vars(o)} \setminus \pi(n) & \text{if}~n \notin \Lv{T}
-    \end{cases}
-\end{equation}
-
-For every literal-weight function $W$, the domain of the function $f^W_n$ is $2^{\vars(n)}$.
+The number of variables that appear in each intermediate pseudo-Boolean function has a significant impact on the runtime.
 To characterize the difficulty of $W$-valuation, we define the \emph{size} of a node $n$, $\func{size}(n)$, to be $\size{\vars(n)}$ for leaf nodes and $\size{\vars(n) \cup \pi(n)}$ for internal nodes.
 The \emph{width} of a project-join tree $(T, r, \gamma, \pi)$ is $\func{width}(T) \equiv \max_{n \in \V T} \func{size}(n)$.
 We see in Section \ref{sec_experiments} how the width impacts the computation of $W$-valuations.

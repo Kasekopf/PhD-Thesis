@@ -146,6 +146,13 @@ Formally:
     Let $\phi$ be a CNF formula and $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$ of width $w$.
     Then there is a tree decomposition of $\gaifman(\phi)$ of width $w-1$.
 \end{theorem}
+\begin{proof}
+    Define $\chi: \V{T} \to 2^\vars(\phi)$ by, for all $n \in \V{T}$,
+    % $\chi(n) \equiv \vars(f_n)$%
+    $\chi(n) \equiv\vars(n)$ if $n \in \Lv{T}$ and $\chi(n) \equiv \vars(n) \cup \pi(n)$ otherwise.
+    Then $(T, \chi)$ is a tree decomposition of the Gaifman graph of $\phi$.
+    Moreover, the width of $(T, \chi)$ is $\max_{n \in \V{T}} \size{\chi (n)}  - 1 = \max_{n \in \V T} \func{size}(n) - 1 = w - 1$.
+\end{proof}
 Theorem \ref{thm_join_to_td} is Lemma 1 of \cite{MPPV04} and can be seen as the inverse of Theorem \ref{thm_td_to_join}.
 
 

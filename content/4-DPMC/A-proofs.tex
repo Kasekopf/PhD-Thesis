@@ -248,20 +248,3 @@ Now we can prove Theorem \ref{thm_csp_jt}
     The project-join tree properties are satisfied, by Lemma \ref{lemma_prop1} and Lemma \ref{lemma_prop2}
 \qed
 \end{proof}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Proof of Theorem \ref{thm_join_to_td}}
-
-\begin{proof}
-    Let $X = \vars(\phi)$.
-    Define $\chi: \V{T} \to 2^X$ by, for all $n \in \V{T}$,
-    % $\chi(n) \equiv \vars(f_n)$%
-    $\chi(n) \equiv\vars(n)$ if $n \in \Lv{T}$ and $\chi(n) \equiv \vars(n) \cup \pi(n)$ otherwise.
-    Then $(T, \chi)$ is a tree decomposition of the Gaifman graph of $\phi$.
-    Moreover, the width of $(T, \chi)$ is $\func{tw}(T, \chi) = \max_{n \in \V{T}} \size{\chi (n)}  - 1 = \max_{n \in \V T} \func{size}(n) - 1 = w - 1$.
-\qed
-\end{proof}

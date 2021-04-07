@@ -17,13 +17,54 @@ While Theorem \ref{thm:factorable-tree} lets us integrate tree-decomposition sol
 \begin{theorem} \label{thm:factorable-branch}
 Let $N$ be a tensor network of tree-factorable tensors s.t. $|\tnfree{N}| \leq 3$ and $G=\struct{N}$ has a branch decomposition $T$ of width $w \geq 1$. Then we can construct in polynomial time a tensor network $M$ and a contraction tree $S$ for $M$ s.t. $\text{max-rank}(S) \leq \ceil{4w/3}$ and $N$ is a partial contraction of $M$.
 \end{theorem}
-\begin{proof}[Sketch of Construction]
-For simplicity, we sketch here only the case when $\tnfree{N} = \emptyset$, as occurs in counting. For each $A \in N$, $\tdim{A} = \vinc{G}{A}$ is a subset of the leaves of $T$ and so the smallest connected component of $T$ containing $\tdim{A}$ is a dimension tree $T_A$ of $A$. Factor $A$ with $T_A$ using Definition \ref{def:tree-factorable} to get $N_A$ and $g_A$.
+\begin{proof}
+This proof differs from the proof of Theorem \ref{thm:factorable-tree} in \cite{DDV19} only in Part 1 and Part 4 (and in the definition of $\rho$ in Part 3).
 
-We now construct the contraction tree for $M = \cup_{A \in N} N_A$. For each $n \in \V{T}$, let $M_n = \{B~:~B \in N_A, g_A(B) = n\}$. At each leaf $\ell \in \Lv{T}$, attach an arbitrary contraction tree of $M_\ell$. At each non-leaf $n \in \V{T}$, partition $M_n$ into three equally-sized sets and attach an arbitrary contraction tree for each to the three edges incident to $n$. These attachments create a carving decomposition $T'$ from $T$ for $\struct{M}$, of width no larger than $\ceil{4w/3}$. Finally, apply Theorem 3 of \cite{DDV19} to construct a contraction tree $S$ for $M$ from $T'$ s.t. $\text{max-rank}(S) \leq \ceil{4w/3}$.
+The proof proceeds in five steps: (1) compute the factored tensor network $M$, (2) construct a graph $H$ that is a simplified version of the structure graph of $M$, (3) construct a carving decomposition $S$ of $H$, (4) bound the width of $S$, and (5) use $S$ to find a contraction tree for $M$. Working with $H$ instead of directly working with the structure graph of $M$ allows us to cleanly handle tensor networks with free indices.
+
+\textbf{Part 1: Factoring the network.}
+Next, for each $v \in \V{G}$, define $T_v$ to be the smallest connected component of $T$ containing $\vinc{G}{v} \subseteq \Lv{T}$. Consider each $A \in N$. If $\tnfree{A} = \emptyset$, let $N_A = \{N_A\}$. Otherwise, observe that $T_A$ is a dimension tree of $A$ and so we can factor $A$ with $T_A$ using Definition \ref{def:tree-factorable} to get a tensor network $N_A$ and a bijection $g_A: \V{T_A} \rightarrow N_A$. Define $M = \cup_{A \in N} N_A$ and let $G'$ be the structure graph of $M$ with free vertex $\fv'$. The remainder of the proof is devoted to bounding the carving width of $G'$. To do this, it is helpful to define $\rho: \V{T} \rightarrow \V{G}$ by $\rho(n) = \{ v \in \V{G} : n \in \V{T_v}, |\vinc{T_v}{n}| = 3\}$. Note that $|\rho(n)| \leq w$ for all $n \in \V{T}$.
+
+\textbf{Part 2: Constructing a simplified structure graph of $M$.} In order to easily characterize $G'$, we define a new, closely-related graph $H$ by taking a copy of $T_v$ for each $v \in \V{G}$ and connecting these copies where indicated by $g$. Formally, the vertices of $H$ are $\{(v, n) : v \in \V{G}, n \in \V{T_v}\}$. For every $v \in \V{G}$ and every arc in $T$ with endpoints $n, m \in \V{T_v}$, we add an edge between $(v, n)$ and $(v, m)$. Moreover, for each $e \in \E{G}$ incident to $v, w \in \V{G}$, we add an edge between $(v, g(e))$ and $(w, g(e))$. 
+
+We will prove in Part 5 that the carving width of $G'$ is bounded from above by the carving width of $H$. We therefore focus in Part 3 and Part 4 on bounding the carving width of $H$. It is helpful for this to define the two projections $\pi_G : \V{H} \rightarrow \V{G}$ and $\pi_T : \V{H} \rightarrow \V{T}$ that indicate respectively the first or second component of a vertex of $H$. 
+% For each $v \in \V{G}$, define $H_v = \pi_G^{-1}(v)$. Thus the sets $H_v$ form a partition of $\V{H}$. 
+
+% This ensures that $H \cap H_v$ is isomorphic to $T_v$ and so $H \cap H_v$ is a tree with $|\vinc{G}{v}|$ leaves.
+
+% The map $f: \E{G} \rightarrow \E{H}$ constructed in this way is an injection and satisfies property 3 above. Moreover, since $g(\vinc{G}{v})$ is exactly the leaves of $T_v$, each leaf $\ell \in \Lv{H \cap H_v}$ is incident to exactly one edge in the range of $f$, namely $f(g^{-1}(\ell))$.
+
+\textbf{Part 3. Constructing a carving decomposition $S$ of $H$.}
+The idea of the construction is, for each $n \in \V{T}$, to attach the elements of $\pi_T^{-1}(n)$ as leaves along the arcs incident to $n$. To do this, for every leaf node $\ell \in \Lv{T}$ with incident arc $a \in \vinc{T}{\ell}$ define $H_{\ell, a} = \pi_T^{-1}(\ell)$. For every non-leaf node $n \in \V{T} \setminus \Lv{T}$ partition $\pi_T^{-1}(n)$ into three sets $\{H_{n,a} : a \in \vinc{T}{n}\}$, ensuring that the degree 3 vertices are divided evenly (the degree 1 and 2 vertices can be placed arbitrarily). Observe that $\{H_{n,a} : n \in \V{T}, a \in \vinc{T}{n}\}$ is a partition of $\V{H}$, and there are at most $\ceil{|\rho(n)|/3}$ vertices of degree 3 in each $H_{n,a}$, since there are exactly $|\rho(n)|$ vertices of degree 3 in $\pi_T^{-1}(n)$. 
+
+We use this to construct a carving decomposition $S$ from $T$ by adding each element of $H_{n,a}$ as a leaf along the arc $a$. Formally, let $x_v$ denote a fresh vertex for each $v \in \V{H}$, let $y_n$ denote a fresh vertex for each $n \in \V{T}$, and let $z_{n,a}$ denote a fresh vertex for each $n \in \V{T}$ and $a \in \vinc{T}{n}$. Define $\V{S}$ to be the union of $\V{H}$ with the set of these free vertices. 
+
+We add an arc between $v$ and $x_v$ for every $v \in \V{H}$. Moreover, for every $a \in \E{T}$ with endpoints $o, p \in \einc{T}{a}$ add an arc between $y_{o,a}$ and $y_{p,a}$. For every $n \in \V{T}$ and incident arc $a \in \vinc{T}{n}$, construct an arbitrary sequence $I_{n,a}$ from $\{x_v : v \in H_{n,a}\}$. If $H_{n,a} = \emptyset$ then add an arc between $y_n$ and $z_{n,a}$. Otherwise, add arcs between $y_n$ and the first element of $I$, between consecutive elements of $I_{n,a}$, and between the last element of $I_{n,a}$ and $z_{n,a}$. 
+
+Finally, remove the previous leaves of $T$ from $S$. The resulting tree $S$ is a carving decomposition of $H$, since we have added all vertices of $H$ as leaves and removed the previous leaves of $T$.
+
+\textbf{Part 4: Computing the width of $S$.} In this part, we separately bound the width of the partition induced by each of the three kinds of arcs in $S$.
+
+First, consider an arc $b$ between some $v \in \V{H}$ and $x_v$. Since all vertices of $H$ are degree 3 or smaller, $b$ defines a partition of width at most $3 \leq \ceil{4w/3}$.
+
+Next, consider an arc $c_a$ between $z_{o,a}$ and $z_{p,a}$ for some arc $a \in \E{T}$ with endpoints $o, p \in \einc{T}{a}$.
+Observe that removing $a$ from $T$ defines a partition $\{B_o, B_p\}$ of $\V{T}$, denoted so that $o \in B_o$ and $p \in B_p$. 
+
+Then removing $c_a$ from $S$ defines the partition $\{ \pi_T^{-1}(B_o), \pi_T^{-1}(B_p) \}$ of $\Lv{S}$. By construction of $H$, all edges between $\pi_T^{-1}(B_o)$ and $\pi_T^{-1}(B_p)$ are between $\pi_T^{-1}(o)$ and $\pi_T^{-1}(p)$. Observe that every edge $e \in \E{H}$ between $\pi_T^{-1}(o)$ and $\pi_T^{-1}(p)$ corresponds under $g_v$ to $a$ in $T_v$ for some $v$. It follows that the number of edges between $\pi_T^{-1}(o)$ and $\pi_T^{-1}(o)$ is exactly the number of vertices in $G$ that are endpoints of edges in both $C_a$ and $\E{G} \setminus C_a$, which is bounded by $w$. Thus the partition defined by $c_a$ has width no larger than $w$. 
+
+Finally, consider an arc $d$ added as one of the sequence of $|H_{n,a}|+1$ arcs between $y_n$, $I_{n,a}$, and $z_{n,a}$ for some $n \in \V{T}$ and $a \in \vinc{T}{n}$. Some elements of $H_{n,a}$ have changed blocks from the partition defined by $c_a$. Each vertex of degree 2 that changes blocks does not affect the width of the partition, but each vertex of degree 3 that changes blocks increases the width by 1. There are at most $\ceil{w/3}$ elements of degree 3 added as leaves between $y_n$ and $z_{n,a}$. Thus the partition defined by $d$ has width at most $w + \ceil{w/3} = \ceil{4w/3}$.
+
+It follows that the width of $S$ is at most $\ceil{4w/3}$.
+
+\textbf{Part 5: Bounding the max-rank of $M$.} Let $\fv$ be the free vertex of the structure graph of $N$. We first construct a new graph $H'$ from $H$ by, if $\tnfree{N} \neq \emptyset$, contracting all vertices in $\pi_G^{-1}(\fv)$ to a single vertex $\fv$. If $\tnfree{N} = \emptyset$, instead add $\fv$ as a fresh degree 0 vertex to $H'$. Moreover, for all $A \in N$ with $\tdim{A} = \emptyset$ add $A$ as a degree 0 vertex to $H'$. 
+
+Note that adding degree 0 vertices to a graph does not affect the carving width. Moreover, since $|\tnfree{N}| \leq 3$ all vertices (except at most one) of $\pi_G^{-1}(\fv)$ are degree 2 or smaller. It follows that contracting $\pi_G^{-1}(\fv)$ does not increase the carving width. Thus the carving width of $H'$ is at most $\ceil{4w/3}$.
+
+Moreover, $H'$ and $G'$ are isomorphic. To prove this, define an isomorphism $\phi: \V{H'} \rightarrow \V{G'}$ between $H'$ and $G'$ by, for all $v \in \V{H'}$:
+$$\phi(v) \equiv \begin{cases}v&\text{if}~v \in N~\text{and}~\tdim{v}=\emptyset\\\fv'&v=\fv\\g_{\pi_G(v)}(\pi_T(v))&\text{if}~v \in \V{H}~\text{and}~\pi_G(v) \in N\end{cases}$$
+$\phi$ is indeed an isomorphism between $H'$ and $G'$ because the functions $g_A$ are all isomorphisms and because an edge exists between $\pi_G^{-1}(v)$ and $\pi_G^{-1}(w)$ for $v, w \in \V{G}$ if and only if there is an edge between $v$ and $w$ in $G$. Thus the carving width of $G'$ is at most $\ceil{4w/3}$. By Theorem \ref{thm:contraction-equiv-carving}, then, $M$ has a contraction tree of max rank no larger than $\ceil{4w/3}$.
 \end{proof}
 
-The full proof is an extension of the proof of Theorem \ref{thm:factorable-tree} given in \cite{DDV19} and appears in Appendix \ref{sec:appendix:proof}.
 Theorem \ref{thm:factorable-branch} subsumes Theorem \ref{thm:factorable-tree}, since given a graph $G$ and a tree decomposition for $G$ of width $w+1$ one can construct in polynomial time a branch decomposition for $G$ of width $w$ \cite{RS91}. Moreover, on many graphs there are branch decompositions whose width is smaller than all tree decompositions. We explore this potential in practice in Section \ref{sec:experiments}.
 
 It was previously known that branch decompositions can also be used in variable elimination \cite{BDP09}, but Theorem \ref{thm:factorable-branch} considers branch decompositions of a different graph. For example, consider again computing the model count of $\psi = \left(\lor_{i=1}^n x_i\right) \land \left(\lor_{i=1}^n \neg x_i\right)$. Theorem \ref{thm:factorable-branch} uses branch decompositions of the incidence graph of $\psi$, which has branchwidth 2. Variable elimination uses branch decompositions of the primal graph of $\psi$, which has branchwidth $n-1$. 

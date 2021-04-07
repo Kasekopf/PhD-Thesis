@@ -117,7 +117,7 @@ $$f^W_n = \proj_{\pi(n)} \pars{\prod_{o \in \C{T}{r}{n}} \pars{\proj_{P(o)} \par
 
 Consider distinct $o, o' \in \C{T}{r}{n}$. For each $x \in P(o)$, $x$ is projected out at some node below $o$ in $T$. It follows by Property 2 of Definition \ref{def_jointree} that $x$ appears in no descendent of $o'$. It follows that $P(o)$ and $\vars(\Phi(o'))$ are disjoint. We can therefore apply Theorem \ref{thm_early_proj} repeatedly to get that
 $$f^W_n = \proj_{\pi(n)} \proj_{P'} \pars{ \prod_{o \in \C{T}{r}{n}} \Phi(o) \mult \prod_{x \in P'} W_{x} \mult \prod_{x \in \pi(n)} W_{x} }$$
-where $P' = \bigcup_{o \in \C{T}{r}{n}} P(o)$. Moreover, since $P(n) = \pi(n) \cup P'$ and $\Phi(n) = \prod_{o \in \C{T}{r}{n}} \Phi(o)$ this completes the induction.
+where $P' = \bigcup_{o \in \C{T}{r}{n}} P(o)$. Moreover, observe that $P(n) = \pi(n) \cup P'$ and $\Phi(n) = \prod_{o \in \C{T}{r}{n}} \Phi(o)$. This completes the induction.
 
 Finally, to complete the proof we observe that $P(r) = X$ and $\Phi(r) = \varphi$. It follows that $f^W_n = \proj_X \pars{ \varphi \mult \prod_{x \in X} W_x } = W(\varphi)$, as desired.
 \end{proof}

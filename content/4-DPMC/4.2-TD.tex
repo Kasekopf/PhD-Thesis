@@ -154,13 +154,3 @@ Formally:
     Moreover, the width of $(T, \chi)$ is $\max_{n \in \V{T}} \size{\chi (n)}  - 1 = \max_{n \in \V T} \func{size}(n) - 1 = w - 1$.
 \end{proof}
 Theorem \ref{thm_join_to_td} is Lemma 1 of \cite{MPPV04} and can be seen as the inverse of Theorem \ref{thm_td_to_join}.
-
-
-
-
-\subsection{Proof of Theorem \ref{thm_td_to_join}}
-
-Let $(T, r, \gamma, \pi)$ be the object returned by Algorithm \ref{alg_td_to_join}.
-We first observe that $T$ is indeed a tree with root $r$.
-For each node $a \in \V{T}$, let $O(a) \in \V{S}$ denote the node in $\V{S}$ \st{} $a$ was created in the $\func{Process}(O(a), \ell)$ call for some $\ell \subseteq X$.
-Throughout, let $s$ denote the value obtained on Line \ref{line_arbitrary_node} of Algorithm \ref{alg_td_to_join}.

@@ -31,8 +31,8 @@ Translated to model counting, this technique allows us to use tree decomposition
 The Gaifman graph of a CNF formula $\phi$, denoted $\gaifman(\phi)$, has a vertex for each variable of $\phi$, and two vertices are adjacent if the corresponding variables appear together in some clause of $\phi$.
 We present this tree-decomposition-based technique as Algorithm \ref{alg_td_to_join}.
 The key idea is that each clause $c$ of $\phi$ forms a clique in $\gaifman(\phi)$ between the variables of $c$.
-Thus all variables of $c$ must appear together in some label of the tree decomposition.
-We identify that node with $c$.
+Thus all variables of $c$ must appear together in the label of some node of the tree decomposition.
+We identify that node with $c$ in the resulting project-join tree.
 \begin{algorithm*}[t]
 \label{alg_td_to_join}
 \caption{Using a tree decomposition to build a project-join tree}
@@ -65,14 +65,62 @@ We identify that node with $c$.
     \Return{$(T, r, \gamma, \pi)$}
 \end{algorithm*}
 
+We first prove in the following theorem that Algorithm \ref{alg_td_to_join} is correct, i.e. that it indeed returns a project-join tree. 
+\begin{theorem}
+\label{thm_td_to_join_correct}
+	Let $\phi$ be a CNF formula over a set $X$ of variables and $(S, \chi)$ be a tree decomposition of $\gaifman(\phi)$.
+    Then Algorithm \ref{alg_td_to_join} returns a project-join tree of $\phi$.
+\end{theorem}
+\begin{proof}
+Let $\mathcal{T} = (T, r, \gamma, \pi)$ be the object returned by Algorithm \ref{alg_td_to_join}.
+
+We first observe that $T$ is indeed a tree with root $r$. To prove that $\mathcal{T}$ is a project-join tree we must additionally verify that $\gamma$ is a bijection and that both properties from Definition \ref{def_jointree} hold.  For each node $a \in \V{T}$, let $O(a) \in \V{S}$ denote the node in $\V{S}$ \st{} $a$ was created in the $\func{Process}(O(a), \ell)$ call for some $\ell \subseteq X$. Moreover, let $s$ denote the value obtained on Line \ref{line_arbitrary_node} of Algorithm \ref{alg_td_to_join}.
+
+\paragraph{Part 1: $\gamma$ is a bijection.}
+    Note that $\gamma$ is an injection since $found$ on Line \ref{line_found} of Algorithm \ref{alg_td_to_join} ensures that we generate at most one leaf node for each clause.
+    To show that $\gamma$ is a surjection, consider $c \in \phi$.
+    Then $\vars(c)$ forms a clique in the Gaifman graph of $\phi$.
+    It follows (since the treewidth of a complete graph on $k$ vertices is $k-1$) that $\vars(c) \subseteq \chi(n)$ for some $n \in \V{S}$.
+    Thus $\gamma$ is a surjection as well.
+    
+\paragraph{Part 2: Property 1 of Definition \ref{def_jointree}.} 
+    That is, we must verify that $P = \{\pi(a) : a \in \V{T} \setminus \Lv{T} \}$ is a partition of $X$.
+    First, let $x \in X$.
+    Then $x \in \vars(c)$ for some $c \in \phi$. 
+    Let $n_0 = O(\gamma^{-1}(c)) \in \V{S}$ and observe that $x \in \chi(n_0)$.
+    Consider the sequence of nodes $n_0, n_1, n_2, \cdots, n_k = s \in \V{S}$ on the unique shortest path from $n_0$ to $s$ in $S$.
+    Observe that, by Property \ref{prop_running_intersection} of tree decompositions, there is some $0 \leq k' \leq k$ s.t. $x \in \chi(n_i)$ for all $0 \leq i \leq k'$ and $x \not \in \chi(n_i)$ for all $k' < i \leq k$.
+    If $k' = k$, then $x \in \chi(s)$ and so $x \in \pi(r)$.
+    Otherwise,  $x \in \chi(n_{k'})$ but $x \not\in \chi(n_{k'+1})$.
+    Consider the call on Line \ref{line_recur} to $\func{Process}(o, \chi(n))$ when $o = n_{k'}$ and $n = n_{k'+1}$.
+    Within this call, $\chi(n_{k'} \not\subseteq \ell = \chi(n_{k'+1}))$ and so Line \ref{line_return_singleton} will return an internal node $a \in \V{T}$ with $O(a) = n_{k'}$ and $x \in \pi(a)$.
+
+    On the other hand, consider distinct $a, b \in \V{T}$. Since $S$ is a tree, there is some node $p \in \V{S}$ on the path between $O(a)$ and $O(b)$ \st{} $p$ is the parent of either $O(a)$ or $O(b)$. By Line \ref{line_recur} and Line \ref{line_return_singleton}, this means that $\chi(p)$ is disjoint from either $\pi(a)$ or $\pi(b)$. In either case, $\chi(p)$ is disjoint from $\pi(a) \cap \pi(b)$. By Line \ref{line_return_singleton} of Algorithm \ref{alg_td_to_join}, we also know that $\pi(a) \cap \pi(b) \subseteq \chi(O(a)) \cap \chi(O(b))$. By Property \ref{prop_running_intersection} of tree decompositions, $\chi(O(a)) \cap \chi(O(b))$ (and thus $\pi(a) \cap \pi(b)$) must be contained in $\chi(p)$. It follows that $\pi(a) \cap \pi(b) = \emptyset$.
+
+\paragraph{Part 3: Property 2 of Definition \ref{def_jointree}.}
+    That is, we must verify that, for each internal node $a \in \V{T} \setminus \Lv{T}$, variable $x \in \pi(a)$, and clause $c \in \phi$ \st{} $x$ appears in $c$, the leaf node $\gamma^{-1}(c)$ is a descendant of $a$ in $T$.
+    If $O(a) = s$, then $a$ is the root of $T$, so all leaf nodes are descendants.
+    Otherwise, assume for the sake of contradiction that $\gamma^{-1}(c)$ is not a descendant of $a$ in $T$.
+    Then $O(\gamma^{-1}(c))$ is not a descendant of $O(a)$ in $S$.
+    This means that the parent $p \in \V{S}$ of $O(a)$ is on the path between $O(a)$ and $O(\gamma^{-1}(c))$. 
+    By Property \ref{prop_running_intersection} of tree decompositions, $x \in \chi(p)$.
+    But Line \ref{line_recur} and Line \ref{line_return_singleton} then implies that $x \not\in \pi(a)$, a contradiction.
+    Thus $\gamma^{-1}(c)$ is a descendant of $a$ in $T$.
+    
+\paragraph{} It follows that $\mathcal{T}$ is a project-join tree of $\phi$.
+\end{proof}
+
 The width of the resulting project-join tree is closely connected to the width of the original tree decomposition.
 We formalize this in the following theorem.
 \begin{theorem}
 \label{thm_td_to_join}
-	Let $\phi$ be a CNF formula over a set $X$ of variables and $(S, \chi)$ be a tree decomposition of $\gaifman(\phi)$ of width $w$.
-    Then Algorithm \ref{alg_td_to_join} returns a project-join tree of $\phi$ of width at most $w+1$.
+	Let $\phi$ be a CNF formula over a set $X$ of variables and $(S, \chi)$ be a tree decomposition of $\gaifman(\phi)$ of width $w$. Then the project-join tree of $\varphi$ returned by Algorithm \ref{alg_td_to_join} has width at most $w+1$.
 \end{theorem}
-The key idea is that, for each node $n \in \V{S}$, the label $\chi(n)$ is a bound on the variables that appear in all nodes returned by $\func{Process}(n, \cdot)$.
+\begin{proof}
+We prove by induction for each node $n \in \V{S}$ that $\vars(a) \subseteq \chi(n)$ for every node $a \in \V{T}$ returned by $\func{Process}(n, \cdot)$. 
+\end{proof}
+
+
 Theorem \ref{thm_td_to_join} allows us to leverage state-of-the-art anytime tools for finding tree decompositions \cite{Tamaki17,strasser2017computing,AMW17} to construct project-join trees, which we do in Section \ref{sec_experiments_planning}.
 
 On the theoretical front, it is well-known that tree decompositions of the Gaifman graph are actually equivalent to project-join trees \cite{MPPV04}.
@@ -84,3 +132,13 @@ Formally:
     Then there is a tree decomposition of $\gaifman(\phi)$ of width $w-1$.
 \end{theorem}
 Theorem \ref{thm_join_to_td} is Lemma 1 of \cite{MPPV04} and can be seen as the inverse of Theorem \ref{thm_td_to_join}.
+
+
+
+
+\subsection{Proof of Theorem \ref{thm_td_to_join}}
+
+Let $(T, r, \gamma, \pi)$ be the object returned by Algorithm \ref{alg_td_to_join}.
+We first observe that $T$ is indeed a tree with root $r$.
+For each node $a \in \V{T}$, let $O(a) \in \V{S}$ denote the node in $\V{S}$ \st{} $a$ was created in the $\func{Process}(O(a), \ell)$ call for some $\ell \subseteq X$.
+Throughout, let $s$ denote the value obtained on Line \ref{line_arbitrary_node} of Algorithm \ref{alg_td_to_join}.

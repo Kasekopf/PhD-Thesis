@@ -72,9 +72,9 @@ We first prove in the following theorem that Algorithm \ref{alg_td_to_join} is c
     Then Algorithm \ref{alg_td_to_join} returns a project-join tree of $\phi$.
 \end{theorem}
 \begin{proof}
-Let $\mathcal{T} = (T, r, \gamma, \pi)$ be the object returned by Algorithm \ref{alg_td_to_join}.
+Let $\mathcal{T} = (T, r, \gamma, \pi)$ be the object returned by Algorithm \ref{alg_td_to_join}. For each node $a \in \V{T}$, let $O(a) \in \V{S}$ denote the node in $\V{S}$ \st{} $a$ was created in the $\func{Process}(O(a), \ell)$ call for some $\ell \subseteq X$. Moreover, let $s$ denote the value obtained on Line \ref{line_arbitrary_node} of Algorithm \ref{alg_td_to_join}.
 
-We first observe that $T$ is indeed a tree with root $r$. To prove that $\mathcal{T}$ is a project-join tree we must additionally verify that $\gamma$ is a bijection and that both properties from Definition \ref{def_jointree} hold.  For each node $a \in \V{T}$, let $O(a) \in \V{S}$ denote the node in $\V{S}$ \st{} $a$ was created in the $\func{Process}(O(a), \ell)$ call for some $\ell \subseteq X$. Moreover, let $s$ denote the value obtained on Line \ref{line_arbitrary_node} of Algorithm \ref{alg_td_to_join}.
+We first observe that $T$ is indeed a tree with root $r$. To prove that $\mathcal{T}$ is a project-join tree we must additionally verify that $\gamma$ is a bijection and that both properties from Definition \ref{def_jointree} hold.  
 
 \paragraph{Part 1: $\gamma$ is a bijection.}
     Note that $\gamma$ is an injection since $found$ on Line \ref{line_found} of Algorithm \ref{alg_td_to_join} ensures that we generate at most one leaf node for each clause.

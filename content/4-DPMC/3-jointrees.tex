@@ -130,7 +130,7 @@ Consider distinct $o, o' \in \C{T}{r}{n}$. For each $x \in P(o)$, $x$ is project
 $$f^W_n = \proj_{\pi(n)} \proj_{P'} \pars{ \prod_{o \in \C{T}{r}{n}} \Phi(o) \mult \prod_{x \in P'} W_{x} \mult \prod_{x \in \pi(n)} W_{x} }$$
 where $P' = \bigcup_{o \in \C{T}{r}{n}} P(o)$. Moreover, observe that $P(n) = \pi(n) \cup P'$ and $\Phi(n) = \prod_{o \in \C{T}{r}{n}} \Phi(o)$. This completes the induction.
 
-Finally, to complete the proof we observe that $P(r) = X$ and $\Phi(r) = \varphi$. It follows that $f^W_n = \proj_X \pars{ \varphi \mult \prod_{x \in X} W_x } = W(\varphi)$, as desired.
+Finally, to complete the proof we observe that $P(r) = X$ and $\Phi(r) = \varphi$. It follows that $f^W_r = \proj_X \pars{ \varphi \mult \prod_{x \in X} W_x } = W(\varphi)$, as desired.
 \end{proof}
 
 This gives us a two-phase algorithm for computing the weighted model count of a formula $\phi$.

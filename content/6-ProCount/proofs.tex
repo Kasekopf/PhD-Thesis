@@ -31,7 +31,7 @@ The key property of project-join trees is that variables projected in one branch
     Let variable $x \in P(o)$.
     Notice that $x \in \pi(s)$ for some internal node $s$ that is a descendant of $o$.
     Assume there is an arbitrary clause $c \in \phi$ \st{} $x$ appears in $c$.
-    By the last property in Definition \ref{def_jointree_old}, the corresponding leaf $\gamma^{-1}(c)$ is a descendant of $s$ and thus a descendant of $o$.
+    By the last property in Definition \ref{def_jointree}, the corresponding leaf $\gamma^{-1}(c)$ is a descendant of $s$ and thus a descendant of $o$.
     So $x$ appears in no descendant leaf of $q$ (as $q$ is a sibling of $o$ in the tree $T$).
     Thus $x \notin \vars(\Phi(q))$. Since $x \in P(o)$ is arbitrary, we conclude that $P(o) \cap \vars \pars{\Phi(q)} = \emptyset$.
 \end{proof}

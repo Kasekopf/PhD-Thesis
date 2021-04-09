@@ -1,77 +1,8 @@
 \section{Using Project-Join Trees for Projected Model Counting}
-In this section, we first describe an existing framework for performing unprojected model counting \cite{dudek2020dpmc}. 
-We then show how to adapt this framework to perform projected model counting.
+In this section, we adapt the framework from Chapter \ref{ch:dpmc} in order to perform projected model counting. 
+Recall that Chapter \ref{ch:dpmc} describes a two-phase algorithm for computing the weighted model count of a CNF formula $\phi$. First, the \emph{planning phase} in Section \ref{sec_planning} builds a project-join tree $(T, r, \gamma, \pi)$ of $\phi$.
+Second, the \emph{execution phase} in Section \ref{sec_execution} computes the $W$-valuation of the project-join tree to obtain the weighted model count.
 
-\subsection{Project-Join Trees for Model Counting}
-\label{sec_ungraded_trees}
-This framework leverages Boolean formulas given in a factored representation, \emph{conjunctive normal form (CNF)}.
-A \emph{clause} is a non-empty disjunction of literals, and a \emph{CNF formula} is a non-empty conjunctively-interpreted set of clauses.
-The key idea is to represent the computation as a rooted tree, where leaves correspond to clauses, and internal nodes correspond to $\Sigma$-projections. 
-This tree is called a \emph{project-join tree} \cite{dudek2020dpmc}.
-\begin{definition}[Project-Join Tree]
-\label{def_jointree_old}
-    Let $\phi$ be a CNF formula.
-    A \emph{project-join tree} of $\phi$ is a tuple $\T = (T, r, \gamma, \pi)$ where:
-    \begin{itemize}
-        \item $T$ is a tree with root $r \in \V{T}$,
-        \item $\gamma: \Lv{T} \to \phi$ is a bijection between the leaves of $T$ and the clauses of $\phi$, and
-        \item $\pi: \V{T} \setminus \Lv{T} \to 2^{\vars(\phi)}$ is a labeling function on internal nodes.
-    \end{itemize}
-    Moreover, $\T$ must satisfy the following two properties:
-    \begin{enumerate}[ref=\arabic*]
-        \item \label{prop_jointree_1} $\{\pi(n) : n \in \V{T} \setminus \Lv{T} \}$ is a partition of $\vars(\phi)$, and
-        \item \label{prop_jointree_2} for each internal node $n \in \V{T} \setminus \Lv{T}$, variable $x \in \pi(n)$, and clause $c \in \phi$, if $x \in \vars(c)$ then the leaf node $\gamma^{-1}(c)$ is a descendant of $n$ in the rooted tree $(T, r)$.
-    \end{enumerate}
-\end{definition}
-
-A project-join tree of a CNF formula $\phi$ can be used to compute the weighted model count of $\phi$. 
-The algorithm traverses the project-join tree from leaves to root, multiplying clauses according to the tree structure and additively projecting out variables according to $\pi$. 
-This is formalized with the following definition.
-\begin{definition}\label{def:valuation}
-    Let $\T = (T, r, \gamma, \pi)$ be a project-join tree, and let $W$ be a literal-weight function over $X$. The \emph{$W$-valuation} of each $n \in \V T$, denoted $f^W_n$, is
-    \begin{align*}
-        f^W_n \equiv
-        \begin{cases}
-            [\gamma(n)] & \text{if } n \in \Lv{T} \\
-            \displaystyle
-            {\sum_{\pi(n)} \pars{ \prod_{o \in \C T r n} f^W_o \cdot \prod_{x \in \pi(n)} W_x }} & \text{if } n \in \V{T} \setminus \Lv{T}
-        \end{cases}
-    \end{align*}
-    where $[\gamma(n)]$ is the pseudo-Boolean function corresponding to the clause $\gamma(n)$.
-\end{definition}
-
-This gives a two-phase algorithm for computing the weighted model count of a CNF formula $\phi$. First, the \emph{planning phase} builds a project-join tree $(T, r, \gamma, \pi)$ of $\phi$. Second, the \emph{execution phase} computes $f^W_r$ by following Definition \ref{def:valuation}. The following theorem shows that $f^W_r$ is the weighted model count of $\phi$.
-\begin{theorem}[\cite{dudek2020dpmc}]
-\label{thm_valuation_wmc_procount}
-    Let $\phi$ be a CNF formula, $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$, and $W$ be a literal-weight function over $\vars(\phi)$. Then $f^W_r(\emptyset)$ is the $W$-weighted model count of $\phi$.
-\end{theorem}
-
-When computing a $W$-valuation, the number of variables that appear in each intermediate pseudo-Boolean function has a significant impact on the runtime. These sets of variables are actually independent of $W$. For each node $n \in \V{T}$, define $\vars(n)$ as follows.
-\begin{align*}
-    \vars(n) \equiv
-    \begin{cases}
-        \vars(\gamma(n)) & \text{if } n \in \Lv{T} \\
-        \displaystyle
-        \bigcup_{o \in \C T r n} \vars(o) \setminus \pi(n) & \text{if } n \in \V{T} \setminus \Lv{T}
-        % JD: Parens here made the equation too wide
-    \end{cases}
-\end{align*}
-The $W$-valuation of a node $n$ is a pseudo-Boolean function over variables $\vars(n)$. 
-If $N \subseteq \V{T}$, for convenience, we define $\vars(N) \equiv \bigcup_{n \in N} \vars(n)$.
-
-The difficulty of valuation scales with the maximum number of variables needed to compute each pseudo-Boolean function. 
-The \emph{size} of a node $n$, $\func{size}(n)$, is $\size{\vars(n)}$ for leaf nodes and $\size{\vars(n) \cup \pi(n)}$ for internal nodes.
-The \emph{width} of a project-join tree $\T = (T, r, \gamma, \pi)$ is $\func{width}(\T) \equiv \max_{n \in \V T} \func{size}(n)$. 
-
-Two algorithms have been proposed to construct project-join trees \cite{dudek2020dpmc}.
-The first, \Lg{}, uses \emph{tree decompositions} \cite{RS91}, following similar work in join-query optimization \cite{DKV02,MPPV04}. The second,
-\htb{}, uses \emph{bucket elimination} \cite{dechter99} and \emph{Bouquet's Method} \cite{bouquet1999gestion} with various constraint-satisfaction heuristics:  \emph{maximum-cardinality search} \cite{tarjan1984simple}, \emph{lexicographic search for perfect/minimal orders} \cite{koster2001treewidth}, and \emph{min-fill} \cite{dechter03}.
-
-%, one using constraint-satisfaction heuristics and anoth using tree decompositions (in \cite{DDV19,fichte2020exploiting}).
-% Notice that Equation \eqref{eqn_valuation} applies $\Sigma$-projection with the additive variables and $\exists$-projection with the disjunctive variables, unlike the algorithm in \cite{dudek2020dpmc} (where all variables are additive, so only $\Sigma$-projection is needed).
-
-
-\subsection{Adaptations for Projected Counting}
 In order to adapt this framework to perform weighted projected model counting, we aim to modify the valuation of project-join trees to incorporate both disjunctive variables and additive variables. In particular, we must perform $\exists$-projection with all disjunctive variables and $\Sigma$-projection with all additive variables.
 
 % In \cite{dudek2020dpmc}, performing this traversal on \emph{every} project-join tree for a CNF formula $\phi$ produces the same result: the weighted model count of $\phi$. This stems from the fact that, for weighted model counting, all projections are $\Sigma$-projections and so all projections commute. There is therefore no restriction on the order that variables can appear in the project-join tree.

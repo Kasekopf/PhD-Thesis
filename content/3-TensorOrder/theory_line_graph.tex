@@ -89,7 +89,7 @@ Since $f$ is an edge clique cover, properties (1) and (2) of a tree decompositio
 
 We now use this lemma to prove Theorem \ref{thm:carving-equiv-tree}.
 
-\begin{proof}
+\begin{proof}[Proof of Theorem \ref{thm:carving-equiv-tree}]
 First, observe that the image of $\vincf{G}: \V{G} \rightarrow \E{G}$ is an edge clique cover of $\Line{G}$. It follows by Lemma \ref{lemma:tree-simplification} that we can construct a tree decomposition $(S, \psi)$ of $\Line{G}$ and a bijection $g: \V{G} \rightarrow \Lv{S}$ such that $\psi \circ g = \vincf{G}$ and $width_t(S, \psi) \leq width_t(T, \chi)$.
 
 Construct $T'$ from $S$ by replacing every leaf $\ell \in \Lv{S}$ with $g^{-1}(\ell)$. Since $g$ is a bijection, $\Lv{T'} = \V{G}$ and so $T'$ is a carving decomposition. In order to compute the carving width of $T'$, consider an arbitrary arc $a \in \E{T'}$ and let $C_a$ be an element of the partition of $\V{G}$ defined by removing $a$. 

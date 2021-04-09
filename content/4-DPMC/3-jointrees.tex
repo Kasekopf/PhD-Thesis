@@ -120,7 +120,7 @@ For each $x \in P(o)$, $x$ is projected out at some node below $o$ in $T$. It fo
 \end{proof}
 
 We now use this lemma to prove Theorem \ref{thm_valuation_wmc}.
-\begin{proof}
+\begin{proof}[Proof of Theorem \ref{thm_valuation_wmc}]
 Consider each $n \in \V{T}$ and define $S(n)$, $\Phi(n)$, and $P(n)$ as in Lemma \ref{lemma:projections_branch_disjoint}. The key idea is to prove for all $n \in \V{T}$ that 
 $$f^W_n = \proj_{P(n)} \pars{ \Phi(n) \mult \prod_{x \in P(n)} W_x } \label{eqn:valuation:correctness}.$$
 We proceed by induction on $n$ over the tree structure of $T$. In the base case, $n$ is a leaf and so $\Phi(n) = \gamma(n)$ and $P(n) = \emptyset$. So $f^W_n = \proj_{\emptyset} \pars{ \gamma(n) \mult \prod_{x \in \emptyset} W_x } = \gamma(n)$ as desired. In the inductive case, consider an internal node $n$ of $T$. By Equation \ref{eq_valuation}, $$f^W_n = \proj_{\pi(n)} \pars{\prod_{o \in \C{T}{r}{n}} f^W_o \mult \prod_{x \in \pi(n)} W_x}.$$

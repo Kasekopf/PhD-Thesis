@@ -40,16 +40,16 @@ The approach has also seen similar success in Bayesian network inference \cite{d
 We model a rearrangement of Equation \eqref{eq_factored_wmc} as a \emph{project-join tree}:
 \begin{definition}[Project-Join Tree]
 \label{def_jointree}
-    Let $X$ be a set of Boolean variables and $\phi$ be a CNF formula over $X$.
+    Let $\phi$ be a CNF formula.
     A \emph{project-join tree} of $\phi$ is a tuple $(T, r, \gamma, \pi)$ where:
     \begin{itemize}
         \item $T$ is a tree with root $r \in \V{T}$,
         \item $\gamma: \Lv{T} \to \phi$ is a bijection between the leaves of $T$ and the clauses of $\phi$, and
-        \item $\pi: \V{T} \setminus \Lv{T} \to 2^X$ is a labeling function on internal nodes.
+        \item $\pi: \V{T} \setminus \Lv{T} \to 2^{\vars(\phi)}$ is a labeling function on internal nodes.
     \end{itemize}
     Moreover, $(T, r, \gamma, \pi)$ must satisfy the following two properties:
     \begin{enumerate}[ref=\arabic*]
-        \item $\{\pi(n) : n \in \V{T} \setminus \Lv{T} \}$ is a partition of $X$, and \label{prop1}
+        \item $\{\pi(n) : n \in \V{T} \setminus \Lv{T} \}$ is a partition of $\vars(\phi)$, and \label{prop1}
         \item for each internal node $n \in \V{T} \setminus \Lv{T}$, variable $x \in \pi(n)$, and clause $c \in \phi$ \st{} $x$ appears in $c$, the leaf node $\gamma^{-1}(c)$ must be a descendant of $n$ in $T$. \label{prop2}
     \end{enumerate}
 \end{definition}
@@ -112,7 +112,7 @@ For every literal-weight function $W$, the domain of the function $f^W_n$ is exa
 Moreover, the $W$-valuation of the root is exactly the result of Equation \eqref{eq_factored_wmc}, \ie, the weighted model count of $\phi$ \wrt{} $W$:
 \begin{theorem}
 \label{thm_valuation_wmc}
-    Let $\phi$ be a CNF formula, $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$, and $W$ be a literal-weight function over $\vars(\phi)$.
+    Let $\phi$ be a CNF formula, $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$, and let $W$ be a literal-weight function over $\vars(\phi)$.
     Then $f^W_r(\emptyset) = W(\phi)$.
 \end{theorem}
 \begin{proof}
@@ -120,7 +120,7 @@ Consider each $n \in \V{T}$. Denote by $S(n)$ the subtree rooted at $n$.
 Define $\Phi(n) \equiv \prod_{n \in S(n) \cap \Lv{T}} \gamma(n)$ to be the product of all clauses in $S(n)$. 
 Similarly, define $P(n) \equiv \bigcup_{n \in S(n) \setminus \Lv{T}} \pi(n)$ to be the set of variables projected out in $S(n)$.
 The key idea is to prove for all $n \in \V{T}$ that 
-$$f^W_n = \proj_{P(n)} \pars{ \Phi(n) \mult \prod_{x \in P(n)} W_x }.$$
+$$f^W_n = \proj_{P(n)} \pars{ \Phi(n) \mult \prod_{x \in P(n)} W_x } \label{eqn:valuation:correctness}.$$
 We proceed by induction on $n$ over the tree structure of $T$. In the base case, $n$ is a leaf and so $\Phi(n) = \gamma(n)$ and $P(n) = \emptyset$. So $f^W_n = \proj_{\emptyset} \pars{ \gamma(n) \mult \prod_{x \in \emptyset} W_x } = \gamma(n)$ as desired. In the inductive case, consider an internal node $n$ of $T$. By Equation \ref{eq_valuation}, $$f^W_n = \proj_{\pi(n)} \pars{\prod_{o \in \C{T}{r}{n}} f^W_o \mult \prod_{x \in \pi(n)} W_x}.$$
 
 Plugging in the inductive hypothesis for each $f^W_o$, it follows that
@@ -130,7 +130,7 @@ Consider distinct $o, o' \in \C{T}{r}{n}$. For each $x \in P(o)$, $x$ is project
 $$f^W_n = \proj_{\pi(n)} \proj_{P'} \pars{ \prod_{o \in \C{T}{r}{n}} \Phi(o) \mult \prod_{x \in P'} W_{x} \mult \prod_{x \in \pi(n)} W_{x} }$$
 where $P' = \bigcup_{o \in \C{T}{r}{n}} P(o)$. Moreover, observe that $P(n) = \pi(n) \cup P'$ and $\Phi(n) = \prod_{o \in \C{T}{r}{n}} \Phi(o)$. This completes the induction.
 
-Finally, to complete the proof we observe that $P(r) = X$ and $\Phi(r) = \varphi$. It follows that $f^W_r = \proj_X \pars{ \varphi \mult \prod_{x \in X} W_x } = W(\varphi)$, as desired.
+Finally, to complete the proof we observe that $P(r) = X$ and $\Phi(r) = \varphi$. It follows that $f^W_r(\emptyset) = \proj_X \pars{ \varphi \mult \prod_{x \in X} W_x } = W(\varphi)$, as desired.
 \end{proof}
 
 This gives us a two-phase algorithm for computing the weighted model count of a formula $\phi$.

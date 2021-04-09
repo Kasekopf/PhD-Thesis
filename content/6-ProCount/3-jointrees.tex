@@ -74,6 +74,57 @@ Let $(X, Y, \phi, W)$ be an instance of weighted projected model counting, and l
 If $\T$ is $(X, Y)$-graded, then $g^W_r(\emptyset) = \func{WPMC}(\phi, W, Y)$.
 % \footnote{Proofs are provided in Appendix \ref{appendix:proofs}.}
 \end{theorem}
+\begin{proof}
+This proof is an extension of the proof of Theorem \ref{thm_valuation_wmc} to include $\exists$-projection. Define, for every node $n$ of $T$,
+\begin{align*}
+    \Phi(n) &\equiv \prod_{n \in S(n) \cap \Lv{T}} \gamma(n) \\
+    P(n) &\equiv \bigcup_{n \in S(n) \setminus \Lv{T}} \pi(n) \\
+    h^W_n &\equiv \Phi(n) \mult \left( \prod_{x \in P(n) \cap X} W_x \right).
+\end{align*}
+The key idea is to prove for all $n \in \V{T}$ that 
+$$g^W_n = \sum_{P(n) \cap X} \displaystyle\exist_{P(n) \cap Y} h^W_n \label{eqn:proj-valuation:correctness}.$$
+We proceed by induction on $n$ over the tree structure of $T$. In the base case, $n$ is a leaf and so $\Phi(n) = \gamma(n)$ and $P(n) = \emptyset$. So $g^W_n = \proj_{\emptyset} \pars{ \gamma(n) \mult \prod_{x \in \emptyset} W_x } = \gamma(n)$ as desired. In the inductive case, consider an internal node $n$ of $T$ and examine the product
+\begin{equation}
+\label{eqn:proj_valuation_child_product}
+    \prod_{o \in \C T r n} g^W_o = \prod_{o \in \C T r n} \sum_{P(o) \cap X} \displaystyle\exist_{P(o) \cap Y} h^W_o.
+\end{equation}
+
+Let $o, o' \in \C{T}{r}{n}$ be distinct. For each $x \in P(o)$, $x$ is projected out at some node below $o$ in $T$. It follows by Property 2 of Definition \ref{def_jointree} that $x$ appears in no descendent of $o'$. It follows that $P(o)$ and $\vars(h^W_n) = \vars(\Phi(o'))$ are disjoint. We can therefore apply Theorem \ref{thm_early_proj} repeatedly to Equation \ref{eqn:proj_valuation_child_product} to get that
+\begin{equation}
+\prod_{o \in \C{T}{r}{n}} g^W_o = \sum_{A \cap X} \prod_{o \in \C{T}{r}{n}} \displaystyle\exist_{P(o) \cap Y} h^W_o = \sum_{A \cap X} \displaystyle\exist_{A \cap Y} \prod_{o \in \C{T}{r}{n}} h^W_o \label{eq_child_prod}
+\end{equation}
+where $A = \bigcup_{o \in \C{T}{r}{n}} P(o)$.
+
+Let $\mathcal{I}_X$ and $\mathcal{I}_Y$ be the grades of $\T$. By Definition \ref{def:graded}, either $n \in \mathcal{I}_X$ or $n \in \mathcal{I}_Y$. We divide the inductive case further into these two cases.
+
+\paragraph{Case: $n \in \mathcal{I}_Y$.} Then for each $p \in S(n)$, by Definition \ref{def:graded}, we have $p \in \mathcal{I}_Y$, so $\pi(p) \subseteq Y$. Thus $A \subseteq Y$. 
+By Definition \ref{def:graded_valuation} and Equation \eqref{eq_child_prod}, we have
+\begin{equation*}
+    g^W_n = \displaystyle\exist_{\pi(n)} \prod_{o \in \C{T}{r}{n}} g^W_o = \displaystyle\exist_{\pi(n)} \displaystyle\exist_{A} \prod_{o \in \C{T}{r}{n}} h^W_o = \displaystyle\exist_{P(n)} \prod_{o \in \C{T}{r}{n}} h^W_o.
+\end{equation*}
+We therefore conclude that $$g^W_n = \displaystyle\exist_{P(n)} \prod_{o \in \C{T}{r}{n}} \prod_{C \in \Phi(o)} [C] = \displaystyle\exist_{P(n)} \prod_{C \in \Phi(n)} [C] = \displaystyle\exist_{P(n)} h^W_n.$$
+Since $P(n) \subseteq Y$, this completes the induction for this case.
+
+
+\paragraph{Case: $n \in \mathcal{I}_X$.} Thus $\pi(n) \subseteq X$. 
+By Definition \ref{def:graded_valuation} and Equation \eqref{eq_child_prod}, we have
+\begin{align*}
+    g^W_n 
+    &= \displaystyle\sum_{\pi(n)} \pars{ \prod_{o \in \C T r n} g^W_o \cdot \prod_{x \in \pi(n)} W_x }\\ 
+    &= \sum_{\pi(n)} \pars{ \pars{ \sum_{A \cap X} \displaystyle\exist_{A \cap Y} \prod_{o \in \C{T}{r}{n}} h^W_o } \cdot \prod_{x \in \pi(n)} W_x }.
+\end{align*}
+Since $\pi(n) \cap A = \emptyset$, we can apply Theorem \ref{thm_early_proj} to get that
+\begin{equation*}
+    g^W_n = \sum_{\pi(n)} \pars{ \sum_{A \cap X} \displaystyle\exist_{A \cap Y} \left( \prod_{o \in \C{T}{r}{n}} h^W_o \cdot \prod_{x \in \pi(n)} W_x \right) }.
+\end{equation*}
+Finally, observe that $\pi(n) \cup A = P(n)$ and that $h^W_n = \prod_{o \in \C{T}{r}{n}} h^W_o \cdot \prod_{x \in \pi(n)} W_x$. We therefore conclude that
+\begin{equation*}
+    g^W_n = \sum_{P(n) \cap X} \displaystyle\exist_{P(n) \cap Y} \left( \prod_{o \in \C{T}{r}{n}} h^W_o \cdot \prod_{x \in \pi(n)} W_x \right) =  \sum_{P(n) \cap X} \displaystyle\exist_{P(n) \cap Y} h^W_n.
+\end{equation*}
+This completes the induction.
+
+Finally, to complete the proof we observe that $P(r) = X \cup Y$ and $\Phi(r) = \varphi$. It follows that $g^W_r(\emptyset) = \proj_X \pars{ \varphi \mult \prod_{x \in X} W_x } = \func{WPMC}(\phi, W, Y)$, as desired.
+\end{proof}
 
 % We see in Section \ref{sec_experiments} how the width impacts the computation of $W$-valuations.
 In the next section, we show how to build graded project-join trees.

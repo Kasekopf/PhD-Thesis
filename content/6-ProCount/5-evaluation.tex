@@ -1,4 +1,4 @@
-\section{Experimental Evaluation}
+\section{Implementation and Evaluation}
 \label{sec:procount:experiments}
 
 To implement our projected model counter \procount, we modify the unprojected model counter \dpmc{}, which is based on ungraded project-join trees \cite{dudek2020dpmc}.
@@ -8,11 +8,11 @@ The \dpmc{} framework includes:
 (3) the \dmc{} executor that uses \emph{algebraic decision diagrams (ADDs)}.
 We generalize these three components to support graded project-join trees and projected model counting.
 
-We conduct three computational experiments to address three following research questions.
+We aim to answer the following experimental research questions:
 \begin{enumerate}
-    \item[RQ1] In the planning phase, how do tree-decomposition techniques compare with constraint-satisfaction heuristics?
-    \item[RQ2] In the execution phase, how do different ADD variable orders compare?
-    \item[RQ3] How does \procount{} compare to other exact weighted projected tools?
+    \item[(RQ1)] In the planning phase, how do tree-decomposition techniques compare with constraint-satisfaction heuristics?
+    \item[(RQ2)] In the execution phase, how do different ADD variable orders compare?
+    \item[(RQ3)] How does \procount{} compare to other exact weighted projected tools?
 \end{enumerate}
 
 To answer RQ1, in Experiment 1 we compare the planner \Lg{} (which uses tree decompositions) to \htb{} (which uses constraint-satisfaction heuristics).

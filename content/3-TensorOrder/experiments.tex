@@ -1,9 +1,9 @@
 \section{Implementation and Evaluation} \label{sec:tensors:experiments}
-We are interested in the following experimental research questions:
+We aim to answer the following experimental research questions:
 \begin{enumerate}
-    \item[RQ1.] Are tensor-network-based approaches competitive with existing state-of-the-art unweighted model counters?
-    \item[RQ2.] Are tensor-network-based approaches competitive with existing state-of-the-art weighted model counters?
-    \item[RQ3.] What are the structural properties of benchmarks for which the tensor-network-based approaches perform well?
+    \item[(RQ1)] Are tensor-network-based approaches competitive with existing state-of-the-art unweighted model counters?
+    \item[(RQ2)] Are tensor-network-based approaches competitive with existing state-of-the-art weighted model counters?
+    \item[(RQ3)] What are the structural properties of benchmarks for which the tensor-network-based approaches perform well?
 \end{enumerate}
 
 To answer these questions, we implement Algorithm 2 in \tool{TensorOrder}, a new tool for weighted model counting using tensor networks. \tool{TensorOrder} can be configured to find contraction trees using existing methods \cite{KCMR18}-- \textbf{greedy} (using a greedy algorithm), \textbf{metis} (using graph partitioning), and \textbf{GN} (using community structure detection)-- or methods presented in this paper-- \textbf{LG} (Section \ref{sec:tensors:contraction-theory}) and \textbf{FT} (Section \ref{sec:tensors:preprocessing}). Implementation details appear in Section \ref{sec:tensors:experiments:implementation}.

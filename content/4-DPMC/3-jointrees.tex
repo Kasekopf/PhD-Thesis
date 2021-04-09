@@ -109,24 +109,32 @@ In particular, for each node $n \in \V{T}$, define $\vars(n)$ as follows:
 \end{equation}
 For every literal-weight function $W$, the domain of the function $f^W_n$ is exactly $2^{\vars(n)}$.
 
-Moreover, the $W$-valuation of the root is exactly the result of Equation \eqref{eq_factored_wmc}, \ie, the weighted model count of $\phi$ \wrt{} $W$:
+Moreover, the $W$-valuation of the root is exactly the result of Equation \eqref{eq_factored_wmc}, \ie, the weighted model count of $\phi$ \wrt{} $W$. The following lemma will aid in our proof of this fact:
+\begin{lemma}
+\label{lemma:projections_branch_disjoint}
+Let $\phi$ be a CNF formula, $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$, and let $W$ be a literal-weight function over $\vars(\phi)$. For each $n \in \V{T}$, denote by $S(n)$ the subtree rooted at $n$ and further define:
+\begin{align*}
+    \Phi(n) &\equiv \prod_{n \in S(n) \cap \Lv{T}} \gamma(n) \\
+    P(n) &\equiv \bigcup_{n \in S(n) \setminus \Lv{T}} \pi(n).
+\end{align*}
+For all $n \in \V{T} \setminus \Lv{T}$, if $o, o' \in \C{T}{r}{n}$ are distinct then $P(o) \cap \vars(\Phi(o')) = \emptyset$.
+\end{lemma}
+\begin{proof}
+For each $x \in P(o)$, $x$ is projected out at some node below $o$ in $T$. It follows by Property 2 of Definition \ref{def_jointree} that $x$ appears in no descendent of $o'$. Thus $P(o)$ and $\vars(\Phi(o'))$ are disjoint.
+\end{proof}
+
 \begin{theorem}
 \label{thm_valuation_wmc}
     Let $\phi$ be a CNF formula, $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$, and let $W$ be a literal-weight function over $\vars(\phi)$.
     Then $f^W_r(\emptyset) = W(\phi)$.
 \end{theorem}
 \begin{proof}
-Consider each $n \in \V{T}$. Denote by $S(n)$ the subtree rooted at $n$.
-Define $\Phi(n) \equiv \prod_{n \in S(n) \cap \Lv{T}} \gamma(n)$ to be the product of all clauses in $S(n)$. 
-Similarly, define $P(n) \equiv \bigcup_{n \in S(n) \setminus \Lv{T}} \pi(n)$ to be the set of variables projected out in $S(n)$.
-The key idea is to prove for all $n \in \V{T}$ that 
+Consider each $n \in \V{T}$ and define $S(n)$, $\Phi(n)$, and $P(n)$ as in Lemma \ref{lemma:projections_branch_disjoint}. The key idea is to prove for all $n \in \V{T}$ that 
 $$f^W_n = \proj_{P(n)} \pars{ \Phi(n) \mult \prod_{x \in P(n)} W_x } \label{eqn:valuation:correctness}.$$
 We proceed by induction on $n$ over the tree structure of $T$. In the base case, $n$ is a leaf and so $\Phi(n) = \gamma(n)$ and $P(n) = \emptyset$. So $f^W_n = \proj_{\emptyset} \pars{ \gamma(n) \mult \prod_{x \in \emptyset} W_x } = \gamma(n)$ as desired. In the inductive case, consider an internal node $n$ of $T$. By Equation \ref{eq_valuation}, $$f^W_n = \proj_{\pi(n)} \pars{\prod_{o \in \C{T}{r}{n}} f^W_o \mult \prod_{x \in \pi(n)} W_x}.$$
-
 Plugging in the inductive hypothesis for each $f^W_o$, it follows that
 $$f^W_n = \proj_{\pi(n)} \pars{\prod_{o \in \C{T}{r}{n}} \pars{\proj_{P(o)} \pars{ \Phi(o) \mult \prod_{x \in P(o)} W_{x} } } \mult \prod_{x \in \pi(n)} W_{x}}.$$
-
-Consider distinct $o, o' \in \C{T}{r}{n}$. For each $x \in P(o)$, $x$ is projected out at some node below $o$ in $T$. It follows by Property 2 of Definition \ref{def_jointree} that $x$ appears in no descendent of $o'$. It follows that $P(o)$ and $\vars(\Phi(o'))$ are disjoint. We can therefore apply Theorem \ref{thm_early_proj} repeatedly to get that
+If $o, o' \in \C{T}{r}{n}$ are distinct, by Lemma \ref{lemma:projections_branch_disjoint} we know $P(o) \cap \vars(\Phi(o')) = \emptyset$. We can therefore apply Theorem \ref{thm_early_proj} to get that
 $$f^W_n = \proj_{\pi(n)} \proj_{P'} \pars{ \prod_{o \in \C{T}{r}{n}} \Phi(o) \mult \prod_{x \in P'} W_{x} \mult \prod_{x \in \pi(n)} W_{x} }$$
 where $P' = \bigcup_{o \in \C{T}{r}{n}} P(o)$. Moreover, observe that $P(n) = \pi(n) \cup P'$ and $\Phi(n) = \prod_{o \in \C{T}{r}{n}} \Phi(o)$. This completes the induction.
 

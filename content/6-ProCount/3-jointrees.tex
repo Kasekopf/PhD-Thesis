@@ -80,7 +80,7 @@ Consider each $n \in \V{T}$ and define $S(n)$, $\Phi(n)$, and $P(n)$ as in Lemma
 $$h^W_n \equiv \Phi(n) \mult \left( \prod_{x \in P(n) \cap X} W_x \right).$$
 The key idea is to prove for all $n \in \V{T}$ that 
 $$g^W_n = \sum_{P(n) \cap X} \displaystyle\exist_{P(n) \cap Y} h^W_n \label{eqn:proj-valuation:correctness}.$$
-We proceed by induction on $n$ over the tree structure of $T$. In the base case, $n$ is a leaf and so $\Phi(n) = \gamma(n)$ and $P(n) = \emptyset$. So $g^W_n = \proj_{\emptyset} \pars{ \gamma(n) \mult \prod_{x \in \emptyset} W_x } = \gamma(n)$ as desired. In the inductive case, consider an internal node $n$ of $T$ and examine the product
+We proceed by induction on $n$ over the tree structure of $T$. In the base case, $n$ is a leaf and so $\Phi(n) = \gamma(n)$ and $P(n) = \emptyset$. So $g^W_n = \proj_{\emptyset} \pars{ \gamma(n) \mult \prod_{x \in \emptyset} W_x } = \gamma(n)$ as desired. In the inductive case, consider an internal node $n$ of $T$ and apply the inductive hypothesis to the following product:
 \begin{equation}
 \label{eqn:proj_valuation_child_product}
     \prod_{o \in \C T r n} g^W_o = \prod_{o \in \C T r n} \sum_{P(o) \cap X} \displaystyle\exist_{P(o) \cap Y} h^W_o.
@@ -93,16 +93,16 @@ where $A = \bigcup_{o \in \C{T}{r}{n}} P(o)$.
 
 Let $\mathcal{I}_X$ and $\mathcal{I}_Y$ be the grades of $\T$. By Definition \ref{def:graded}, either $n \in \mathcal{I}_X$ or $n \in \mathcal{I}_Y$. We divide the inductive case further into these two cases.
 
-\paragraph{Case: $n \in \mathcal{I}_Y$.} Then for each $p \in S(n)$, by Definition \ref{def:graded}, we have $p \in \mathcal{I}_Y$, so $\pi(p) \subseteq Y$. Thus $A \subseteq Y$. 
+\paragraph{Case 1: $n \in \mathcal{I}_Y$.} Then for each $p \in S(n)$, by Definition \ref{def:graded}, we have $p \in \mathcal{I}_Y$, so $\pi(p) \subseteq Y$. Moreover, $\V{S(N)} \subseteq \mathcal{I}_Y$ by Definition \ref{def:graded}. Thus $A \subseteq Y$. 
 By Definition \ref{def:graded_valuation} and Equation \eqref{eq_child_prod}, we have
 \begin{equation*}
     g^W_n = \displaystyle\exist_{\pi(n)} \prod_{o \in \C{T}{r}{n}} g^W_o = \displaystyle\exist_{\pi(n)} \displaystyle\exist_{A} \prod_{o \in \C{T}{r}{n}} h^W_o = \displaystyle\exist_{P(n)} \prod_{o \in \C{T}{r}{n}} h^W_o.
 \end{equation*}
-We therefore conclude that $$g^W_n = \displaystyle\exist_{P(n)} \prod_{o \in \C{T}{r}{n}} \prod_{C \in \Phi(o)} [C] = \displaystyle\exist_{P(n)} \prod_{C \in \Phi(n)} [C] = \displaystyle\exist_{P(n)} h^W_n.$$
+After plugging in each $h^W_o$, we conclude that $$g^W_n = \displaystyle\exist_{P(n)} \prod_{o \in \C{T}{r}{n}} \prod_{C \in \Phi(o)} [C] = \displaystyle\exist_{P(n)} \prod_{C \in \Phi(n)} [C] = \displaystyle\exist_{P(n)} h^W_n.$$
 Since $P(n) \subseteq Y$, this completes the induction for this case.
 
 
-\paragraph{Case: $n \in \mathcal{I}_X$.} Thus $\pi(n) \subseteq X$. 
+\paragraph{Case 2: $n \in \mathcal{I}_X$.} Thus $\pi(n) \subseteq X$. 
 By Definition \ref{def:graded_valuation} and Equation \eqref{eq_child_prod}, we have
 \begin{align*}
     g^W_n 

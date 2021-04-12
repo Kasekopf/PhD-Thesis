@@ -108,15 +108,15 @@ The main idea is that the $W$-valuation at each node of $T$ is a pseudo-Boolean 
 In order to prove this theorem, it is helpful to first state and prove a lemma that limits the appearance of variables in different subexpressions of Equation \ref{eq_valuation}. We also refer to this lemma in Chapter \ref{ch:procount} in the case of projected model counting.
 \begin{lemma}
 \label{lemma:projections_branch_disjoint}
-Let $\phi$ be a CNF formula, $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$, and let $W$ be a literal-weight function over $\vars(\phi)$. For each $n \in \V{T}$, denote by $S(n)$ the subtree rooted at $n$ and further define:
+Let $\phi$ be a CNF formula, $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$, and let $W$ be a literal-weight function over $\vars(\phi)$. For each $n \in \V{T}$, denote by $S(n)$ the subtree of $T$ rooted at $n$ and further define:
 \begin{align*}
     \Phi(n) &\equiv \prod_{n \in S(n) \cap \Lv{T}} \gamma(n) \\
     P(n) &\equiv \bigcup_{n \in S(n) \setminus \Lv{T}} \pi(n).
 \end{align*}
-For all $n \in \V{T} \setminus \Lv{T}$, if $o, o' \in \C{T}{r}{n}$ are distinct then $P(o) \cap \vars(\Phi(o')) = \emptyset$.
+For all $n \in \V{T} \setminus \Lv{T}$ and $o, o' \in \C{T}{r}{n}$, if $o \neq o'$ then $P(o) \cap \vars(\Phi(o')) = \emptyset$.
 \end{lemma}
 \begin{proof}
-For each $x \in P(o)$, $x$ is projected out at some node below $o$ in $T$. It follows by Property 2 of Definition \ref{def_jointree} that $x$ appears in no descendent of $o'$. Thus $P(o)$ and $\vars(\Phi(o'))$ are disjoint.
+For each $x \in P(o)$, $x$ is projected out at some node below $o$ in $T$. It follows by Property 2 of Definition \ref{def_jointree} that $x$ appears in no descendent of $o'$, since $o'$ is not a descendent of $o$. Thus $P(o)$ and $\vars(\Phi(o'))$ are disjoint.
 \end{proof}
 
 We now use this lemma to prove Theorem \ref{thm_valuation_wmc}.
@@ -127,8 +127,8 @@ We proceed by induction on $n$ over the tree structure of $T$. In the base case,
 Plugging in the inductive hypothesis for each $f^W_o$, it follows that
 $$f^W_n = \proj_{\pi(n)} \pars{\prod_{o \in \C{T}{r}{n}} \pars{\proj_{P(o)} \pars{ \Phi(o) \mult \prod_{x \in P(o)} W_{x} } } \mult \prod_{x \in \pi(n)} W_{x}}.$$
 If $o, o' \in \C{T}{r}{n}$ are distinct, by Lemma \ref{lemma:projections_branch_disjoint} we know $P(o) \cap \vars(\Phi(o')) = \emptyset$. We can therefore apply Theorem \ref{thm_early_proj} to get that
-$$f^W_n = \proj_{\pi(n)} \proj_{P'} \pars{ \prod_{o \in \C{T}{r}{n}} \Phi(o) \mult \prod_{x \in P'} W_{x} \mult \prod_{x \in \pi(n)} W_{x} }$$
-where $P' = \bigcup_{o \in \C{T}{r}{n}} P(o)$. Moreover, observe that $P(n) = \pi(n) \cup P'$ and $\Phi(n) = \prod_{o \in \C{T}{r}{n}} \Phi(o)$. This completes the induction.
+$$f^W_n = \proj_{\pi(n)} \proj_{A} \pars{ \prod_{o \in \C{T}{r}{n}} \Phi(o) \mult \prod_{x \in A} W_{x} \mult \prod_{x \in \pi(n)} W_{x} }$$
+where $A = \bigcup_{o \in \C{T}{r}{n}} P(o)$. Moreover, observe that $P(n) = \pi(n) \cup A$ and $\Phi(n) = \prod_{o \in \C{T}{r}{n}} \Phi(o)$. This completes the induction.
 
 Finally, to complete the proof we observe that $P(r) = X$ and $\Phi(r) = \varphi$. It follows that $f^W_r(\emptyset) = \proj_X \pars{ \varphi \mult \prod_{x \in X} W_x } = W(\varphi)$, as desired.
 \end{proof}

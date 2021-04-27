@@ -123,4 +123,5 @@ experiments/figures_pdf
 *.lof
 *.lot
 *.toc
+*.synctex.gz
 main.pdf

@@ -11,7 +11,7 @@ The key idea is to include in $N_\varphi$ a tensor $A_x$ for each variable $x \i
 % TODO: Define \support in preliminaries.
 Define $I = \{(x, C) : C \in \varphi, x \in \support{C}\}$ to be a set of indices, each with domain $\{0, 1\}$. That is, $I$ has an index for each appearance of each variable in $\varphi$. We use $I$ as the set of indices in $N_\varphi$.
 
-Next, recall that since $W$ is a literal-weight function there exist pseudo-Boolean functions $W_x: 2^\{x\} \rightarrow \mathbb{R}$ for all $x \in X$ such that $W = \prod_{x \in X} W_x$. For each $x \in X$, let $\depend{x}$ be the set of clauses that contain $x$. Define $A_x: [\{x\} \times \depend{x}] \rightarrow \mathbb{R}$ to be the tensor defined by $$A_x(\tau) \equiv \begin{cases}W_x(\{x\})&\text{if}~\tau((x,C)) = 1~\text{for all}~C \in \depend{x}\\W_x(\emptyset)&\text{if}~\tau((x,C)) = 0~\text{for all}~C \in \depend{x}\\0&\text{otherwise.}\end{cases}$$
+Next, recall that since $W$ is a literal-weight function there exist pseudo-Boolean functions $W_x: 2^{\{x\}} \rightarrow \mathbb{R}$ for all $x \in X$ such that $W = \prod_{x \in X} W_x$. For each $x \in X$, let $\depend{x}$ be the set of clauses that contain $x$. Define $A_x: [\{x\} \times \depend{x}] \rightarrow \mathbb{R}$ to be the tensor defined by $$A_x(\tau) \equiv \begin{cases}W_x(\{x\})&\text{if}~\tau((x,C)) = 1~\text{for all}~C \in \depend{x}\\W_x(\emptyset)&\text{if}~\tau((x,C)) = 0~\text{for all}~C \in \depend{x}\\0&\text{otherwise.}\end{cases}$$
 
 Next, for each $C \in \varphi$, let $B_C: [\support{C} \times \{C\}] \rightarrow \mathbb{R}$ be the tensor defined by
 $$B_C(\tau) \equiv \begin{cases}1& \text{if}~\{x: x \in \support{C}~\text{and}~\tau((x, C)) = 1\}~\text{satisfies}~C\\0&\text{otherwise.}\end{cases}$$

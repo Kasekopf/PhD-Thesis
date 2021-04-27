@@ -1,0 +1,56 @@
+\section{Parallelizing the Execution Stage with TensorFlow and Slicing}
+\label{sec:parallel:execution}
+As discussed in Chapter \ref{ch:background}, each contraction in Algorithm \ref{alg:network-contraction} can be implemented as a matrix multiplication.
+This was done in Chapter \ref{ch:tensors} using \tool{numpy} \cite{numpy}, and it is straightforward to adjust the implementation to leverage multiple cores with \tool{numpy} and a GPU with \tool{TensorFlow} \cite{ABCCDDDGII16}.
+
+The primary challenge that emerges when using a GPU is dealing with the small onboard memory. For example, the \tool{NVIDIA Tesla-V100} (which we use in Section \ref{sec:experiments}) has just 16GB of onboard memory. This limits the size of tensors that can be easily manipulated. A single contraction of two tensors can be performed across multiple GPU kernel calls \cite{RRBSKH08}, and similar techniques were implemented in \tool{gpusat2} \cite{FHZ19}. These techniques, however, require parts of the input tensors to be copied into and out of GPU memory, which incurs significant slowdown.
+
+Instead, we use \emph{index slicing} \cite{CZHNS18,GK20,VBNHRBM19} of a tensor network $N$. This technique is analogous to \emph{conditioning} on Bayesian networks \cite{darwiche01,dechter99,pearl86,SAS94}. The idea is to represent $\tntensor{N}$ as the sum of contractions of smaller tensor networks. Each smaller network contains tensor slices:
+
+%The main it is to contract a tensor network $N$ by choosing a subset of bond indices $I \subseteq \tnbound{N}$ and representing $\tntensor{N}$ into the sum of $|\domain{I}|$ contractions of smaller tensor networks. % This corresponds to moving the marginalization of the indices in $I$ to the outside of Equation \ref{eqn:contraction}.
+%These smaller tensor networks contain tensor slices:
+\begin{definition}
+Let $A$ be a tensor, $I \subseteq \textbf{Ind}$, and $\eta \in \domain{I}$. Then the \emph{$\eta$-slice} of $A$ is the tensor $A[\eta]$ with indices $\tdim{A} \setminus I$ defined for all $\tau \in \domain{\tdim{A} \setminus I}$ by $A[\eta](\tau) \equiv A((\tau \cup \eta)\restrict{\tdim{A}}).$
+\end{definition}
+
+These are called slices because every value in $A$ appears in exactly one tensor in $\{ A[\eta] : \eta \in \domain{I} \}$. We now define and prove the correctness of index slicing: 
+\begin{theorem}
+Let $N$ be a tensor network and let $I \subseteq \tnbound{N}$. For each $\eta \in \domain{I}$, let $N[\eta] = \{ A[\eta] : A \in N\}$. Then $\tntensor{N} = \sum_{\eta \in \domain{I}} \tntensor{N[\eta]}.$
+\end{theorem}
+\begin{proof}
+Move the summation over $\eta \in \domain{I}$ to the outside of Equation \ref{eqn:contraction}, then apply the definition of tensor slices and recombine terms.
+\end{proof}
+
+\begin{algorithm*}[t]
+    \label{alg:tn-sliced}
+    \caption{Sliced contraction of a tensor network}
+    \DontPrintSemicolon
+    \KwIn{$N$: a tensor network}
+    \KwIn{$T$: a contraction tree for $N$}
+    \KwIn{$m$: a memory bound}
+    \KwOut{$\tntensor{N}$, the contraction of $N$, performed using at most $m$ memory.}
+    \Function{\upshape $\func{ExecuteSliced}(N, T, m)$}{
+        $I \gets \emptyset$\;
+        \While{$\func{MemCost}(N, T, I) > m$}{
+            $I \gets I \cup \{\func{ChooseSliceIndex}(N, T, I)\}$\;
+        }
+        \Return{$\sum_{\eta \in [I]} \func{Execute}(N[\eta], T[\eta])$}
+    }
+\end{algorithm*}
+
+By choosing $I$ carefully, computing each $\tntensor{N[\eta]}$ uses less intermediate memory (compared to computing $\tntensor{N}$) while using the same contraction tree. In exchange, the number of floating point operations to compute all $\tntensor{N[\eta]}$ terms increases. 
+
+Choosing $I$ is itself a difficult problem. Our goal is to choose the smallest $I$ so that contracting each network slice $N[\eta]$ can be done in onboard memory. We first consider adapting Bayesian network conditioning heuristics to the context of tensor networks. Two popular conditioning heuristics are (1) \emph{cutset conditioning} \cite{pearl86}, which chooses $I$ so that each network slice is a tree, and (2) \emph{recursive conditioning} \cite{darwiche01}, which chooses $I$ so that each network slice is disconnected\footnote{The full recursive conditioning procedure then recurses on each connected component. While recursive conditioning is an any-space algorithm, the partial caching required for this is difficult to implement on a GPU.}. Both of these heuristics result in a choice of $I$ far larger than our goal requires. 
+% Cutset conditioning chooses $I$ much larger than needed for our purpose, while recursive conditioning scales in memory using an explicit 
+
+
+Instead, in this work as a first step we use a heuristic from \cite{CZHNS18,GK20}: choose $I$ incrementally, greedily minimizing the memory cost of contracting $N[\eta]$ until the memory usage fits in onboard memory. Unlike cutset and recursive conditioning, the resulting networks $N[\eta]$ are typically still highly connected. One direction for future work is to compare other heuristics for choosing $I$ (e.g., see the discussion in Section 10 of \cite{dechter99}).
+
+This gives us Algorithm \ref{alg:tn-sliced}, which performs the execution stage with limited memory at the cost of additional time. $T[\eta]$ is the contraction tree obtained by computing the $\eta$-slice of every tensor in $T$. $\func{MemCost}(N, T, I)$ computes the memory for one $\func{Execute}(N[\eta], T[\eta])$ call. $\func{ChooseSliceIndex}(N,T,I)$ chooses the next slice index greedily to minimize memory cost.
+
+%\begin{align*}
+%    \tntensor{N}(\tau) =& \sum_{\rho \in \domain{\tnbound{N}}} \prod_{A \in N} A((\rho \cup \tau)\restrict{\tdim{A}}) \\
+%    =& \sum_{\eta \in \domain{I}} \sum_{\rho \in \domain{\tnbound{N} \setminus I}} \prod_{A \in N} A((\eta \cup \rho \cup \tau)\restrict{\tdim{A}}) \\
+%    =& \sum_{\eta \in \domain{I}} \left( \sum_{\rho \in \domain{\tnbound{N} \setminus I}} \prod_{A \in N} A[\eta]((\rho \cup \tau)\restrict{\tdim{A}}) \right) \\
+%    =& \sum_{\eta \in \domain{I}} \tntensor{\{A[\eta] : A \in N\}}.
+%\end{align*}

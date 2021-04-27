@@ -1,22 +1,22 @@
-\emph{Weighted projected model counting} is a fundamental problem in artificial intelligence, with applications in planning \cite{aziz2015projected}, formal verification \cite{klebanov2013sat}, and reliability estimation \cite{duenas2017counting}. Counting is also closely connected to sampling
-\cite{jerrum1986random}, a problem of major interest in probabilistic reasoning \cite{kelly2019adaptive}.
-The input is a set of constraints, whose variables are divided into \emph{relevant variables} $X$ and \emph{irrelevant variables} $Y$.
-The goal is to compute the weighted number of assignments to $X$ that, together with some assignment to $Y$, satisfy the constraints.
-This problem is complete for the complexity class \#P\textsuperscript{NP[1]} 
+% \emph{Weighted projected model counting} is a fundamental problem in artificial intelligence, with applications in planning \cite{aziz2015projected}, formal verification \cite{klebanov2013sat}, and reliability estimation \cite{duenas2017counting}. Counting is also closely connected to sampling
+% \cite{jerrum1986random}, a problem of major interest in probabilistic reasoning \cite{kelly2019adaptive}.
+% The input is a set of constraints, whose variables are divided into \emph{relevant variables} $X$ and \emph{irrelevant variables} $Y$.
+% The goal is to compute the weighted number of assignments to $X$ that, together with some assignment to $Y$, satisfy the constraints.
+% This problem is complete for the complexity class \#P\textsuperscript{NP[1]} 
 % (solvable by a polynomially bounded counting Turing machine with one query to an NP-complete oracle)
-\cite{zawadzki2013generalization}, and
-there are recent tools for exact weighted projected model counting \cite{lagniez2019recursive,lee2017solving}.
+% \cite{zawadzki2013generalization}, and
+% there are recent tools for exact weighted projected model counting \cite{lagniez2019recursive,lee2017solving}.
 
 % unweighted tools: \cite{zawadzki2013generalization,aziz2015projected,mohle2018dualizing,hecher2020taming}
 
-Dynamic programming is a powerful technique that has been applied across computer science \cite{bellman1966dynamic}.
-The key idea is to solve a large problem by solving many smaller subproblems, and then combining partial solutions into the final result.
-Dynamic programming is a natural framework to solve a variety of problems defined on sets of constraints, as subproblems can be formed by partitioning the constraints.
-This framework has been instantiated into algorithms for database-query optimization \cite{MPPV04}, SAT solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, QBF evaluation \cite{charwat2016bdd}, model counting \cite{BDP09,SS10,jegou2016improving,dudek2020dpmc,fichte2020exploiting}, and projected model counting \cite{fichte2020counting}.
+% Dynamic programming is a powerful technique that has been applied across computer science \cite{bellman1966dynamic}.
+% The key idea is to solve a large problem by solving many smaller subproblems, and then combining partial solutions into the final result.
+% Dynamic programming is a natural framework to solve a variety of problems defined on sets of constraints, as subproblems can be formed by partitioning the constraints.
+% This framework has been instantiated into algorithms for database-query optimization \cite{MPPV04}, SAT solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, QBF evaluation \cite{charwat2016bdd}, model counting \cite{BDP09,SS10,jegou2016improving,dudek2020dpmc,fichte2020exploiting}, and projected model counting \cite{fichte2020counting}.
 
-Recently, a unifying framework for dynamic-programming algorithms based on \emph{project-join trees} was proposed \cite{dudek2020dpmc}. 
+Chapter \ref{ch:dpmc} proposed a unifying framework for dynamic-programming algorithms based on \emph{project-join trees} was proposed. 
 The key idea is to consider project-join trees as \emph{execution plans} and decompose dynamic-programming algorithms into two phases: a \emph{planning phase}, where a project-join tree is constructed from an input problem instance, and an \emph{execution phase}, where the project-join tree is used to compute the result. 
-The project-join-tree-based model counter \dpmc{} \cite{dudek2020dpmc} was found to be competitive with state-of-the-art exact weighted model counters \cite{
+The resulting project-join-tree-based model counter \dpmc{} was found to be competitive with state-of-the-art exact weighted model counters \cite{
     % DPV20, % ADDMC
     % DDV19, % TensorOrder
     sang2004combining, % Cachet

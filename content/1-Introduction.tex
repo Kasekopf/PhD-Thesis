@@ -25,7 +25,7 @@ Projected model counting is thought to be even harder: $\#\exists$SAT is not con
 
 Despite the theoretical difficulty of discrete integration, a variety of discrete integration tools (called \emph{counters}) exist that can handle industrial sets of constraints. The earliest counters, e.g. \tool{CDP} \cite{birnbaum1999good}, were based on search.
 The key idea is to take an algorithm for exploring the entire solution space of a set of constraints (e.g. DPLL \cite{davis1960computing,davis1962machine}, and later CDCL \cite{biere2009conflict}) and augment it to enumerate the number of partial solutions encountered. 
-Modern solverslike \tool{cachet} \cite{SBK05} and \tool{SharpSAT} \cite{Thurley2006} follow this approach.
+Modern solvers such as \tool{cachet} \cite{SBK05} and \tool{SharpSAT} \cite{Thurley2006} follow this approach.
 Another class of counters (e.g. \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) are based on knowledge compilation, where the idea is to compile the set of constraints into an alternative representation on which a discrete integration query may be answered in polynomial time.
 
 A third class of counters \cite{CW16,FHMW17,FHWZ18,FHZ19,DPV20,fichte2020exploiting} are based on dynamic programming. % \cite{BDP09,SS10,jegou2016improving}

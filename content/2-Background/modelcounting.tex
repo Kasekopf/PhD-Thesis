@@ -1,14 +1,34 @@
-\section{Literal-Weighted Model Counting}
+\section{Discrete Integration}
 \label{sec:wmc}
 
-The task in weighted model counting is to count the total weight, subject to a given weight function, of the set of solutions of input constraints (typically given in CNF). Formally:
-\begin{definition}[Weighted Model Count]
-  Let $\varphi$ be a formula over Boolean variables $X$ and let $W: 2^X \rightarrow \mathbb{R}$ be a function. The \emph{weighted model count} of $\varphi$ w.r.t. $W$ is
-  $W(\varphi) \equiv \sum_{\tau \in 2^X} \varphi(\tau) \cdot W(\tau).$
-\end{definition}
-$W$ is called the \emph{weight function}. We focus on the case where $W$ is a \emph{literal-weight function}, where there exist weights $W_{x,0}, W_{x,1} \in \mathbb{R}$ for each $x \in X$ so that, for all $\tau \in 2^X$, $W(\tau) = \prod_{x \in \tau} W_{x,1} \cdot \prod_{x \in X \setminus \tau} W_{x,0}$. The literal-weighted formulation is an equivalent representation of log-linear models \cite{koller2009probabilistic}. If $W$ is the constant function that always returns 1, $W(\varphi)$ is known as the \emph{unweighted model count} of $\varphi$.
+In discrete integration (also called constrained counting) the task is to count the total weight, subject to a given weight function, of the set of solutions of input constraints \cite{GSS08}. This thesis primarily focuses on two subclasses of discrete integration: model counting and projected model counting.
 
-% TODO: Include in Ch 5?
-% We focus in this work on weighted model counting, as opposed to \emph{unweighted model counting} where the weight function $W$ is constant. There are a variety of counters \cite{CW16,FHMW17,Thurley2006} that can perform only unweighted model counting and so we do not compare against them. Of particular note here is \tool{countAntom} \cite{BSB15}, a multi-core unweighted model counter. An interesting direction for future work is to explore the integration of weights into \tool{countAntom} and compare with tensor-network-based approaches to weighted model counting.
+A pseudo-Boolean function $W: 2^X \rightarrow \mathbb{R}$ is \emph{log-linear} or a \emph{literal-weight} function if there exist pseudo-Boolean functions $W_x: 2^\{x\} \rightarrow \mathbb{R}$ for all $x \in X$ such that $W = \prod_{x \in X} W_x$. 
+
+% weights $W_{x,0}, W_{x,1} \in \mathbb{R}$ for each $x \in X$ so that, for all $\tau \in 2^X$, $W(\tau) = \prod_{x \in \tau} W_{x,1} \cdot \prod_{x \in X \setminus \tau} W_{x,0}$.
+
+\subsection{Model Counting}
+In (weighted) model counting, the input constraints are given as a propositional formula, typically in CNF. Formally:
+\begin{definition}[Weighted Model Count]
+  Let $\varphi$ be a formula over Boolean variables $X$ and let $W: 2^X \rightarrow \mathbb{R}$ be a pseudo-Boolean function. We say that $(X, \phi, W)$ is an instance of \emph{weighted model counting}. The \emph{$W$-weighted model count} of $\varphi$ is
+  $$W(\varphi) \equiv \sum_{\tau \in 2^X} [\varphi](\tau) \cdot W(\tau).$$
+\end{definition}
+
+The \emph{unweighted model count} of a Boolean formula $\varphi$ is the number of solutions of $\varphi$, i.e. the $W$-weighted model count of $\varphi$ where $W(\tau) = 1$ for all $\tau \in 2^X$.
+
+
+We focus in this work on weighted model counting, as opposed to \emph{unweighted model counting} where the weight function $W$ is constant. There are a variety of counters \cite{CW16,FHMW17,Thurley2006} that can perform only unweighted model counting and so we do not compare against them. Of particular note here is \tool{countAntom} \cite{BSB15}, a multi-core unweighted model counter. An interesting direction for future work is to explore the integration of weights into \tool{countAntom} and compare with tensor-network-based approaches to weighted model counting.
 
 Existing approaches to weighted model counting can be split broadly into three categories: \emph{direct reasoning}, \emph{knowledge compilation}, and \emph{dynamic programming}. In counters based on direct reasoning (e.g., \tool{cachet} \cite{SBK05}), the idea is to reason directly about the CNF representation of $\varphi$. In counters based on knowledge compilation (e.g. \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}), the idea is to compile $\varphi$ into an alternative representation on which counting is easy. In counters based on dynamic programming (e.g. \tool{ADDMC} \cite{DPV20} and \tool{gpuSAT2} \cite{FHWZ18,FHZ19}), the idea is to traverse the clause structure of $\varphi$. Tensor-network approaches to counting (e.g. \tool{TensorOrder} \cite{DDV19} and this work) are also based on dynamic programming. Dynamic programming approaches often utilize graph decompositions, which we define in the next section. 
+
+\subsection{Projected Model Counting}
+In (weighted) projected model counting, the input constraints are given as a propositional formula, typically in CNF, and a set of irrelevant, existential variables.
+Formally:
+\begin{definition}
+	Let $\phi$ be a Boolean formula, $\{X, Y\}$ be a partition of $\vars(\phi)$, and $W: 2^X \to \R$ be a pseudo-Boolean function. We say that $(X, Y, \phi, W)$ is an instance of \emph{weighted projected model counting}.
+	The \emph{$W$-weighted $Y$-projected model count} of $\phi$ is
+	$$\func{WPMC}(\phi, W, Y) \equiv \sum_{\tau \in 2^X} \pars{ W(\tau) \mult \max_{\sigma \in 2^Y} [\phi](\tau \cup \sigma) }$$.
+\end{definition}
+
+Variables in $X$ are called \emph{relevant} or \emph{additive}, and variables in $Y$ are called \emph{irrelevant} or \emph{disjunctive}. 
+Notice that model counting is a special case of projected model counting where all variables are relevant. Thus $W(\varphi) = \func{WPMC}(\phi, W, \emptyset)$ for all Boolean formulas $\varphi$ and weight functions $W: 2^{\vars(\varphi)} \rightarrow \mathbb{R}$. 

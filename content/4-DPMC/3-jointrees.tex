@@ -91,12 +91,12 @@ The $W$-valuation of a node $n \in \V{T}$ is denoted $f^W_n$ and defined as foll
 \label{eq_valuation}
     f^W_n \equiv
     \begin{cases}
-       \gamma(n) & \text{if}~n \in \Lv{T} \\
+       [\gamma(n)] & \text{if}~n \in \Lv{T} \\
         \sum_{\pi(n)} \pars{ \prod_{o \in \C{T}{r}{n}} f^W_o \cdot \prod_{x \in \pi(n)} W_x } & \text{if}~n \notin \Lv{T}
     \end{cases}
 \end{equation}
 
-Note that the $W$-valuation of a leaf node $n \in \Lv{T}$ is a clause $c = \gamma(n) \in \phi$, interpreted in this context as an associated function $\lambda_c : 2^{\vars(c)} \to \B$ where $\lambda_c(\tau) = 1$ if and only if the truth assignment $\tau$ satisfies $c$. 
+Recall that $[\gamma(n)]$ is a pseudo-Boolean function $[\gamma(n)] : 2^{\vars(\gamma(n))} \rightarrow \mathbb{R}$ where $[\gamma(n)](\tau) = 1$ if and only if the assignment $\tau$ satisfies $\gamma(n)$ (and 0 otherwise). 
 
 The main idea is that the $W$-valuation at each node of $T$ is a pseudo-Boolean function computed as a subexpression of Equation \eqref{eq_factored_wmc}. The $W$-valuation of the root is exactly the result of Equation \eqref{eq_factored_wmc}, \ie, the weighted model count of $\phi$ \wrt{} $W$:
 \begin{theorem}
@@ -110,7 +110,7 @@ In order to prove this theorem, it is helpful to first state and prove a lemma t
 \label{lemma:projections_branch_disjoint}
 Let $\phi$ be a CNF formula, $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$, and let $W$ be a literal-weight function over $\vars(\phi)$. For each $n \in \V{T}$, denote by $S(n)$ the subtree of $T$ rooted at $n$ and further define:
 \begin{align*}
-    \Phi(n) &\equiv \prod_{n \in S(n) \cap \Lv{T}} \gamma(n) \\
+    \Phi(n) &\equiv \prod_{n \in S(n) \cap \Lv{T}} [\gamma(n)] \\
     P(n) &\equiv \bigcup_{n \in S(n) \setminus \Lv{T}} \pi(n).
 \end{align*}
 For all $n \in \V{T} \setminus \Lv{T}$ and $o, o' \in \C{T}{r}{n}$, if $o \neq o'$ then $P(o) \cap \vars(\Phi(o')) = \emptyset$.
@@ -123,14 +123,14 @@ We now use this lemma to prove Theorem \ref{thm_valuation_wmc}.
 \begin{proof}[Proof of Theorem \ref{thm_valuation_wmc}]
 Consider each $n \in \V{T}$ and define $S(n)$, $\Phi(n)$, and $P(n)$ as in Lemma \ref{lemma:projections_branch_disjoint}. The key idea is to prove for all $n \in \V{T}$ that 
 $$f^W_n = \proj_{P(n)} \pars{ \Phi(n) \mult \prod_{x \in P(n)} W_x } \label{eqn:valuation:correctness}.$$
-We proceed by induction on $n$ over the tree structure of $T$. In the base case, $n$ is a leaf and so $\Phi(n) = \gamma(n)$ and $P(n) = \emptyset$. So $f^W_n = \proj_{\emptyset} \pars{ \gamma(n) \mult \prod_{x \in \emptyset} W_x } = \gamma(n)$ as desired. In the inductive case, consider an internal node $n$ of $T$. By Equation \ref{eq_valuation}, $$f^W_n = \proj_{\pi(n)} \pars{\prod_{o \in \C{T}{r}{n}} f^W_o \mult \prod_{x \in \pi(n)} W_x}.$$
+We proceed by induction on $n$ over the tree structure of $T$. In the base case, $n$ is a leaf and so $\Phi(n) = [\gamma(n)]$ and $P(n) = \emptyset$. So $f^W_n = \proj_{\emptyset} \pars{ [\gamma(n)] \mult \prod_{x \in \emptyset} W_x } = [\gamma(n)]$ as desired. In the inductive case, consider an internal node $n$ of $T$. By Equation \ref{eq_valuation}, $$f^W_n = \proj_{\pi(n)} \pars{\prod_{o \in \C{T}{r}{n}} f^W_o \mult \prod_{x \in \pi(n)} W_x}.$$
 Plugging in the inductive hypothesis for each $f^W_o$, it follows that
 $$f^W_n = \proj_{\pi(n)} \pars{\prod_{o \in \C{T}{r}{n}} \pars{\proj_{P(o)} \pars{ \Phi(o) \mult \prod_{x \in P(o)} W_{x} } } \mult \prod_{x \in \pi(n)} W_{x}}.$$
 If $o, o' \in \C{T}{r}{n}$ are distinct, by Lemma \ref{lemma:projections_branch_disjoint} we know $P(o) \cap \vars(\Phi(o')) = \emptyset$. We can therefore apply Theorem \ref{thm_early_proj} to get that
 $$f^W_n = \proj_{\pi(n)} \proj_{A} \pars{ \prod_{o \in \C{T}{r}{n}} \Phi(o) \mult \prod_{x \in A} W_{x} \mult \prod_{x \in \pi(n)} W_{x} }$$
 where $A = \bigcup_{o \in \C{T}{r}{n}} P(o)$. Moreover, observe that $P(n) = \pi(n) \cup A$ and $\Phi(n) = \prod_{o \in \C{T}{r}{n}} \Phi(o)$. This completes the induction.
 
-Finally, to complete the proof we observe that $P(r) = X$ and $\Phi(r) = \varphi$. It follows that $f^W_r(\emptyset) = \proj_X \pars{ \varphi \mult \prod_{x \in X} W_x } = W(\varphi)$, as desired.
+Finally, to complete the proof we observe that $P(r) = X$ and $\Phi(r) = [\varphi]$. It follows that $f^W_r(\emptyset) = \proj_X \pars{ [\varphi] \mult \prod_{x \in X} W_x } = W(\varphi)$, as desired.
 \end{proof}
 
 This gives us a two-phase algorithm for computing the weighted model count of a formula $\phi$.

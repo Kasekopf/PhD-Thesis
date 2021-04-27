@@ -1,17 +1,19 @@
 \section{Discrete Integration}
 \label{sec:wmc}
 
-In discrete integration (also called constrained counting) the task is to count the total weight, subject to a given weight function, of the set of solutions of input constraints \cite{GSS08}. This thesis primarily focuses on two subclasses of discrete integration: model counting and projected model counting.
-
+In discrete integration (also called constrained counting) the task is to count the total weight, subject to a given weight function, of the set of solutions of input constraints \cite{GSS08}. We represent weight functions as pseudo-Boolean functions. As is standard, we focus on literal-weight functions: 
+\begin{definition}[Literal-Weight Function]
 A pseudo-Boolean function $W: 2^X \rightarrow \mathbb{R}$ is \emph{log-linear} or a \emph{literal-weight} function if there exist pseudo-Boolean functions $W_x: 2^{\{x\}} \rightarrow \mathbb{R}$ for all $x \in X$ such that $W = \prod_{x \in X} W_x$. 
+\end{definition}
+$W_x(\{x\})$ indicates the weight of the positive literal $x$ in $W$ and $W_x(\emptyset)$ indicates the weight of the negative literal $\neg x$ in $W$.
 
-% weights $W_{x,0}, W_{x,1} \in \mathbb{R}$ for each $x \in X$ so that, for all $\tau \in 2^X$, $W(\tau) = \prod_{x \in \tau} W_{x,1} \cdot \prod_{x \in X \setminus \tau} W_{x,0}$.
+This thesis primarily focuses on two subclasses of discrete integration: model counting and projected model counting.
 
 \subsection{Model Counting}
 In (weighted) model counting, the input constraints are given as a propositional formula, typically in CNF. Formally:
 \begin{definition}[Weighted Model Count]
   Let $\varphi$ be a formula over Boolean variables $X$ and let $W: 2^X \rightarrow \mathbb{R}$ be a pseudo-Boolean function. We say that $(X, \phi, W)$ is an instance of \emph{weighted model counting}. The \emph{$W$-weighted model count} of $\varphi$ is
-  $$W(\varphi) \equiv \sum_{\tau \in 2^X} [\varphi](\tau) \cdot W(\tau).$$
+  $$W(\varphi) \equiv \sum_{\tau \in 2^X} \varphi(\tau) \cdot W(\tau).$$
 \end{definition}
 
 The \emph{unweighted model count} of a Boolean formula $\varphi$ is the number of solutions of $\varphi$, i.e. the $W$-weighted model count of $\varphi$ where $W(\tau) = 1$ for all $\tau \in 2^X$.
@@ -27,7 +29,7 @@ Formally:
 \begin{definition}
 	Let $\phi$ be a Boolean formula, $\{X, Y\}$ be a partition of $\vars(\phi)$, and $W: 2^X \to \R$ be a pseudo-Boolean function. We say that $(X, Y, \phi, W)$ is an instance of \emph{weighted projected model counting}.
 	The \emph{$W$-weighted $Y$-projected model count} of $\phi$ is
-	$$\func{WPMC}(\phi, W, Y) \equiv \sum_{\tau \in 2^X} \pars{ W(\tau) \mult \max_{\sigma \in 2^Y} [\phi](\tau \cup \sigma) }$$.
+	$$\func{WPMC}(\phi, W, Y) \equiv \sum_{\tau \in 2^X} \pars{ W(\tau) \mult \max_{\sigma \in 2^Y} \phi(\tau \cup \sigma) }$$.
 \end{definition}
 
 Variables in $X$ are called \emph{relevant} or \emph{additive}, and variables in $Y$ are called \emph{irrelevant} or \emph{disjunctive}. 

@@ -1,7 +1,26 @@
 \section{Boolean Formulas and Pseudo-Boolean Functions}
-A \emph{pseudo-Boolean function} over a set $X$ of variables is a function $f: 2^X \to \R$. A Boolean formula $\phi$ over variables $X$ can be represented by a pseudo-Boolean function over $X$, denoted $[\phi]: 2^X \rightarrow \R$, where for all $\tau \in 2^X$, if $\tau$ satisfies $\phi$ then $[\phi](\tau) \equiv 1$ else $[\phi](\tau) \equiv 0$.
+Let $X$ be a set of propositional variables and let $\varphi$ be a Boolean formula defined over $X$.
+We use $\vars(\varphi)$ to indicate the set of variables of $\varphi$. An \emph{assignment} to $X$ is an element of $2^X$, and further $\tau \in 2^X$ is a \emph{solution} to $\varphi$ if $\varphi$ evaluates to true under $\tau$.
 
-Operations on pseudo-Boolean functions include \emph{product} and \emph{projection}.
+We are typically interested in Boolean formulas in \emph{conjunctive normal form} (CNF).
+A \emph{literal} is a variable (e.g., $x$) or the negation of a variable (e.g., $\neg x$).
+A Boolean formula is a \emph{(CNF) clause} if it is the disjunction of literals (e.g., $x \lor y \lor \neg z$).
+A Boolean formula is a \emph{CNF formula} (also called \emph{in CNF}) if it is the conjunction of CNF clauses.
+For example $(x \lor y) \land (z \lor \neg x)$ is a CNF formula with 2 clauses and 4 solutions ($\{y\}$, $\{y, z\}$, $\{x, z\}$, and $\{x, y, z\}$).
+If $\varphi$ is a CNF formula, we often treat $\varphi$ as the set of its clauses and so write $C \in \varphi$ to mean that $C$ is one of the CNF clauses of $\varphi$. Thus $\varphi = \bigwedge_{C \in \varphi} C$.
+
+A generalization of Boolean formulas are pseudo-Boolean functions.
+\begin{definition}[Pseudo-Boolean function]
+\label{def_pseudoboolean}
+Let $X$ be a set of Boolean variables.
+A \emph{pseudo-Boolean function} over $X$ is a function $f: 2^X \to \R$.
+We use $\vars(f)$ to indicate the set of variables of $f$.
+\end{definition}
+Pseudo-Boolean functions are also known as \emph{factors} in other works.
+A pseudo-Boolean function can naturally represent a Boolean formula. In detail, for a Boolean formula $\phi$ let $[\phi]: 2^{\vars(\varphi)} \rightarrow \R$ be a pseudo-Boolean function, where for all $\tau \in 2^{\vars(\varphi)}$, if $\tau$ is a solution of $\phi$ then $[\phi](\tau) \equiv 1$ else $[\phi](\tau) \equiv 0$.
+As an abuse of notation, we often omit the brackets for simplicity and define $\phi(\tau) \equiv 1$ if $\tau$ is a solution of $\phi$ and $\phi(\tau) \equiv 0$ otherwise.
+
+Operations on pseudo-Boolean functions include \emph{product}, \emph{$\Sigma$-projection} and \emph{$\exists$-projection}.
 First, we define product.
 \begin{definition}[Product]
 \label{def_mult}
@@ -9,11 +28,10 @@ First, we define product.
     The \textdef{product} of functions $f: 2^X \to \R$ and $g: 2^Y \to \R$ is the function $f \mult g: 2^{X \cup Y} \to \R$ defined for all $\tau \in 2^{X \cup Y}$ by
     $(f \mult g)(\tau) \equiv f(\tau \cap X) \mult g(\tau \cap Y).$
 \end{definition}
-Product generalizes conjunction of Boolean formulas: if $\alpha$ and $\beta$ are Boolean formulas, then $[\alpha] \mult [\beta] = [\alpha \land \beta]$.
+Product generalizes conjunction of Boolean formulas: if $\alpha$ and $\beta$ are Boolean formulas, then $[\alpha] \mult [\beta] = [\alpha \land \beta]$. Thus if $\varphi$ is a CNF formula then $[\varphi] = \prod_{C \in \varphi} [C]$.
 
-We need two types of projections on pseudo-Boolean functions: $\Sigma$-projection and $\exists$-projection; each eliminates a single variable. 
-We first define $\Sigma$-projection.
-\begin{definition}
+We next define $\Sigma$-projection.
+\begin{definition}[$\Sigma$-projection]
 \label{def_sum}
     Let $X$ be a set of Boolean variables, and let $x \in X$.
     The \emph{$\Sigma$-projection} of a function $f: 2^X \to \R$ \wrt{} $x$ is the function $\Sigma_x f: 2^{X \setminus \set{x}} \to \R$ defined for all $\tau \in 2^{X \setminus \set{x}}$ by
@@ -21,8 +39,8 @@ We first define $\Sigma$-projection.
 \end{definition}
 $\Sigma$-projection is also known as \emph{additive projection} or 
 \emph{marginalization}.
-We next define $\exists$-projection.
-\begin{definition}
+Finally, we define $\exists$-projection.
+\begin{definition}[$\exists$-projection]
 \label{def_exist}
     Let $X$ be a set of Boolean variables, and let $x \in X$.
     The \emph{$\exists$-projection} of a function $f: 2^X \to \R$ \wrt{} $x$ is the function $\exists_x f: 2^{X \setminus \set{x}} \to \R$ defined for all $\tau \in 2^{X \setminus \set{x}}$ by $\pars{\exists_x f}(\tau) \equiv \max(f(\tau), f(\tau \cup \set{x}))$.
@@ -31,9 +49,9 @@ $\exists$-projection is also called \emph{disjunctive projection} and generalize
 
 % If $f: 2^X \to \B$ represents a Boolean formula, then $\exists_x f \equiv f[x \mapsto 0] \lor f[x \mapsto 1]$.
 
-$\Sigma$-projection and $\exists$-projection are each independently commutative. 
+
+In general, $\Sigma$-projection does not commute with $\exists$-projection. For example, if $f(x, y) = [x \oplus y]$ (XOR), then $\Sigma_x \exists_y f \neq \exists_y \Sigma_x f$.
+Nevertheless, $\Sigma$-projection and $\exists$-projection are each independently commutative. 
 That is, for all $x, y \in X$ and $f: 2^X \to \R$, we have that $\Sigma_x \Sigma_y f = \Sigma_y \Sigma_x f$ and $\exists_x \exists_y f = \exists_y \exists_x f$. 
 Thus, for all $X = \{x_1, \ldots, x_n\}$, define $\Sigma_X f \equiv \Sigma_{x_1} \ldots \Sigma_{x_n} f$ and $\exists_X f \equiv \exists_{x_1} \ldots \exists_{x_n} f$. 
-We also take the convention that $\Sigma_\varnothing f \equiv \exists_\varnothing f \equiv f$.
-
-In general, $\Sigma$-projection does not commute with $\exists$-projection. For example, if $f(x, y) = x \oplus y$ (XOR), then $\Sigma_x \exists_y f \neq \exists_y \Sigma_x f$.
+We also take the convention that $\Sigma_\varnothing f \equiv \exists_\varnothing f \equiv f$. 

@@ -80,7 +80,7 @@ Consider each $n \in \V{T}$ and define $S(n)$, $\Phi(n)$, and $P(n)$ as in Lemma
 $$h^W_n \equiv \Phi(n) \mult \left( \prod_{x \in P(n) \cap X} W_x \right).$$
 The key idea is to prove for all $n \in \V{T}$ that 
 $$g^W_n = \sum_{P(n) \cap X} \displaystyle\exist_{P(n) \cap Y} h^W_n \label{eqn:proj-valuation:correctness}.$$
-We proceed by induction on $n$ over the tree structure of $T$. In the base case, $n$ is a leaf and so $\Phi(n) = \gamma(n)$ and $P(n) = \emptyset$. So $g^W_n = \proj_{\emptyset} \pars{ \gamma(n) \mult \prod_{x \in \emptyset} W_x } = \gamma(n)$ as desired. In the inductive case, consider an internal node $n$ of $T$ and apply the inductive hypothesis to the following product:
+We proceed by induction on $n$ over the tree structure of $T$. In the base case, $n$ is a leaf and so $\Phi(n) = [\gamma(n)]$ and $P(n) = \emptyset$. So $g^W_n = \proj_{\emptyset} \pars{ [\gamma(n)] \mult \prod_{x \in \emptyset} W_x } = [\gamma(n)]$ as desired. In the inductive case, consider an internal node $n$ of $T$ and apply the inductive hypothesis to the following product:
 \begin{equation}
 \label{eqn:proj_valuation_child_product}
     \prod_{o \in \C T r n} g^W_o = \prod_{o \in \C T r n} \sum_{P(o) \cap X} \displaystyle\exist_{P(o) \cap Y} h^W_o.
@@ -119,7 +119,7 @@ Finally, observe that $\pi(n) \cup A = P(n)$ and that $h^W_n = \prod_{o \in \C{T
 \end{equation*}
 This completes the induction.
 
-Finally, to complete the proof we observe that $P(r) = X \cup Y$ and $\Phi(r) = \varphi$. It follows that $g^W_r(\emptyset) = \proj_X \pars{ \varphi \mult \prod_{x \in X} W_x } = \func{WPMC}(\phi, W, Y)$, as desired.
+Finally, to complete the proof we observe that $P(r) = X \cup Y$ and $\Phi(r) = [\varphi]$. It follows that $g^W_r(\emptyset) = \proj_X \pars{ [\varphi] \mult \prod_{x \in X} W_x } = \func{WPMC}(\phi, W, Y)$, as desired.
 \end{proof}
 
 % We see in Section \ref{sec_experiments} how the width impacts the computation of $W$-valuations.

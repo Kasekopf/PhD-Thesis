@@ -8,7 +8,7 @@ In this section, we introduce tensors and tensor networks and discuss prior work
 \hline
 \textbf{Database Concept} & \textbf{Factor Graph Concept} & \textbf{Tensor Concept}\\ \hline
 Attribute & Variable & Index\\
-Table & Factor & Tensor\\
+Table & Pseudo-Boolean Function & Tensor\\
 Project-Join Query & Factor Graph & Tensor Network\\
 Join Tree & Dtree & Contraction Tree\\ 
 Width & Largest Cluster Size & Contraction Complexity \\
@@ -33,6 +33,7 @@ We now define tensors as multidimensional arrays of values, indexed by assignmen
 \end{definition}
 
 The \emph{rank} of a tensor $A$ is the cardinality of $\tdim{A}$. The memory to store a tensor (in a dense way) is exponential in the rank. For example, a scalar is a rank 0 tensor, a vector is a rank 1 tensor, and a matrix is a rank 2 tensor. An example of a higher-rank tensor is the \emph{copy tensor} on a set of indices $I$, which is the tensor $\copyt_I: \domain{I} \rightarrow \mathbb{C}$ such that, for all $\tau \in \domain{I}$, $\copyt_I(\tau) \equiv 1$ if $\tau$ is a constant function on $I$ and $\copyt_I(\tau) \equiv 0$ otherwise \cite{BCJ11}.
+Note that a pseudo-Boolean function can be seen as a special case of a tensor, where each index has a domain of size 2 and every tensor entry lies in $\mathbb{R}$.
 
 It is common to consider sets of tensors closed under contraction (see Section \ref{sec:tensors:tensors:tensor-networks}), e.g. tensors with entries in $\mathbb{R}$ as in Section \ref{sec:tensors:wmc}. Database tables under bag-semantics \cite{CV93}, i.e., multirelations, are tensors with entries in $\mathbb{N}$. Probabilistic database tables \cite{CP87} are tensors with entries in $[0, 1]$ that sum to 1.
 

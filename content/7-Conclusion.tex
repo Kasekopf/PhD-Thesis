@@ -1,2 +1,36 @@
 \chapter{Conclusion and Future Directions}
 \label{ch:conclusion}
+
+It would be interesting in the future to analyze the types of benchmarks amenable to tensor-network methods, e.g. by computing lower bounds on carving width in addition to the upper bounds given by heuristic methods. % It would also be interesting to explore the impact of other preprocessing techniques (e.g., PMC \cite{LM14} or B+E \cite{LLM16}) on carving width and treewidth.
+
+% Although we restricted our experiments to a single core, a variety of libraries exist for efficiently performing tensor contractions on multiple cores or on GPUs \cite{KSTKPPRS19,NRBHHJN15}. Another direction for future work is to analyze and improve the potential parallelism of tensor-based algorithms. This would allow comparison against other recent GPU-based counters, including Fichte \emph{et al.} \shortcite{FHWZ18} which also uses graph decompositions. It may also be possible to use spare tensor libraries \cite{FWS20} or decision diagrams \cite{BFGHMPS97} to perform tensor contractions.
+
+Tensor-based methods can also be used to count other classes of CSPs. For example, all techniques we introduced in this work would have similar performance computing the weighted model count of formulas that mix OR clauses with XOR clauses and Exactly-One clauses (as such clauses can also be represented as tree-factorable tensors). More generally, our algorithms for tensor-network contraction can be used to improve many other applications of tensor networks, e.g. quantum circuit simulation \cite{MS08}. Evaluating our techniques on a wider collection of tensor networks is an exciting direction for future work. % that may enable new applications of tensor networks.
+
+% In this work, we did not consider preprocessing of benchmarks.
+% For example, \cite{DDV19} found that preprocessing (called \pkg{FT}, based on a technique to reduce variable occurrences using tree decompositions of the incidence graph \cite{SS10_2}) significantly improved tensor-network-based approaches for weighted model counting.
+% Moreover, \cite{fichte2019improved} and \cite{dudek2020parallel} observed that the \tool{pmc} preprocessor \cite{LM14} notably improved the running time of some dynamic-programming-based model counters.
+% We expect these techniques to also improve \tool{DPMC}.
+
+A promising future research direction is multicore programming of \Dpmc{}.
+Our planning tool \Lg{} can be improved to run back-end tree-decomposition solvers in parallel, as in Chapter \ref{ch:parallel}.
+We can also make the execution tool \Dmc{} support multicore ADD packages (\eg, \sylvan{} \cite{van2015sylvan}).
+Our other executor, \Tensor{}, is built on top of \Numpy{} \cite{numpy} and should be readily parallelizable (\eg, using techniques from Chapter \ref{ch:parallel}).
+We can then compare \Dpmc{} to parallel solvers (\eg, \cite{dal2018parallel,BSB15}).
+
+%%MYV: Added
+Finally, decision diagrams have been widely used in artificial intelligence in the context of \emph{knowledge compilation}, where formulas are compiled into a tractable form in an early phase to support efficient query processing \cite{koriche2013knowledge,LM17,darwiche2004new,OD15}.
+Our work opens up an investigation into the combination of knowledge compilation and dynamic programming.
+The focus here is on processing a single model-counting query.
+Exploring how dynamic programming can also be leveraged to handle several queries is another promising research direction.
+
+
+
+For future work, it would be interesting to consider leveraging other width parameters (e.g. \cite{AGG07} or \cite{GS17}) in the portfolio as well. It may also be possible to improve the portfolio through more advanced algorithm-selection techniques \cite{HHLKS09,XHHL12}. One could develop parallel heuristic decomposition solvers directly, e.g., by adapting the exact GPU-based tree-decomposition solver \cite{VB17} into a heuristic solver.
+
+We focused here on parallelism within a single tensor contraction, but there are opportunities in future work to exploit higher-level parallelism, e.g. by running each slice computation in Algorithm \ref{alg:tn-sliced} on a separate GPU. 
+
+\pkg{TensorFlow} also supports performing tensor contractions on TPUs (tensor processing unit \cite{JYPPABBBBB17}), which are specialized hardware designed for neural network training and inference. Tensor networks therefore provide a natural framework to leverage TPUs for weighted model counting as well. There are additional challenges in the TPU setting: floating-point precision is limited, and there is a (100+ second) compilation stage from a contraction tree into XLA \cite{XLA}. We plan to explore these challenges further in future work.
+
+
+In future work, \procount{} can be generalized for maximum model counting \cite{fremont2017maximum} and even other types of functional aggregate queries (FAQs) \cite{KNR16}, including MAP (discussed above). Another research direction is multicore programming. The planning tool \Lg{} can be improved to run tree decomposers in parallel \cite{dudek2020parallel} in a portfolio approach \cite{XHHL08}. One could also make the execution tool \Dmc{} support multicore ADD packages (\eg, \sylvan{} \cite{van2015sylvan}).

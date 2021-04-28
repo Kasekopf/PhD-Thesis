@@ -1,4 +1,4 @@
-\section{Discussion}
+\section{Chapter Summary}
 \label{sec_procount_discussion}
 
 We adapted an existing dynamic-programming framework \cite{dudek2020dpmc} to perform projected model counting by requiring project-join trees to be graded.
@@ -9,5 +9,3 @@ We proved that algorithms for building project-join trees can be used to build g
 
 Our framework \procount{} is competitive with the exact weighted projected model counters \dfp{} \cite{lagniez2019recursive}, \projmc{} \cite{lagniez2019recursive}, and \ssat{} \cite{lee2017solving}. 
 \procount{} considerably improves the virtual best solver and thus is a valuable addition to the portfolio.
-
-In future work, \procount{} can be generalized for maximum model counting \cite{fremont2017maximum} and even other types of functional aggregate queries (FAQs) \cite{KNR16}, including MAP (discussed above). Another research direction is multicore programming. The planning tool \Lg{} can be improved to run tree decomposers in parallel \cite{dudek2020parallel} in a portfolio approach \cite{XHHL08}. One could also make the execution tool \Dmc{} support multicore ADD packages (\eg, \sylvan{} \cite{van2015sylvan}).

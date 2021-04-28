@@ -1,4 +1,4 @@
-\section{Discussion}
+\section{Chapter Summary}
 \label{sec_discussion}
 
 In this work, we introduced the concept of project-join trees for weighted model counting.
@@ -22,20 +22,3 @@ We will also consider adding to our framework an executor based on databases (\e
 We showed that our dynamic-programming model-counting framework \Dpmc{} is competitive with state-of-the-art tools (\cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{LM17}, and \minictd{} \cite{OD15}).
 Although no single model counter dominates,
 \Dpmc{} considerably improves the virtual best solver and thus is valuable as part of the portfolio.
-
-In this work, we did not consider preprocessing of benchmarks.
-For example, \cite{DDV19} found that preprocessing (called \pkg{FT}, based on a technique to reduce variable occurrences using tree decompositions of the incidence graph \cite{SS10_2}) significantly improved tensor-network-based approaches for weighted model counting.
-Moreover, \cite{fichte2019improved} and \cite{dudek2020parallel} observed that the \tool{pmc} preprocessor \cite{LM14} notably improved the running time of some dynamic-programming-based model counters.
-We expect these techniques to also improve \tool{DPMC}.
-
-A promising future research direction is multicore programming.
-Our planning tool \Lg{} can be improved to run back-end tree-decomposition solvers in parallel, as in \cite{dudek2020parallel}.
-We can also make the execution tool \Dmc{} support multicore ADD packages (\eg, \sylvan{} \cite{van2015sylvan}).
-Our other executor, \Tensor{}, is built on top of \Numpy{} \cite{numpy} and should be readily parallelizable (\eg, using techniques from \cite{dudek2020parallel}).
-We can then compare \Dpmc{} to parallel solvers (\eg, \cite{dal2018parallel,BSB15}).
-
-%%MYV: Added
-Finally, decision diagrams have been widely used in artificial intelligence in the context of \emph{knowledge compilation}, where formulas are compiled into a tractable form in an early phase to support efficient query processing \cite{koriche2013knowledge,LM17,darwiche2004new,OD15}.
-Our work opens up an investigation into the combination of knowledge compilation and dynamic programming.
-The focus here is on processing a single model-counting query.
-Exploring how dynamic programming can also be leveraged to handle several queries is another promising research direction.

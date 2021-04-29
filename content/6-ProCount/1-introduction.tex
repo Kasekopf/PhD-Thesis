@@ -14,20 +14,20 @@
 % Dynamic programming is a natural framework to solve a variety of problems defined on sets of constraints, as subproblems can be formed by partitioning the constraints.
 % This framework has been instantiated into algorithms for database-query optimization \cite{MPPV04}, SAT solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, QBF evaluation \cite{charwat2016bdd}, model counting \cite{BDP09,SS10,jegou2016improving,dudek2020dpmc,fichte2020exploiting}, and projected model counting \cite{fichte2020counting}.
 
-Chapter \ref{ch:dpmc} proposed a unifying framework for dynamic-programming algorithms based on \emph{project-join trees} was proposed. 
+Chapter \ref{ch:dpmc} proposed a unifying framework for dynamic-programming algorithms based on \emph{project-join trees}. 
 The key idea is to consider project-join trees as \emph{execution plans} and decompose dynamic-programming algorithms into two phases: a \emph{planning phase}, where a project-join tree is constructed from an input problem instance, and an \emph{execution phase}, where the project-join tree is used to compute the result. 
-The resulting project-join-tree-based model counter \dpmc{} was found to be competitive with state-of-the-art exact weighted model counters \cite{
-    % DPV20, % ADDMC
-    % DDV19, % TensorOrder
-    sang2004combining, % Cachet
-    darwiche2004new, % C2D
-    LM17, % d4
-    OD15% miniC2D
-}.
-%MYV: Say something about competition?
-Notably, \dpmc{} subsumes \addmc{} \cite{DPV20}, which tied with \df{} \cite{LM17} for first place of the weighted track of the 2020 Model Counting Competition \cite{fichte2020model}.
+% The resulting project-join-tree-based model counter \dpmc{} was found to be competitive with state-of-the-art exact weighted model counters \cite{
+%     % DPV20, % ADDMC
+%     % DDV19, % TensorOrder
+%     sang2004combining, % Cachet
+%     darwiche2004new, % C2D
+%     LM17, % d4
+%     OD15% miniC2D
+% }.
+% %MYV: Say something about competition?
+% Notably, \dpmc{} subsumes \addmc{} \cite{DPV20}, which tied with \df{} \cite{LM17} for first place of the weighted track of the 2020 Model Counting Competition \cite{fichte2020model}.
 
-We adapt this framework for weighted projected model counting. The central challenge is that there are two kinds of variables: relevant and irrelevant. This contrasts with model counting, where all variables are relevant and can be treated similarly. This challenge also occurs for other problems.
+We adapt this framework for weighted projected model counting. The central challenge is that for projected model counting there are two kinds of variables: relevant and irrelevant. This contrasts with model counting, where all variables are relevant and so can be treated similarly. This challenge also occurs for other problems.
 For example, in Boolean functional synthesis \cite{tabajara2017factored}, some variables are \emph{free} and must not be projected out. 
 Our solution is to model multiple types of variables by requiring the project-join tree to be \emph{graded}, meaning that irrelevant variables must be projected before relevant variables. Our main theoretical contribution is a novel algorithm to construct graded project-join trees from standard project-join trees. This has two primary advantages. 
 

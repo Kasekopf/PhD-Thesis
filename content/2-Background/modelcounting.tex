@@ -3,8 +3,9 @@
 
 In discrete integration (also called constrained counting) the task is to count the total weight, subject to a given weight function, of the set of solutions of input constraints \cite{GSS08}. We represent weight functions as pseudo-Boolean functions. As is standard, we focus on literal-weight functions: 
 \begin{definition}[Literal-Weight Function]
-A pseudo-Boolean function $W: 2^X \rightarrow \mathbb{R}$ is \emph{log-linear} or a \emph{literal-weight} function if there exist pseudo-Boolean functions $W_x: 2^{\{x\}} \rightarrow \mathbb{R}$ for all $x \in X$ such that $W = \prod_{x \in X} W_x$. 
+A pseudo-Boolean function $W: 2^X \rightarrow \mathbb{R}$ is \emph{literal-weight} function if there exist pseudo-Boolean functions $W_x: 2^{\{x\}} \rightarrow \mathbb{R}$ for all $x \in X$ such that $W = \prod_{x \in X} W_x$. 
 \end{definition}
+Literal-weight functions are also called \emph{log-linear} functions and can be employed to capture a wide variety of probabilistic distributions that arise from graphical models, conditional random fields, skip-gram models, and the like~\cite{KF09}.
 $W_x(\{x\})$ indicates the weight of the positive literal $x$ in $W$ and $W_x(\emptyset)$ indicates the weight of the negative literal $\neg x$ in $W$.
 
 This thesis primarily focuses on two subclasses of discrete integration: model counting and projected model counting.
@@ -28,7 +29,7 @@ Moreover, this thesis focuses on \emph{exact} discrete integration, where the ex
 \subsection{Projected Model Counting}
 In (weighted) projected model counting, the input constraints are given as a propositional formula, typically in CNF, and a set of irrelevant, existential variables.
 Formally:
-\begin{definition}
+\begin{definition}[Weighted Projected Model Count]
 	Let $\phi$ be a Boolean formula, $\{X, Y\}$ be a partition of $\vars(\phi)$, and $W: 2^X \to \R$ be a pseudo-Boolean function. We say that $(X, Y, \phi, W)$ is an instance of \emph{weighted projected model counting}.
 	The \emph{$W$-weighted $Y$-projected model count} of $\phi$ is
 	$$\func{WPMC}(\phi, W, Y) \equiv \sum_{\tau \in 2^X} \pars{ W(\tau) \mult \max_{\sigma \in 2^Y} \phi(\tau \cup \sigma) }$$.

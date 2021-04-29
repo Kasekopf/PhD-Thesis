@@ -17,7 +17,7 @@ A \emph{pseudo-Boolean function} over $X$ is a function $f: 2^X \to \R$.
 We use $\vars(f)$ to indicate the set of variables of $f$.
 \end{definition}
 Pseudo-Boolean functions are also known as \emph{factors}.
-A pseudo-Boolean function can naturally represent a Boolean formula. In detail, for a Boolean formula $\phi$ let $[\phi]: 2^{\vars(\varphi)} \rightarrow \R$ be a pseudo-Boolean function, where for all $\tau \in 2^{\vars(\varphi)}$, if $\tau$ is a solution of $\phi$ then $[\phi](\tau) \equiv 1$ else $[\phi](\tau) \equiv 0$.
+A pseudo-Boolean function can naturally represent a Boolean formula. In detail, for a Boolean formula $\phi$ define $[\phi]: 2^{\vars(\varphi)} \rightarrow \R$ to be a pseudo-Boolean function where, for all $\tau \in 2^{\vars(\varphi)}$, if $\tau$ is a solution of $\phi$ then $[\phi](\tau) \equiv 1$ else $[\phi](\tau) \equiv 0$.
 As an abuse of notation, we often omit the brackets for simplicity and define $\phi(\tau) \equiv 1$ if $\tau$ is a solution of $\phi$ and $\phi(\tau) \equiv 0$ otherwise.
 
 Operations on pseudo-Boolean functions include \emph{product}, \emph{$\Sigma$-projection} and \emph{$\exists$-projection}.

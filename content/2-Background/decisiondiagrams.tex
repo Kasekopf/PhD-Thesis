@@ -2,14 +2,18 @@
 \label{sec:background:dd}
 An \emph{algebraic decision diagram (ADD)} is a compact representation of a pseudo-Boolean function as a directed acyclic graph \cite{bahar1997algebraic}.
 For functions with logical structure, an ADD representation can be exponentially smaller than the explicit representation.
-Originally designed for matrix multiplication and shortest path algorithms, ADDs have also been used for Bayesian inference \cite{chavira2007compiling,gogate2011approximation}, stochastic planning \cite{hoey1999spudd}, model checking \cite{kwiatkowska2007stochastic}, and model counting \cite{fargier2014knowledge,DPV20}.
+Originally designed for matrix multiplication and shortest path algorithms, ADDs have also been used for Bayesian inference \cite{chavira2007compiling,gogate2011approximation}, stochastic planning \cite{hoey1999spudd}, model checking \cite{kwiatkowska2007stochastic}, and model counting \cite{fargier2014knowledge,DPV20}. Formally:
 
-Formally, an ADD is a tuple $(X, S, \sigma, G)$, where $X$ is a set of Boolean variables, $S$ is an arbitrary set (called the \textdef{carrier set}), $\sigma: X \to \N$ is an injection (called the \textdef{diagram variable order}), and $G$ is a rooted directed acyclic graph satisfying the following three properties.
-First, every leaf node of $G$ is labeled with an element of $S$.
-Second, every internal node of $G$ is labeled with an element of $X$ and has two outgoing edges, labeled 0 and 1.
-Finally, for every path in $G$, the labels of internal nodes must occur in increasing order under $\sigma$.
-In this work, we only need to consider ADDs with the carrier set $S = \mathbb{R}$.
-
+\begin{definition}
+\label{def:add}[Algebraic decision diagram]
+An \emph{ADD} is a tuple $(X, S, \sigma, G)$, where $X$ is a set of Boolean variables, $S$ is an arbitrary set (called the \textdef{carrier set}), $\sigma: X \to \N$ is an injection (called the \textdef{diagram variable order}), and $G$ is a rooted directed acyclic graph satisfying the following three properties:
+\begin{enumerate}
+    \item Every leaf node of $G$ is labeled with an element of $S$,
+    \item Every internal node of $G$ is labeled with an element of $X$ and has two outgoing edges, labeled 0 and 1, and
+    \item For every path in $G$, the labels of internal nodes must occur in increasing order under $\sigma$.
+\end{enumerate}
+\end{definition}
+In this work, we only need to consider ADDs with the carrier set $S = \mathbb{R}$. 
 An ADD $(X, S, \sigma, G)$ is a compact representation of a function $f: 2^X \to S$.
 Although there are many ADDs representing $f$, for each injection $\sigma: X \to \N$, there is a unique minimal ADD that represents $f$ with $\sigma$ as the diagram variable order, called the \textdef{canonical ADD}.
 ADDs can be minimized in polynomial time, so it is typical to only work with canonical ADDs.
@@ -20,4 +24,4 @@ A variety of techniques exist in prior work to heuristically find diagram variab
 Moreover, since binary decision diagrams (BDDs) \cite{bryant1986graph} can be seen as ADDs with carrier set $S = \set{0, 1}$, there is significant overlap with the techniques to find variable orders for BDDs.
 
 Several packages exist for efficiently manipulating ADDs.
-For example, \cudd{} \cite{somenzi2015cudd} implements both product and projection on ADDs in polynomial time (in the size of the ADD representation).
+For example, \cudd{} \cite{somenzi2015cudd} implements product, $\Sigma$-projection and $\exists$-projection on ADDs in polynomial time (in the size of the ADD representation).

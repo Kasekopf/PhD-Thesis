@@ -8,7 +8,7 @@
 % This framework has been instantiated into algorithms for database-query optimization \cite{MPPV04}, satisfiability solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, and QBF evaluation \cite{charwat2016bdd}.
 
 Dynamic programming has been the basis of several tools for model counting \cite{DPV20,DDV19,dudek2020parallel,fichte2020exploiting}.
-Although each tool uses a different data structure--algebraic decision diagrams (ADDs) \cite{DPV20}, tensors \cite{DDV19,dudek2020parallel}, or database tables \cite{fichte2020exploiting}--the overall algorithms have similar structure.
+Although each tool uses a different data structure--algebraic decision diagrams (ADDs) \cite{DPV20}, tensors (see Chapter \ref{ch:tensors}), or database tables \cite{fichte2020exploiting}--the overall algorithms have similar structure.
 % Also, decomposition techniques have seen many applications in model counting, cf.~\cite{jegou2016improving} and the reference therein. %JD: Moved the citation to paragraph 2 instead
 The goal of this chapter is to unify these approaches into a single conceptual framework: \emph{project-join trees}.
 Project-join trees are not an entirely new idea.
@@ -16,12 +16,9 @@ Similar concepts have been used in constraint programming (as join trees \cite{d
 Our original contributions include the unification of these concepts into project-join trees and the application of this unifying framework to model counting.
 
 We argue that project-join trees provide a natural formalism to describe execution plans for dynamic-programming algorithms for model counting.
-In particular, considering project-join trees as \emph{execution plans} enables us to decompose dynamic-programming algorithms such as the one in \cite{DPV20} into two phases, following the breakdown in \cite{dudek2020parallel}: a \emph{planning} phase and an \emph{execution} phase.
+In particular, considering project-join trees as \emph{execution plans} enables us to decompose dynamic-programming algorithms such as the one in \cite{DPV20} into two phases, following the breakdown in Chapter \ref{ch:tensors}: a \emph{planning} phase and an \emph{execution} phase.
 This enables us to study and compare different planning algorithms, different execution environments, and the interplay between planning and execution.
 Such a study is the main focus of this work.
-While the focus here is on model counting, our framework is of broader interest.
-For example, in \cite{tabajara2017factored}, Tabajara and Vardi described a dynamic-programming, binary-decision-diagram-based framework for functional Boolean synthesis.
-Refactoring the algorithm into a planning phase followed by an execution phase is also of interest in that context.
 
 The primary contribution of the work here is a dynamic-programming framework for weighted model counting based on project-join trees.
 In particular:

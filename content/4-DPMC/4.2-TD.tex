@@ -25,9 +25,9 @@ In particular, join-query optimization uses tree decompositions of the \emph{joi
 The \emph{join graph} of a project-join query consists of all attributes of a database as vertices and all tables as cliques.
 In this approach, tree decompositions of the join graph of a query are used to find optimal project-join trees; see Algorithm 3 of \cite{MPPV04}.
 Similarly, tree decompositions of the \emph{primal graph} of a factor graph, which consists of all variables as vertices and all factors as cliques, can be used to find variable elimination orders \cite{KDLD05}.
-This technique has also been applied in the context of tensor networks \cite{morgenstern2008ltl,DDV19}.
+Section \ref{sec:tensors:contraction-theory} discussed this technique in the context of tensor networks.
 
-Translated to model counting, this technique allows us to use tree decompositions of the \textdef{Gaifman graph} of a CNF formula to compute project-join trees.
+Translated to our project-join-tree framework, this technique allows us to use tree decompositions of the \textdef{Gaifman graph} of a CNF formula to compute project-join trees.
 The Gaifman graph of a CNF formula $\phi$, denoted $\gaifman(\phi)$, has a vertex for each variable of $\phi$, and two vertices are adjacent if the corresponding variables appear together in some clause of $\phi$.
 We present this tree-decomposition-based technique as Algorithm \ref{alg_td_to_join}.
 The key idea is that each clause $c$ of $\phi$ forms a clique in $\gaifman(\phi)$ between the variables of $c$.
@@ -136,7 +136,7 @@ This completes the induction. To complete the proof, notice that every internal 
 $\func{Process}$ in Algorithm \ref{alg_td_to_join}. Since every call Algorithm \ref{alg_td_to_join} makes to $\func{Process}$ has $\ell \in \{\emptyset\} \cup \{ \chi(n) : n \in \V{S}\}$, it follows that, for every internal node $i$ of $\mathcal{T}$, $| \vars(i) | \leq w+1$. Moreover, for every leaf node $i$ of $\mathcal{T}$ there is a corresponding clauses $c \in \varphi$ with $\vars(i) = \vars(c)$. Thus there is a clique in $\gaifman(\varphi)$ of $|\vars(i)|$ vertices, which implies that $w \geq |\vars(i)| - 1$. Thus the width of $\mathcal{T}$ is at most $w+1$.
 \end{proof}
 
-Theorem \ref{thm_td_to_join} allows us to leverage state-of-the-art anytime tools for finding tree decompositions \cite{Tamaki17,strasser2017computing,AMW17} to construct project-join trees, which we do in Section \ref{sec_experiments_planning}.
+Theorem \ref{thm_td_to_join} allows us to leverage state-of-the-art tools for finding tree decompositions \cite{Tamaki17,strasser2017computing,AMW17} to construct project-join trees, which we do in Section \ref{sec_experiments_planning}.
 
 On the theoretical front, it is well-known that tree decompositions of the Gaifman graph are actually equivalent to project-join trees \cite{MPPV04}.
 That is, one can go in the other direction as well: given a project-join tree of $\phi$, one can construct a tree decomposition of $\gaifman(\phi)$ of equivalent width.
@@ -154,3 +154,7 @@ Formally:
     Moreover, the width of $(T, \chi)$ is $\max_{n \in \V{T}} \size{\chi (n)}  - 1 = \max_{n \in \V T} \func{size}(n) - 1 = w - 1$.
 \end{proof}
 Theorem \ref{thm_join_to_td} is Lemma 1 of \cite{MPPV04} and can be seen as the inverse of Theorem \ref{thm_td_to_join}.
+
+% TODO: compare to max-rank?
+% Notice the difference between Algorithm \ref{alg_td_to_join}, which uses tree decompositions to construct project-join trees, and Theorem \ref{thm:carving-equiv-tree}, which uses tree decompositions to construct carving decompositions. 
+% This is because the width of a project-join tree is analogous to the contraction complexity of a contraction tree, while (by Theorem \ref{thm:contraction-equiv-carving}) the width of a carving decomposition is exactly the max-rank of the corresponding contraction tree.

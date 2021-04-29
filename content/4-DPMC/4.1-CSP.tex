@@ -4,8 +4,10 @@
 A variety of constraint-satisfaction heuristics for model counting were presented in a single algorithmic framework by \cite{DPV20}.
 These heuristics have a long history in constraint programming \cite{dechter03}, database-query optimization \cite{MPPV04}, and propositional reasoning \cite{pan2005symbolic}.
 In this section, we adapt the framework of \cite{DPV20} to produce project-join trees.
+This adaption was done by Vu H. N. Phan and is not a contribution of this thesis. We outline it briefly here and refer the reader to \cite{dudek2020dpmc} for the complete details.
+
 This algorithm is presented as Algorithm \ref{alg_csp_jt}, which constructs a project-join tree of a CNF formula using constraint-satisfaction heuristics.
-The functions $\clusterVarOrder$, $\clauseRank$, and $\chosenCluster$ represent heuristics for fine-tuning the specifics of the algorithm.
+Each of the functions $\clusterVarOrder$, $\clauseRank$, and $\chosenCluster$ represent heuristics for fine-tuning the specifics of the algorithm.
 Before discussing the various heuristics, we assert the correctness of Algorithm \ref{alg_csp_jt} in the following theorem.
 \begin{theorem}
 \label{thm_csp_jt}
@@ -19,42 +21,42 @@ Before discussing the various heuristics, we assert the correctness of Algorithm
     \end{enumerate}
     Then Algorithm \ref{alg_csp_jt} returns a project-join tree of $\phi$.
 \end{theorem}
-\begin{proof}
-Let $\mathcal{T} = (T, n_m, \gamma, \pi)$ be the object returned by Algorithm \ref{alg_csp_jt}. To prove that $\mathcal{T}$ is a project-join tree we must verify that $T$ is a tree, that $\gamma$ is a bijection and that both properties from Definition \ref{def_jointree} hold.
+% \begin{proof}
+% Let $\mathcal{T} = (T, n_m, \gamma, \pi)$ be the object returned by Algorithm \ref{alg_csp_jt}. To prove that $\mathcal{T}$ is a project-join tree we must verify that $T$ is a tree, that $\gamma$ is a bijection and that both properties from Definition \ref{def_jointree} hold.
 
-\paragraph{Part 1: $(T, n_m)$ is a rooted tree containing every node created by Algorithm \ref{alg_csp_jt}.}
-After the loop at Line \ref{line_creation_loop}, every leaf node created by Algorithm \ref{alg_csp_jt} in contained in some element of $\{ \kappa_j : 1 \leq j \leq m\}$. One can prove by induction that, after iteration $i < m$ of the loop on Line \ref{line_construction_loop}, because of Condition \ref{cond2} every node created by Algorithm \ref{alg_csp_jt} so far is the descendent of exactly one node of one element of $\{ \kappa_j : i < j \leq m\}$. Thus before the final iteration (with $i = m$) every node created by Algorithm \ref{alg_csp_jt} so far is the descendent of exactly one node in $\kappa_m$. It follows that $(T, n_m)$ is indeed a rooted tree containing every node created by Algorithm \ref{alg_csp_jt}.
+% \paragraph{Part 1: $(T, n_m)$ is a rooted tree containing every node created by Algorithm \ref{alg_csp_jt}.}
+% After the loop at Line \ref{line_creation_loop}, every leaf node created by Algorithm \ref{alg_csp_jt} in contained in some element of $\{ \kappa_j : 1 \leq j \leq m\}$. One can prove by induction that, after iteration $i < m$ of the loop on Line \ref{line_construction_loop}, because of Condition \ref{cond2} every node created by Algorithm \ref{alg_csp_jt} so far is the descendent of exactly one node of one element of $\{ \kappa_j : i < j \leq m\}$. Thus before the final iteration (with $i = m$) every node created by Algorithm \ref{alg_csp_jt} so far is the descendent of exactly one node in $\kappa_m$. It follows that $(T, n_m)$ is indeed a rooted tree containing every node created by Algorithm \ref{alg_csp_jt}.
 
-\paragraph{Part 2: $\gamma$ is a bijection.}
-By condition \ref{cond1}, $\{ \Gamma_i : 1 \leq i \leq m\}$ is a partition of the clauses of $\varphi$. Moreover, observe that after Line \ref{line_kappa} $\{ \kappa_i : 1 \leq i \leq m\}$ is a partition of $\Lv{T}$. Finally, by construction $\gamma$ is a bijection between $\kappa_i$ and $\Gamma_i$ for each $1 \leq i \leq m$. Thus $\gamma$ is a bijection between $\Lv{T}$ and the clauses of $\varphi$.
+% \paragraph{Part 2: $\gamma$ is a bijection.}
+% By condition \ref{cond1}, $\{ \Gamma_i : 1 \leq i \leq m\}$ is a partition of the clauses of $\varphi$. Moreover, observe that after Line \ref{line_kappa} $\{ \kappa_i : 1 \leq i \leq m\}$ is a partition of $\Lv{T}$. Finally, by construction $\gamma$ is a bijection between $\kappa_i$ and $\Gamma_i$ for each $1 \leq i \leq m$. Thus $\gamma$ is a bijection between $\Lv{T}$ and the clauses of $\varphi$.
 
-\paragraph{Part 3: Property 1 of Definition \ref{def_jointree}.} 
-That is, we must verify that $P = \{\pi(a) : a \in \V{T} \setminus \Lv{T} \}$ is a partition of $X$.
-For each $i = 1, 2, \ldots, m$, Algorithm \ref{alg_csp_jt} constructs an internal node $n_i$ with $\pi(n_i) = X_i$.
-Since $\set{X_i}_{i = 1}^m$ is a partition of $X$, so is $P = \set{\pi(n_i)}_{i = 1}^m$.
+% \paragraph{Part 3: Property 1 of Definition \ref{def_jointree}.} 
+% That is, we must verify that $P = \{\pi(a) : a \in \V{T} \setminus \Lv{T} \}$ is a partition of $X$.
+% For each $i = 1, 2, \ldots, m$, Algorithm \ref{alg_csp_jt} constructs an internal node $n_i$ with $\pi(n_i) = X_i$.
+% Since $\set{X_i}_{i = 1}^m$ is a partition of $X$, so is $P = \set{\pi(n_i)}_{i = 1}^m$.
 
-\paragraph{Part 4: Property 2 of Definition \ref{def_jointree}.}
-That is, consider an an internal node $n_i \in \V{T} \setminus \Lv{T}$ (created on Line \ref{line_internal_node} at iteration $i$), variable $x \in \pi(n_i)$, and clause $c \in \phi$ \st{} $x$ appears in $c$. We must verify that $\ell = \gamma^{-1}(c)$ is a descendant of $n_i$ in $T$.
+% \paragraph{Part 4: Property 2 of Definition \ref{def_jointree}.}
+% That is, consider an an internal node $n_i \in \V{T} \setminus \Lv{T}$ (created on Line \ref{line_internal_node} at iteration $i$), variable $x \in \pi(n_i)$, and clause $c \in \phi$ \st{} $x$ appears in $c$. We must verify that $\ell = \gamma^{-1}(c)$ is a descendant of $n_i$ in $T$.
 
-Define a sequence $p_0, p_1, \cdots, p_L$ of integers by $p_0 = p$, $p_{k+1} = \func{ChosenCluster}(n_{p_k})$ if $p_k < m$, and $p_L = m$.
-Condition \ref{cond2} implies that this sequence is indeed finite and strictly increasing.
-The loop on Line \ref{line_construction_loop} ensures that $\ell$ is a child of $n_{p_0}$ and that, for each $0 \leq k < L$, the internal node $n_{p_k}$ is a child of $n_{p_{k+1}}$.
-Eventually we reach $n_{p_L} = n_m$, the root of $\mathcal{T}$.
-So $n_{p_0}, n_{p_1}, \cdots, n_{p_L}$ are exactly the ancestors of $\ell$ in $T$.
+% Define a sequence $p_0, p_1, \cdots, p_L$ of integers by $p_0 = p$, $p_{k+1} = \func{ChosenCluster}(n_{p_k})$ if $p_k < m$, and $p_L = m$.
+% Condition \ref{cond2} implies that this sequence is indeed finite and strictly increasing.
+% The loop on Line \ref{line_construction_loop} ensures that $\ell$ is a child of $n_{p_0}$ and that, for each $0 \leq k < L$, the internal node $n_{p_k}$ is a child of $n_{p_{k+1}}$.
+% Eventually we reach $n_{p_L} = n_m$, the root of $\mathcal{T}$.
+% So $n_{p_0}, n_{p_1}, \cdots, n_{p_L}$ are exactly the ancestors of $\ell$ in $T$.
 
-Assume for the sake of a contradiction that $i$ is not an ancestor of $\ell$.
-Thus $i$ does not appear in the sequence $p_0, p_1, \cdots, p_L$. 
-Since $x \in \pi(n_i) = X_i$, we know by Line \ref{line_varsets} of Algorithm \ref{alg_csp_jt} that $p \leq i$.
-Therefore $p_0, p_1, \cdots, p_L$ is an increasing sequence of integers from $p_0 = p \leq i$ to $p_L = m \geq i$.
-Hence there exists some $k'$ s.t. $p_{k'} < i < p_{k'+1}$. 
-Condition \ref{cond3} then implies that $X_i \cap \vars(n_{p_{k'}}) = \emptyset$.
-In particular, since $x \in X_i$ this means that $x \not\in \vars(n_{p_{k'}})$.
+% Assume for the sake of a contradiction that $i$ is not an ancestor of $\ell$.
+% Thus $i$ does not appear in the sequence $p_0, p_1, \cdots, p_L$. 
+% Since $x \in \pi(n_i) = X_i$, we know by Line \ref{line_varsets} of Algorithm \ref{alg_csp_jt} that $p \leq i$.
+% Therefore $p_0, p_1, \cdots, p_L$ is an increasing sequence of integers from $p_0 = p \leq i$ to $p_L = m \geq i$.
+% Hence there exists some $k'$ s.t. $p_{k'} < i < p_{k'+1}$. 
+% Condition \ref{cond3} then implies that $X_i \cap \vars(n_{p_{k'}}) = \emptyset$.
+% In particular, since $x \in X_i$ this means that $x \not\in \vars(n_{p_{k'}})$.
 
-On the other hand, since $\set{X_i}_{i = 1}^m$ is a partition of $X$ and $x \in \pi(n_i) = X_i$, we know that $x \not\in X_{i_k}$ for all $0 \leq k \leq L$.
-Because $\ell$ is a child of $n_{p_0}$ and $x \in \vars(\ell)$, this implies that $x \in \vars(n_k)$ for all $0 \leq k \leq L$.
-In particular, $x \in \vars(n_{p_{k'}})$.
-This is a contradiction.
-\end{proof}
+% On the other hand, since $\set{X_i}_{i = 1}^m$ is a partition of $X$ and $x \in \pi(n_i) = X_i$, we know that $x \not\in X_{i_k}$ for all $0 \leq k \leq L$.
+% Because $\ell$ is a child of $n_{p_0}$ and $x \in \vars(\ell)$, this implies that $x \in \vars(n_k)$ for all $0 \leq k \leq L$.
+% In particular, $x \in \vars(n_{p_{k'}})$.
+% This is a contradiction.
+% \end{proof}
 
 \begin{algorithm*}[t]
 \label{alg_csp_jt}
@@ -99,10 +101,10 @@ There are a variety of heuristics to fine-tune Algorithm \ref{alg_csp_jt}.
 For the function $\clusterVarOrder$, we consider the heuristics \Random, \Mcs{} (\textdef{maximum-cardinality search} \cite{tarjan1984simple}), \Lexp/\Lexm{} (\textdef{lexicographic search for perfect/minimal orders} \cite{koster2001treewidth}), and \Minfill{} (\textdef{minimal fill-in} \cite{dechter03}) as well as their inverses (\Invmcs, \Invlexp, \Invlexm, and \Invminfill).
 Heuristics for $\clauseRank$ include \Be{} (\textdef{bucket elimination} \cite{dechter99}) and \Bm{} (\textdef{Bouquet's Method} \cite{bouquet1999gestion}).
 For $\chosenCluster$, the heuristics we use are \ListH{} and \TreeH{} \cite{DPV20}.
-We combine $\clauseRank$ and $\chosenCluster$ as \textdef{clustering heuristics}: $\Be-\ListH$, $\Be-\TreeH$, $\Bm-\ListH$, and $\Bm-\TreeH$.
+We combine $\clauseRank$ and $\chosenCluster$ as \textdef{clustering heuristics}: $\Be-\ListH$, $\Be-\TreeH$, $\Bm-\ListH$, and $\Bm-\TreeH$. See \cite{dudek2020dpmc} for a full description of all heuristics.
 
-The only heuristic we consider that does not appear in \cite{DPV20} is the \Minfill{} heuristic for variable order \cite{dechter03}. 
-This heuristic operates on the Gaifman graph of $\varphi$ and chooses variables one-by-one.
-Whenever a variable $v$ is chosen, we add \textdef{fill-in} edges to connect all of $v$'s neighbors in the Gaifman graph.
-At each step of the \Minfill{} heuristic, the next variable chosen is the variable that minimizes the number of fill-in edges.
-All other heuristics are described in \cite{DPV20}.
+% The only heuristic we consider that does not appear in \cite{DPV20} is the \Minfill{} heuristic for variable order \cite{dechter03}. 
+% This heuristic operates on the Gaifman graph of $\varphi$ and chooses variables one-by-one.
+% Whenever a variable $v$ is chosen, we add \textdef{fill-in} edges to connect all of $v$'s neighbors in the Gaifman graph.
+% At each step of the \Minfill{} heuristic, the next variable chosen is the variable that minimizes the number of fill-in edges.
+% All other heuristics are described in \cite{DPV20}.

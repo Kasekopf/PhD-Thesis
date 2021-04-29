@@ -14,11 +14,8 @@ and \Lg{} based on tree-decomposition tools \cite{strasser2017computing,Tamaki17
 Our empirical work indicates that tree-decomposition tools tend to produce project-join trees of lower widths in shorter times.
 This is a significant finding with applications beyond model counting, \eg, in Boolean functional synthesis \cite{tabajara2017factored}.
 
-For the execution phase, we implemented \Dmc{} based on ADDs \cite{DPV20,somenzi2015cudd} and \Tensor{} based on tensors \cite{DDV19,numpy}.
+For the execution phase, we implemented \Dmc{} based on ADDs \cite{DPV20,somenzi2015cudd} and \Tensor{} based on tensors \cite{numpy}.
 Empirically, we observed that (sparse) ADDs outperform (dense) tensors on single CPU cores.
-Whether this holds for richer architectures as well is a subject for future work.
-We will also consider adding to our framework an executor based on databases (\eg, \cite{fichte2020exploiting}).
 
 We showed that our dynamic-programming model-counting framework \Dpmc{} is competitive with state-of-the-art tools (\cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{LM17}, and \minictd{} \cite{OD15}).
-Although no single model counter dominates,
-\Dpmc{} considerably improves the virtual best solver and thus is valuable as part of the portfolio.
+Although no single model counter dominates, \Dpmc{} considerably improves the virtual best solver and thus is valuable as part of the portfolio.

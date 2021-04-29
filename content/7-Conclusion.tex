@@ -18,12 +18,18 @@ We can also make the execution tool \Dmc{} support multicore ADD packages (\eg, 
 Our other executor, \Tensor{}, is built on top of \Numpy{} \cite{numpy} and should be readily parallelizable (\eg, using techniques from Chapter \ref{ch:parallel}).
 We can then compare \Dpmc{} to parallel solvers (\eg, \cite{dal2018parallel,BSB15}).
 
+Whether or not sparse ADDs outperform tensors for richer hardware architectures as well is a subject for future work. %TODO: expand. ADDs are hard to do on other hardwares
+We will also consider adding to our framework an executor based on databases (\eg, \cite{fichte2020exploiting}).
+
 %%MYV: Added
 Finally, decision diagrams have been widely used in artificial intelligence in the context of \emph{knowledge compilation}, where formulas are compiled into a tractable form in an early phase to support efficient query processing \cite{koriche2013knowledge,LM17,darwiche2004new,OD15}.
 Our work opens up an investigation into the combination of knowledge compilation and dynamic programming.
 The focus here is on processing a single model-counting query.
 Exploring how dynamic programming can also be leveraged to handle several queries is another promising research direction.
 
+While the focus here is on model counting, our framework is of broader interest.
+For example, in \cite{tabajara2017factored}, Tabajara and Vardi described a dynamic-programming, binary-decision-diagram-based framework for functional Boolean synthesis.
+Refactoring the algorithm into a planning phase followed by an execution phase is also of interest in that context.
 
 
 For future work, it would be interesting to consider leveraging other width parameters (e.g. \cite{AGG07} or \cite{GS17}) in the portfolio as well. It may also be possible to improve the portfolio through more advanced algorithm-selection techniques \cite{HHLKS09,XHHL12}. One could develop parallel heuristic decomposition solvers directly, e.g., by adapting the exact GPU-based tree-decomposition solver \cite{VB17} into a heuristic solver.

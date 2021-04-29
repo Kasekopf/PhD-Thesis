@@ -1,20 +1,20 @@
 \subsection{Tensors}
+% A \emph{tensor} is a multi-dimensional generalization of a matrix.
+% Tensor are widely used in data analysis \cite{Cichocki14}, signal and image processing \cite{cichocki2015tensor}, quantum physics \cite{arad2010quantum}, quantum chemistry \cite{smilde2005multi}, and many other areas of science.
+% Given the diverse applications of tensors and tensor networks, a variety of tools \cite{baumgartner2005synthesis,KKCLA17} exist to manipulate them efficiently on a variety of hardware architectures, including multi-core and GPU-enhanced architectures.
 
-A \emph{tensor} is a multi-dimensional generalization of a matrix.
-Tensor are widely used in data analysis \cite{Cichocki14}, signal and image processing \cite{cichocki2015tensor}, quantum physics \cite{arad2010quantum}, quantum chemistry \cite{smilde2005multi}, and many other areas of science.
-Given the diverse applications of tensors and tensor networks, a variety of tools \cite{baumgartner2005synthesis,KKCLA17} exist to manipulate them efficiently on a variety of hardware architectures, including multi-core and GPU-enhanced architectures.
-
-Tensors can be used to represent pseudo-Boolean functions in a dense way.
+A \emph{tensor} is a multi-dimensional generalization of a matrix and can be used to represent pseudo-Boolean functions in a dense way.
 Tensors are particularly efficient at computing the contraction of two pseudo-Boolean functions: given two functions $f: 2^X \to \mathbb{R}$ and $g: 2^Y \to \mathbb{R}$, their \emph{contraction} $f \contract g$ is the pseudo-Boolean function $\proj_{X \cap Y} f \cdot g$.
 The contraction of two tensors can be implemented as matrix multiplication and so leverage significant work in high-performance computing on matrix multiplication on CPUs \cite{LHKK77} and GPUs \cite{FSH04}.
-To efficiently use tensors to compute $W$-valuations, we follow \cite{DDV19} in implementing projection and product using tensor contraction.
+To efficiently use tensors to compute $W$-valuations, we implement projection and product using tensor contraction.
 
 First, we must compute the weighted projection of a function $f: 2^X \to \mathbb{R}$, \ie, we must compute $\proj_x f \cdot W_x$ for some $x \in X$.
 This is exactly equivalent to $f \contract W_x$.
 Second, we must compute the product of two functions $f: 2^X \to \mathbb{R}$ and $g: 2^Y \to \mathbb{R}$.
 The central challenge is that tensor contraction implicitly projects all variables in $X \cap Y$, but we often need to maintain some shared variables in the result of $f \cdot g$.
-In \cite{DDV19}, this problem was solved using a reduction to tensor networks.
-After the reduction, all variables appear exactly twice, so one never needs to perform a product without also projecting all shared variables.
+In Chapter \ref{ch:tensors}, this problem was solved using a reduction from weighted model counting to tensor networks.
+After the reduction, all indices appear exactly twice, so one never needs to perform a product without also projecting all shared indices.
+Moreover, the additional overhead incurred by this reduction was lessened through the \textbf{FT} planner (see Section \ref{sec:tensors:preprocessing}).
 
 In order to incorporate tensors in our project-join-tree-based framework, we take a different strategy that uses copy tensors.
 The \emph{copy tensor} for a set $X$ represents the pseudo-Boolean function $\blacksquare_X: 2^X \to \mathbb{R}$ \st{} $\blacksquare_X(\tau)$ is $1$ if $\tau \in \{ \emptyset, X \}$ and $0$ otherwise.
@@ -26,7 +26,7 @@ Then one can check that $f \cdot g = f' \contract g' \contract \bigcontract_{z \
 When a product is immediately followed by the projection of shared variables (\ie, we are computing $\proj_Z f \cdot g$ for some $Z \subseteq X \cap Y$), we can optimize this procedure.
 In particular, we skip creating copy tensors for the variables in $Z$ and instead eliminate them directly as we perform $f' \contract g'$.
 In this case, we do not ever fully compute $f \cdot g$, so the maximum number of variables needed in each intermediate tensor may be lower than the width of the project-join tree.
-In the context of tensor networks and contraction trees, the maximum number of variables needed after accounting for this optimization is the \emph{max-rank} of the contraction tree \cite{KCMR18,DDV19}.
+In the context of tensor networks and contraction trees, the maximum number of variables needed after accounting for this optimization is exactly the \emph{max-rank} of the contraction tree \cite{KCMR18}.
 The max-rank is often lower than the width of the corresponding project-joint tree.
 On the other hand, the intermediate terms in the computation of $f \cdot g$ with contractions may have more variables than either $f$, $g$, or $f \cdot g$.
 Thus the number of variables in each intermediate tensor may be higher than the width of the project-join tree (by at most a factor of 1.5).

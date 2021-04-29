@@ -8,7 +8,7 @@ We aim to answer the following experimental research questions:
     \item[(RQ3)] Are project-join-tree-based weighted model counters competitive with state-of-the-art tools?
 \end{itemize}
 
-To answer RQ1, we build two implementations of the planning phase: \Htb{} (Heuristic Tree Builder, based on \cite{DPV20}) and \Lg{} (Line Graph, based on \cite{DDV19}).
+To answer RQ1, we build two implementations of the planning phase: \Htb{} (Heuristic Tree Builder, based on \cite{DPV20}) and \Lg{} (Line Graph).
 \Htb{} implements Algorithm \ref{alg_csp_jt} and so is representative of the constraint-satisfaction approach.
 \Htb{} contains implementations of four clustering heuristics (\Be-\ListH, \Be-\TreeH, \Bm-\ListH, and \Bm-\TreeH) and nine cluster-variable-order heuristics (\Random, \Mcs, \Invmcs, \Lexp, \Invlexp, \Lexm, \Invlexm, \Minfill, and \Invminfill).
 \Lg{} implements Algorithm \ref{alg_td_to_join} and so is representative of the tree-decomposition approach.
@@ -17,7 +17,7 @@ These solvers are all \emph{anytime}, meaning that \Lg{} never halts but continu
 On the other hand, \Htb{} produces a single project-join tree.
 We compare these implementations on the planning phase in Section \ref{sec_experiments_planning}.
 
-To answer RQ2, we build two implementations of the execution phase: \Dmc{} (for Diagram Model Counter, based on \cite{DPV20}) and \Tensor{} (based on \cite{DDV19}).
+To answer RQ2, we build two implementations of the execution phase: \Dmc{} (for Diagram Model Counter, based on \cite{DPV20}) and \Tensor{}.
 \Dmc{} uses ADDs as the underlying data structure with \cudd{} \cite{somenzi2015cudd}.
 \Tensor{} uses tensors as the underlying data structure with \Numpy{} \cite{numpy}.
 We compare these implementations on the execution phase in Section \ref{sec_experiments_execution}.
@@ -69,7 +69,7 @@ All code, benchmarks, and experimental data are available at \url{https://github
 We first compare constraint-satisfaction heuristics (\Htb) and tree-decomposition tools (\Lg) at building project-join trees of CNF formulas.
 To do this, we ran all 36 configurations of \Htb{} (combining four clustering heuristics with nine cluster-variable-order heuristics) and all three configurations of \Lg{} (choosing a tree-decomposition solver) once on each benchmark with a 100-second timeout.
 In Figure \ref{fig:planning}, we compare how long it takes various methods to find a high-quality (meaning width at most 30) project-join tree of each benchmark.
-We chose 30 for Figure \ref{fig:planning} since \cite{DDV19} observed that tensor-based approaches were unable to handle trees whose widths are above 30, but Figure \ref{fig:planning} is qualitatively similar for other choices of widths.
+We chose 30 for Figure \ref{fig:planning} since we observed in Chapter \ref{ch:tensors} that tensor-based approaches were unable to handle trees whose widths are above 30, but Figure \ref{fig:planning} is qualitatively similar for other choices of widths.
 We observe that \Lg{} is generally able to find project-join trees of lower widths than those \Htb{} is able to find.
 We therefore conclude that tree-decomposition solvers outperform constraint-satisfaction heuristics in this case.
 We observe that \Be-\TreeH{} as the clustering heuristic and \Invlexp{} as the cluster-variable-order heuristic make up the best-performing heuristic configuration from \Htb.
@@ -102,10 +102,10 @@ To do this, we ran both \Dmc{} and \Tensor{} on all project-join trees generated
 The total times recorded include both the planning stage and the execution stage.
 
 Since \Lg{} is an anytime tool, it may have produced more than one project-join tree of each benchmark in Experiment 1.
-We follow \cite{DDV19} by allowing \Tensor{} and \Dmc{} to stop \Lg{} at a time proportional to the estimated cost to valuate the best-seen project-join tree.
+We follow Chapter \ref{ch:tensors} by allowing \Tensor{} and \Dmc{} to stop \Lg{} at a time proportional to the estimated cost to valuate the best-seen project-join tree.
 The constant of proportionality is chosen to minimize the PAR-2 score (\ie, the sum of the running times of all completed benchmarks plus twice the timeout for every uncompleted benchmark) of each executor.
 \Tensor{} and \Dmc{} use different methods for estimating cost.
-Tensors are a dense data structure, so the number of floating-point operations to valuate a project-join tree can be computed exactly as in \cite{DDV19}.
+Tensors are a dense data structure, so the number of floating-point operations to valuate a project-join tree can be computed exactly as in Chapter \ref{ch:tensors}.
 We use this as the cost estimator for \Tensor{}.
 ADDs are a sparse data structure, and estimating the amount of sparsity is difficult.
 It is thus hard to find a good cost estimator for \Dmc{}.
@@ -137,7 +137,8 @@ It would be interesting in the future to find better cost estimators for \Dmc{}.
 
 Finally, we compare project-join-tree-based model counters with state-of-the-art tools for weighted model counting.
 We construct four project-join-tree-based model counters by combining \Htb{} and \Lg{} (using the representative configurations from Experiment 1) with \Dmc{} and \Tensor{} (using the cost estimators for \Lg{} from Experiment 2).
-Note that \Dmc{}+\Htb{} is equivalent to \tool{ADDMC} \cite{DPV20}, and \Tensor{}+\Lg{} is equivalent to \tool{TensorOrder} \cite{DDV19}.
+Note that \Dmc{}+\Htb{} is equivalent to \tool{ADDMC} \cite{DPV20}.
+% , and \Tensor{}+\Lg{} is equivalent to \tool{TensorOrder} \cite{DDV19}.
 We compare against the state-of-the-art model counters \cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{LM17}, and \minictd{} \cite{OD15}.
 We ran each benchmark once with each model counter with a 1000-second timeout and recorded the total time taken.
 For the project-join-tree-based model counters, time taken includes both the planning stage and the execution stage.
@@ -146,7 +147,5 @@ We present results from this experiment in Figure \ref{fig:comparison}.
 For each benchmark, the solving time of \tool{VBS*} is the shortest solving time among all pre-existing model counters (\cachet, \ctd, \df, and \minictd).
 Similarly, the time of \tool{VBS} is the shortest time among all model counters, including those based on project-join trees.
 We observe that \tool{VBS} performs significantly better than \tool{VBS*}.
-In fact, \Dmc{}+\Lg{} is the fastest model counter on 471
-of \benchmarkCountAltogether{}
-benchmarks.
+In fact, \Dmc{}+\Lg{} is the fastest model counter on 471 of \benchmarkCountAltogether{} benchmarks.
 Thus project-join-tree-based tools are valuable for portfolios of weighted model counters.

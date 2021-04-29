@@ -83,7 +83,7 @@ See Figure \ref{fig_join_tree} for a graphical example of a project-join tree.
 \end{figure}
 
 Project-join trees have previously been studied in the context of database-query optimization \cite{MPPV04}.
-Project-join trees are also closely related to contraction trees in the context of tensor networks \cite{EP14,DDV19}.
+Project-join trees are also closely related to contraction trees in the context of tensor networks \cite{EP14}.
 Once a rearrangement of Equation \eqref{eq_factored_wmc} has been represented by a project-join tree, we can model the computation process according to the rearrangement.
 In particular, given a literal-weight function $W = \prod_{x \in X} W_x$, we define the $W$-\emph{valuation} of each node $n \in \V{T}$ as a pseudo-Boolean function associated with $n$.
 The $W$-valuation of a node $n \in \V{T}$ is denoted $f^W_n$ and defined as follows:
@@ -154,6 +154,7 @@ For every literal-weight function $W$, the domain of the function $f^W_n$ is exa
 The number of variables that appear in each intermediate pseudo-Boolean function has a significant impact on the runtime.
 To characterize the difficulty of $W$-valuation, we define the \emph{size} of a node $n$, $\func{size}(n)$, to be $\size{\vars(n)}$ for leaf nodes and $\size{\vars(n) \cup \pi(n)}$ for internal nodes.
 The \emph{width} of a project-join tree $(T, r, \gamma, \pi)$ is $\func{width}(T) \equiv \max_{n \in \V T} \func{size}(n)$.
+The width of a project-join tree is analogous to the contraction complexity of a contraction tree in the context of tensor networks.
 We see in Section \ref{sec_experiments} how the width impacts the computation of $W$-valuations.
 
 % Project-join trees are related to \emph{variable elimination} on factor graphs \cite{KDLD05,BDP09}, which uses tree decompositions of the primal graph of a factor graph.

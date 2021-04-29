@@ -61,8 +61,8 @@ Each point $(x, y)$ on a plotted curve indicates that, within $x$ seconds on eac
 We choose \maxWidth{} because previous work shows that executors do not handle larger project-join trees well \cite{DDV19,dudek2020dpmc}. % JD: This is more true for tensors than for ADDs, let's just leave it out
 % Figure \ref{figPlanning} is qualitatively similar for other width cutoffs.
 
-While \Lg{} is an \emph{anytime} tool that produces several trees (of decreasing widths) for each benchmark, for all experiments in the main paper, we use only the first tree produced on each benchmark.
-We find that this does not significantly affect the performance of \procount{}; see Appendix \ref{appendix:exp} for more detail.
+While \Lg{} is an \emph{anytime} tool that produces several trees (of decreasing widths) for each benchmark, we use only the first tree produced on each benchmark.
+We find that this does not significantly affect the performance of \procount{}.
 
 The tree-decomposition-based planner \Lg{} outputs more low-width trees than the constraint-satisfaction-based planner \htb{}.
 Moreover, for \Lg{}, the tree decomposer \flowcutter{} is faster than \htd{} and \tamaki{}.

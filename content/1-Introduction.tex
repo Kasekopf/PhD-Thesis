@@ -1,40 +1,39 @@
 \chapter{Introduction}
 \label{ch:intro}
-Constrained counting is a fundamental problem in artificial intelligence.
+Discrete integration is a fundamental problem in artificial intelligence.
+
+Over the last ten years, hundreds of thousands of research hours have been poured into low-level computational tools and compilers for neural network training and inference. Simultaneously, there has been a surge in high-level reasoning tools based on graph decompositions, spurred by several competitions. While some existing discrete integration tools (counters) tightly integrate with these low-level computational or high-level reasoning tools, no existing counter is able to leverage both together.
 
 \section{Discrete Integration}
 In discrete integration (also called constrained counting) the task is to count the total weight, subject to a given weight function, of the set of solutions of input constraints \cite{GSS08}. 
 If the input constraints are given as a propositional formula, the problem is called \emph{model counting}. 
-If existential variables are also allowed in the input constraints, the problem is called \emph{projected model counting}. This thesis primarily focuses on model counting and projected model counting, but other works have considered other classes of discrete integration problems (e.g., allowing constraints with alternating quantifiers, or allowing continuous variables). %TODO: cite
-Moreover, this thesis focuses on \emph{exact} discrete integration, where the exact total weight must be produced, as opposed to \emph{approximate} discrete integration where approximations (possibly with theoretical guarantees) are allowed in the result. %TODO: cite
+If existential variables are also allowed in the input constraints, the problem is called \emph{projected model counting}. This thesis primarily focuses on exact techniques for model counting and projected model counting, but other works have considered other classes of discrete integration problems (e.g., allowing constraints with alternating quantifiers \cite{stearns2002exploiting,KNR16}, or allowing continuous variables \cite{BPV15}) or approximate techniques \cite{CMV21}.
 
-Discrete integration has applications in probabilistic reasoning, planning, inexact computing, engineering reliability, and statistical physics \cite{Bacchus2003,DH07,GSS08,naveh2007constraint}.
-
-As is common, we restrict our attention to discrete integration problems where the weight function is log-linear (i.e., literal-weighted).
-For example, in the context of probabilistic reasoning this corresponds to assuming that all variables are independent.
-Log-linear models can be employed to capture a wide variety of probabilistic distributions that arise from graphical models, conditional random fields, skip-gram models, and the like~\cite{KF09}. %TODO: Check sentence from WMC-reduction paper.
+As is common, we restrict our attention to discrete integration problems where the weight function is log-linear (i.e., literal-weighted), which captures a wide variety of probabilistic distributions~\cite{KF09}.
+% For example, in the context of probabilistic reasoning this corresponds to assuming that all variables are independent.
+% Log-linear models can be employed to capture a wide variety of probabilistic distributions that arise from graphical models, conditional random fields, skip-gram models, and the like~\cite{KF09}. %TODO: Check sentence from WMC-reduction paper.
 We call a discrete integration problem \emph{weighted} if the weight function is log-linear and \emph{unweighted} if the weight function is a constant function (and thus the task is simply to count the number of solutions to the input constraints).
-Note that a constant function is a special case of a log-linear distribution.
+Note that unweighted discrete integration is a special case of weighted discrete integration.
 Unweighted model counting is also called \#SAT, while unweighted projected model counting is also called $\#\exists$SAT.
 
 Even the simplest case of discrete integration, \#SAT, is \#P-Complete \cite{Valiant79}. 
-In fact, every problem in the polynomial hierarchy can be answered by a single \#SAT query. %TODO: Cite Toda. 
+In fact, every problem in the polynomial hierarchy can be answered by a single \#SAT query \cite{toda89}. 
 As a simple example, a propositional formula is satisfiable if and only if its unweighted model count is nonzero.
-Projected model counting is thought to be even harder: $\#\exists$SAT is not contained in $\#$P unless the polynomial hierarchy collapses to $\Sigma_2^P$ \cite{zawadzki2013generalization}.
-%TODO: Reduction from weighted to unweighted
+Weighted model counting (with rational, log-linear weights) is \#P-Complete as well, through a reduction to \#SAT that encodes the weights in additional variables \cite{DFM20}.
+But projected model counting is thought to be harder: $\#\exists$SAT is not contained in $\#$P unless the polynomial hierarchy collapses to $\Sigma_2^P$ \cite{zawadzki2013generalization}.
 
 Despite the theoretical difficulty of discrete integration, a variety of discrete integration tools (called \emph{counters}) exist that can handle industrial sets of constraints. The earliest counters, e.g. \tool{CDP} \cite{birnbaum1999good}, were based on search.
 The key idea is to take an algorithm for exploring the entire solution space of a set of constraints (e.g. DPLL \cite{davis1960computing,davis1962machine}, and later CDCL \cite{biere2009conflict}) and augment it to enumerate the number of partial solutions encountered. 
 Modern solvers such as \tool{cachet} \cite{SBK05} and \tool{SharpSAT} \cite{Thurley2006} follow this approach.
 Another class of counters (e.g. \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) are based on knowledge compilation, where the idea is to compile the set of constraints into an alternative representation on which a discrete integration query may be answered in polynomial time.
 
-A third class of counters \cite{CW16,FHMW17,FHWZ18,FHZ19,DPV20,fichte2020exploiting} are based on dynamic programming. % \cite{BDP09,SS10,jegou2016improving}
+A third class of counters \cite{CW16,FHMW17,FHWZ18,FHZ19,DPV20,fichte2020exploiting} are based on dynamic programming. % \cite{BDP09,SS10,jegou2016improving} % TODO: should cite Algorithms \cite{FMR08,SS10}.
 Dynamic programming is a powerful technique that has been applied across computer science \cite{bellman1966dynamic}, including to database-query optimization \cite{MPPV04}, satisfiability solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, and QBF evaluation \cite{charwat2016bdd}.
-The key idea is to solve a large problem by solving a sequence of smaller subproblems and then incrementally combining these solutions into the final result.
-Dynamic programming provides a natural framework to solve discrete integration: subproblems can be formed by partitioning the input constraints.
+The key idea is to solve a sequence of smaller subproblems, formed by partitioning the input constraints, and then incrementally combine these solutions into the final result.
+The techniques developed in this thesis are all based on dynamic programming.
 
+Discrete integration has applications in probabilistic reasoning, planning, inexact computing, engineering reliability, and statistical physics \cite{Bacchus2003,DH07,GSS08,naveh2007constraint}.
 
-Algorithms \cite{FMR08,SS10}.
 
 
 

@@ -2,7 +2,7 @@
 Let $X$ be a set of propositional variables and let $\varphi$ be a Boolean formula defined over $X$.
 We use $\vars(\varphi)$ to indicate the set of variables of $\varphi$. An \emph{assignment} to $X$ is an element of $2^X$, and further $\tau \in 2^X$ is a \emph{solution} to $\varphi$ if $\varphi$ evaluates to true under $\tau$.
 
-We are typically interested in Boolean formulas in \emph{conjunctive normal form} (CNF).
+% We are often interested in Boolean formulas in \emph{conjunctive normal form} (CNF).
 A \emph{literal} is a variable (e.g., $x$) or the negation of a variable (e.g., $\neg x$).
 A Boolean formula is a \emph{(CNF) clause} if it is the disjunction of literals (e.g., $x \lor y \lor \neg z$).
 A Boolean formula is a \emph{CNF formula} (also called \emph{in CNF}) if it is the conjunction of CNF clauses.
@@ -16,7 +16,7 @@ Let $X$ be a set of Boolean variables.
 A \emph{pseudo-Boolean function} over $X$ is a function $f: 2^X \to \R$.
 We use $\vars(f)$ to indicate the set of variables of $f$.
 \end{definition}
-Pseudo-Boolean functions are also known as \emph{factors} in other works.
+Pseudo-Boolean functions are also known as \emph{factors}.
 A pseudo-Boolean function can naturally represent a Boolean formula. In detail, for a Boolean formula $\phi$ let $[\phi]: 2^{\vars(\varphi)} \rightarrow \R$ be a pseudo-Boolean function, where for all $\tau \in 2^{\vars(\varphi)}$, if $\tau$ is a solution of $\phi$ then $[\phi](\tau) \equiv 1$ else $[\phi](\tau) \equiv 0$.
 As an abuse of notation, we often omit the brackets for simplicity and define $\phi(\tau) \equiv 1$ if $\tau$ is a solution of $\phi$ and $\phi(\tau) \equiv 0$ otherwise.
 

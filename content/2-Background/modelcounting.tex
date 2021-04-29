@@ -23,6 +23,8 @@ We focus in this work on weighted model counting, as opposed to \emph{unweighted
 
 Existing approaches to weighted model counting can be split broadly into three categories: \emph{direct reasoning}, \emph{knowledge compilation}, and \emph{dynamic programming}. In counters based on direct reasoning (e.g., \tool{cachet} \cite{SBK05}), the idea is to reason directly about the CNF representation of $\varphi$. In counters based on knowledge compilation (e.g. \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}), the idea is to compile $\varphi$ into an alternative representation on which counting is easy. In counters based on dynamic programming (e.g. \tool{ADDMC} \cite{DPV20} and \tool{gpuSAT2} \cite{FHWZ18,FHZ19}), the idea is to traverse the clause structure of $\varphi$. Tensor-network approaches to counting (e.g. \tool{TensorOrder} \cite{DDV19} and this work) are also based on dynamic programming. Dynamic programming approaches often utilize graph decompositions, which we define in the next section. 
 
+Moreover, this thesis focuses on \emph{exact} discrete integration, where the exact total weight must be produced, as opposed to \emph{approximate} discrete integration where approximations (possibly with theoretical guarantees) are allowed in the result. %TODO: cite
+
 \subsection{Projected Model Counting}
 In (weighted) projected model counting, the input constraints are given as a propositional formula, typically in CNF, and a set of irrelevant, existential variables.
 Formally:
@@ -34,3 +36,7 @@ Formally:
 
 Variables in $X$ are called \emph{relevant} or \emph{additive}, and variables in $Y$ are called \emph{irrelevant} or \emph{disjunctive}. 
 Notice that model counting is a special case of projected model counting where all variables are relevant. Thus $W(\varphi) = \func{WPMC}(\phi, W, \emptyset)$ for all Boolean formulas $\varphi$ and weight functions $W: 2^{\vars(\varphi)} \rightarrow \mathbb{R}$. 
+
+There are several recent tools for weighted projected model counting.
+For example, \dfp{} uses decision decomposable negation normal form \cite{lagniez2019recursive}, \projmc{} leverages disjunctive decomposition \cite{lagniez2019recursive}, and \ssat{} combines counting with SAT techniques \cite{lee2017solving}. 
+While our focus in Chapter \ref{ch:procount} is on deterministic exact weighted projected model counting, it is worth mentioning that various relaxations have also been studied, e.g., probabilistic \cite{sharma2019ganak}, approximate \cite{ermon2013taming,fremont2017maximum,soos2019bird}, or unweighted \cite{zawadzki2013generalization,aziz2015projected,mohle2018dualizing,hecher2020taming} projected model counting.

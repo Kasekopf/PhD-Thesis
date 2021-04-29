@@ -66,7 +66,14 @@ We take each contraction tree discovered in Experiment 1 (with max-rank below 36
 
 Given a performance factor, a benchmark, and a planner, we use the planning times from Experiment 1 to determine which contraction tree would have been chosen in step 4 of Algorithm \ref{alg:wmc}. We then add the execution time of the relevant contraction tree on each hardware. In this way, we simulate Algorithm \ref{alg:wmc} for a given planner and hardware with many performance factors. 
 
-\begin{table}[b]
+\begin{figure}[t]
+\begin{center}
+\input{figures/5/performance_factor.pgf}
+\caption{\label{fig:performance-factor} A graph of the simulated PAR-2 score for various combinations of planners and hardware as the performance factor varies.}
+\end{center}
+\end{figure}
+
+\begin{table}[t]
   \caption{\label{tab:performance_factor} The performance factor for each combination of planner and hardware that minimizes the simulated PAR-2 score.}
   \centering
     \begin{tabular}{|l|c|c|c|c|c|c|} \hline
@@ -77,7 +84,7 @@ Given a performance factor, a benchmark, and a planner, we use the planning time
     \end{tabular}
 \end{table}
 
-For each planner and hardware, Table 2 shows the performance factor $\alpha$ that minimizes the simulated PAR-2 score. We observe that the performance factor for \pkg{CPU8} is lower than for \pkg{CPU1}, but not necessarily higher or lower than for \pkg{GPU}. We conclude that different combinations of planners and hardware are optimized by different performance factors. % Further details are available in the supplemental material.
+Figure \ref{fig:performance-factor} indicates how varying the performance factor affects the simulated PAR-2 score for various combinations of planners and hardware. For each planner and hardware, Table 2 shows the performance factor $\alpha$ that minimizes the simulated PAR-2 score. We observe that the performance factor for \pkg{CPU8} is lower than for \pkg{CPU1}, but not necessarily higher or lower than for \pkg{GPU}. We conclude that different combinations of planners and hardware are optimized by different performance factors. % Further details are available in the supplemental material.
 
 % Selected results are summarized in Figure \ref{fig:performance-factor}. For each planner and hardware, we select the performance factor $\alpha$ that minimizes the simulated PAR-2 score (i.e., the sum of of the wall-clock times for each completed benchmark, plus 2000 for each uncompleted benchmark). We observe that the performance factor for $\pkg{GPU}$ is typically lower than for $\pkg{CPU8}$, which is lower than for $\pkg{CPU1}$. We conclude that different combinations of planners and hardware are optimized by different performance factors. The full set of selected values is available in the supplemental material.
 

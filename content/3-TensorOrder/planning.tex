@@ -3,7 +3,7 @@
 The problem of \emph{tensor-network-contraction optimization} is given a tensor network $N$ to find a contraction tree that minimizes the computational cost of Algorithm \ref{alg:network-contraction}. 
 In this section, we discuss a variety of techniques for tensor-network-contraction optimization. 
 We first discuss how exactly to characterize the computational cost of Algorithm \ref{alg:network-contraction}, and conclude that \emph{max rank} is the appropriate measure. 
-We then discuss two techniques for tensor-network-contraction in detail: an existing approach, the \textbf{Line-Graph} method, and a novel technique specialized for weighted model counting, the \textbf{Factor-Graph} method. We contribute a new analysis of each planner in terms of max-rank.
+We then discuss two techniques for tensor-network-contraction in detail: an existing approach, the \textbf{Line-Graph} planner, and a novel technique specialized for weighted model counting, the \textbf{Factor-Graph} planner. We contribute a new analysis of each planner in terms of max-rank.
 
 % Prior work can be categorized into two types: \emph{exact} algorithms that focus on finding the best possible contraction tree, and \emph{heuristic} algorithms that aim to find a ``good-enough'' contraction tree. Since the number of possible contraction trees is exponential in the number of tensors, exact algorithms are generally best for tensor networks with few tensors while heuristic algorithms scale to larger tensor networks but offer worse contraction trees.
 

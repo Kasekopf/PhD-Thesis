@@ -1,0 +1,54 @@
+\section{Separating Planning and Execution}
+\label{sec:algorithm}
+In this section, we discuss the algorithm for literal-weighted model counting using tensor networks. This algorithm is presented as Algorithm \ref{alg:wmc} and has three stages.
+
+% TODO: References in TensorOrder2 assume that \alpha is incorporated
+\begin{algorithm*}[t]
+    \label{alg:wmc}
+    \caption{Computing the weighted model count with a TN}
+    \DontPrintSemicolon
+    \KwIn{$\varphi$: a CNF formula}
+    \KwIn{$W$: a literal-weight function}
+    \KwOut{$W(\varphi)$, the weighted model count of $\varphi$ w.r.t. $W$}
+    $N_\varphi \gets \text{tensor network constructed via Theorem \ref{thm:wmc-reduction}}$\;
+    $T \gets \func{FindContractionTree}(N_\varphi)$ \tcc*{e.g., \textbf{LG} or \textbf{FG}}
+    \Return{$\func{Contract}(N_\varphi,~T)$}
+\end{algorithm*}
+
+First, in the \emph{reduction} stage the input formula $\varphi$ and weight function $W$ is transformed into a tensor network $N$. We discuss in more detail in Section \ref{sec:tensors:wmc}.
+
+Second, in the \emph{planning} stage a plan for contracting the tensor network $N$ is determined. This plan takes the form of a \emph{contraction tree} \cite{EP14}:
+\begin{definition}[Contraction Tree] \label{def:contraction-tree}
+	Let $N$ be a tensor network. A \emph{contraction tree} for $N$ is a rooted binary tree $T$ whose leaves are the tensors of $N$. %, i.e. $\Lv{T} = N$.
+\end{definition}
+
+In our database analogy from Section \ref{sec:tensors:tensors}, a contraction tree for a tensor network representing a project-join query is a join tree of that query (with projections done as early as possible). 
+In our factor-graph analogy from Section \ref{sec:tensors:tensors}, a contraction tree corresponds to a \emph{dtree} \cite{darwiche01}, to an elimination order \cite{darwiche01b}, and to a binary join tree \cite{shenoy97} where factors are assigned to leaf nodes.
+
+The planning stage is allowed to modify the input tensor network $N$ as long as the new tensor network $M$ contracts to an identical tensor. In this work we discuss two planning techniques: the \textbf{Line-Graph} method (see Section \ref{sec:tensors:contraction-theory}) and the \textbf{Factor-Tree} method (see Section \ref{sec:tensors:preprocessing}). 
+
+Planning in Algorithm \ref{alg:wmc} is an anytime process: we heuristically generate better contraction trees until one is ``good enough'' to use. The trade-off between planning and executing is governed by a parameter $\alpha \in \mathbb{R}$. 
+For this chapter, we choose $\alpha$ so that we expect to have spent more than half of the running time in planning (see Section \ref{sec:tensors:experiments:implementation}), but note that we determine $\alpha$ empirically in Chapter \ref{ch:parallel}.
+
+Third, in the \emph{execution} stage the chosen contraction tree is used to contract the tensor network. We discuss this algorithm in more detail in Section \ref{sec:tensors:execution}.
+
+We assert the correctness of Algorithm \ref{alg:wmc} in the following theorem.
+\begin{theorem}
+\label{thm:alg-correctness}
+Let $\varphi$ be a CNF formula and let $W$ be a weight function. 
+    Assume:
+    (1) $\func{Reduce}(\varphi, W)$ returns a tensor network $N$ s.t. $\tntensor{N}(\emptyset) = W(\varphi)$,
+    (2) $\func{Plan}(N)$ returns a tensor network $M$ and a contraction tree $T$ for $M$ s.t. $\tntensor{M} = \tntensor{N}$, and
+    (3) $\func{Execute}(M, T)$ returns $\tntensor{M}$ for all tensor networks $M$ and contraction trees $T$ for $M$.
+Then Algorithm \ref{alg:wmc} returns $W(\varphi)$.
+\end{theorem}
+\begin{proof}
+By Assumption 3, Algorithm \ref{alg:wmc} returns $\tntensor{M}(\emptyset)$. 
+By Assumption 2, this is equal to $\tntensor{N}(\emptyset)$, which by Assumption 1 is exactly $W(\varphi)$.
+\end{proof}
+
+Organizationally, note that we discuss the execution stage in Section \ref{sec:tensors:execution} before we discuss the planning stage. 
+This is because we must understand how plans are used before we can evaluate various planning algorithms.
+
+% TODO: Work in?
+% Theorem \ref{thm:wmc-reduction} suggests that the weighted model count of $\varphi$ can be computed by constructing and contracting $N_\varphi$. We present this framework as Algorithm \ref{alg:wmc}. Algorithm \ref{alg:wmc} is a fixed-parameter algorithm for model counting, parameterized by carving-width of the incidence graph. The existence of such algorithms is easily implied by fixed-parameter algorithms for model counting parameterized by treewidth \cite{FMR08,SS10} since treewidth is bounded by thrice the carving width \cite{sasak10}. A variety of methods can be used in Step 2 to find a contraction tree to contract $N_\varphi$, including the methods \textbf{LG} and \textbf{FT} that we discuss in the following sections.

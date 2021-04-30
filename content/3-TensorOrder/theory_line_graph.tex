@@ -1,4 +1,4 @@
-\section{The Line-Graph Method for Finding Contraction Trees}
+\subsection{The Line-Graph Method for Finding Contraction Trees}
 \label{sec:tensors:contraction-theory}
 The \textbf{Line-Graph} method for finding contraction trees for a tensor network $N$ applies graph-decomposition techniques to a particular graph constructed from $N$. Prior work \cite{MS08} on tensor networks with no free indices constructed a graph from a tensor network where tensors correspond to vertices and indices shared between tensors correspond to edges. In the context of constraint networks \cite{dechter03}, this is analogous to the dual constraint graph (if multiple edges are drawn between constraints with multiple variables in common).
 
@@ -25,7 +25,7 @@ If $N$ has no free indices, the free vertex has no incident edges and the remain
 
 % If $N'$ is a subset of a tensor network $N$, $N'$ is also a subset of vertices in the structure graph of $N$. In this case, the rank of $N'$ is exactly the number of edges in the structure graph of $N$ incident with both a vertex in $N'$ and a vertex in $(N \sqcup \{f\}) \setminus N'$ (where $\fv$ is the free vertex). Thus the structure graph of $N$ contains all the information necessary to compute the rank of a subset of $N$ and thus to compute the max rank of a contraction-tree of $N$.
 
-\subsection{Finding Contraction Trees from Carving Decompositions}
+% \subsection{Finding Contraction Trees from Carving Decompositions}
 Contraction trees are closely connected to decompositions of the structure graph. In particular, contraction trees of a tensor network correspond to carving decompositions of its structure graph, where max rank corresponds exactly to carving width. This correspondence was first proven for tensor networks with no free indices by de Oliveira Oliveira \cite{de15}. Theorem \ref{thm:contraction-equiv-carving} extends this correspondence to tensor networks with free indices as well:
 \begin{theorem}
 	\label{thm:contraction-equiv-carving}
@@ -55,7 +55,7 @@ Carving decompositions have been studied in several settings. For example, there
 
 There is limited work on the heuristic construction of ``good'' carving decompositions for non-planar graphs. Instead, we leverage the work behind finding tree decompositions to find carving decompositions and subsequently find contraction trees of small max rank.
 
-\subsection{Finding Contraction Trees from Tree Decompositions}
+% \subsection{Finding Contraction Trees from Tree Decompositions}
 
 %In this work, we aim to find ``good'' choices for the rooted binary tree that minimize the running-time and memory usage of Algorithm \ref{alg:network-contraction} on a given tensor contraction network.
 %In this work, we make the additional assumption that all dimensions have domains of the same (or similar) size. Thus the max-size of a contraction-tree is entirely characterized by the max rank, and so to find a contraction-tree of small max-size it is equivalent to find a contraction-tree of small max rank.

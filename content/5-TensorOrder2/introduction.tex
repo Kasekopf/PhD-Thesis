@@ -8,7 +8,7 @@ Neural networks are a recent success story of parallelization. The parallelizati
 
 Chapter \ref{ch:tensors} demonstrated that \emph{tensor network contraction} provides a natural bridge between high-performance computing and weighted model counting. 
 Contraction is a key operation in neural network training and inference \cite{BK07,Hirata03,KKCLA17,VZTGDMVAC18}, and, as such, many of the optimizations for neural networks also apply to tensor-network contraction \cite{KSTKPPRS19,NRBHHJN15,RMGZFZHVL19}.
-In detail, tensor-network contraction can be used to perform weighted model counting using a 3-phase algorithm. First, in the \emph{reduction} phase, a counting instance is reduced to a tensor-network problem. Second, in the \emph{planning} phase, an order to contract tensors in the network is determined. Finally, in the \emph{execution} phase, tensors in the network are contracted using the best discovered order. 
+In detail, tensor-network contraction can be used to perform weighted model counting using a 3-phase algorithm. First, in the \emph{reduction} phase, a counting instance is reduced to a tensor-network problem. Second, in the \emph{planning} phase, an order to contract tensors in the network is determined. Finally, in the \emph{execution} phase, tensors in the network are contracted using the determined order. 
 
 In this chapter, we explore the impact of multiple-core and GPU use on tensor network contraction for weighted model counting. Since the reduction phase was not a significant source of runtime in \cite{DDV19}, we focus on opportunities in the planning and execution phases. 
 

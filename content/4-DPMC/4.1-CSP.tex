@@ -3,7 +3,7 @@
 
 A variety of constraint-satisfaction heuristics for model counting were presented in a single algorithmic framework by \cite{DPV20}.
 These heuristics have a long history in constraint programming \cite{dechter03}, database-query optimization \cite{MPPV04}, and propositional reasoning \cite{pan2005symbolic}.
-In this section, we adapt the framework of \cite{DPV20} to produce project-join trees.
+In this section, we adapt the algorithmic framework of \cite{DPV20} to produce project-join trees.
 This adaption was done by Vu H. N. Phan and is not a contribution of this thesis. We outline it briefly here and refer the reader to \cite{dudek2020dpmc} for the complete details.
 
 This algorithm is presented as Algorithm \ref{alg_csp_jt}, which constructs a project-join tree of a CNF formula using constraint-satisfaction heuristics.
@@ -91,13 +91,13 @@ Before discussing the various heuristics, we assert the correctness of Algorithm
     \Return{$(T, n_m, \gamma, \pi)$}
 \end{algorithm*}
 
-By Condition \ref{cond1}, we know that $\set{\Gamma_i}_{i = 1}^m$ is a partition of the clauses of $\phi$.
-Condition \ref{cond2} ensures that Lines \ref{line_chosen_cluster}-\ref{line_cluster_union} place a new internal node $n_i$ in a cluster that has not yet been processed.
-Also on Lines \ref{line_chosen_cluster}-\ref{line_cluster_union}, Condition \ref{cond3} prevents the node $n_i$ from skipping a cluster $\kappa_s$ if there exists some $x \in X_s \cap \vars(n_i)$, since $x$ is projected in iteration $s$, \ie, $x$ is added to $\pi(n_s)$.
-These invariants are sufficient to prove that Algorithm \ref{alg_csp_jt} indeed returns a project-join tree of $\phi$.
-All heuristics we use in this work satisfy the conditions of Theorem \ref{thm_csp_jt}.
+% By Condition \ref{cond1}, we know that $\set{\Gamma_i}_{i = 1}^m$ is a partition of the clauses of $\phi$.
+% Condition \ref{cond2} ensures that Lines \ref{line_chosen_cluster}-\ref{line_cluster_union} place a new internal node $n_i$ in a cluster that has not yet been processed.
+% Also on Lines \ref{line_chosen_cluster}-\ref{line_cluster_union}, Condition \ref{cond3} prevents the node $n_i$ from skipping a cluster $\kappa_s$ if there exists some $x \in X_s \cap \vars(n_i)$, since $x$ is projected in iteration $s$, \ie, $x$ is added to $\pi(n_s)$.
+% These invariants are sufficient to prove that Algorithm \ref{alg_csp_jt} indeed returns a project-join tree of $\phi$.
+% All heuristics we use in this work satisfy the conditions of Theorem \ref{thm_csp_jt}.
 
-There are a variety of heuristics to fine-tune Algorithm \ref{alg_csp_jt}.
+There are a variety of heuristics to fine-tune Algorithm \ref{alg_csp_jt} that satisfy the conditions of Theorem \ref{thm_csp_jt}.
 For the function $\clusterVarOrder$, we consider the heuristics \Random, \Mcs{} (\textdef{maximum-cardinality search} \cite{tarjan1984simple}), \Lexp/\Lexm{} (\textdef{lexicographic search for perfect/minimal orders} \cite{koster2001treewidth}), and \Minfill{} (\textdef{minimal fill-in} \cite{dechter03}) as well as their inverses (\Invmcs, \Invlexp, \Invlexm, and \Invminfill).
 Heuristics for $\clauseRank$ include \Be{} (\textdef{bucket elimination} \cite{dechter99}) and \Bm{} (\textdef{Bouquet's Method} \cite{bouquet1999gestion}).
 For $\chosenCluster$, the heuristics we use are \ListH{} and \TreeH{} \cite{DPV20}.

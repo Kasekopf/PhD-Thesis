@@ -1,22 +1,22 @@
 \section{Using Project-Join Trees for Weighted Model Counting}
 \label{sec_jointree}
 
-In model counting, a Boolean formula is often given in conjunctive normal form (CNF), \ie, as a set $\phi$ of clauses.
-For each clause $c \in \phi$, define $\vars(c)$ to be the set of variables appearing in $c$.
-Then $c$ represents a Boolean function over $\vars(c)$. Similarly, $\phi$ represents a Boolean function over $\vars(\phi) \equiv \bigcup_{c \in \phi} \vars(c)$. 
+% In model counting, a Boolean formula is often given in conjunctive normal form (CNF), \ie, as a set $\phi$ of clauses.
+% For each clause $c \in \phi$, define $\vars(c)$ to be the set of variables appearing in $c$.
+% Then $c$ represents a Boolean function over $\vars(c)$. Similarly, $\phi$ represents a Boolean function over $\vars(\phi) \equiv \bigcup_{c \in \phi} \vars(c)$. 
 
-It is well-known that weighted model counting can be performed through a sequence of projections and joins on pseudo-Boolean functions \cite{DPV20,DDV19}.
-Given a CNF formula $\phi$ and a literal-weight function $W$ over a set $X$ of variables, the corresponding weighted model count can be computed as follows:
+It is well-known that weighted model counting can be performed through a sequence of projections and joins on pseudo-Boolean functions \cite{DPV20}.
+Given a CNF formula $\phi$ and a literal-weight function $W$ over a set $X$ of variables, observe that 
+$[\varphi] = \prod_{c \in \phi} [c]$ (since $\varphi$ is in CNF) and $W = \prod_{x \in X} W_x$ (where $\{W_x : x \in X\}$ is the set of pseudo-Boolean function guaranteed by Definition \ref{def:literal-weight}). The $W$-weighted model count of $\phi$ can therefore be computed as follows:
 \begin{equation}
 \label{eq_factored_wmc}
     W(\phi) = \pars{
         % \proj_{x_1} \cdots \proj_{x_n}
         \proj_X
-        \pars{\prod_{c \in \phi} c \mult \prod_{x \in X} W_x}
+        \pars{\prod_{[c] \in \phi} c \mult \prod_{x \in X} W_x}
     }(\emptyset)
 \end{equation}
 
-% TODO: Define W_x
 It was shown in \cite{DPV20} that the computational cost of Equation \ref{eq_factored_wmc} can be significantly reduced using \emph{early projection} \cite{MPPV04}. The key idea is that, when performing a product followed by a projection, it is sometimes possible to perform the projection first. Formally:
 \begin{theorem}[Early Projection]
 \label{thm_early_proj}
@@ -53,9 +53,6 @@ We model a rearrangement of Equation \eqref{eq_factored_wmc} as a \emph{project-
         \item for each internal node $n \in \V{T} \setminus \Lv{T}$, variable $x \in \pi(n)$, and clause $c \in \phi$ \st{} $x$ appears in $c$, the leaf node $\gamma^{-1}(c)$ must be a descendant of $n$ in $T$. \label{prop2}
     \end{enumerate}
 \end{definition}
-If $n$ is a leaf node, then $n$ corresponds to a clause $c = \gamma(n)$ in Equation \eqref{eq_factored_wmc}.
-If $n$ is an internal node, then $n$'s children $\C{T}{r}{n}$ are to be multiplied before the projections of variables in $\pi(n)$ are performed.
-The two properties ensure that the resulting expression is equivalent to Equation \eqref{eq_factored_wmc} using early projection.
 See Figure \ref{fig_join_tree} for a graphical example of a project-join tree.
 \begin{figure}%[H]
     \centering
@@ -81,10 +78,15 @@ See Figure \ref{fig_join_tree} for a graphical example of a project-join tree.
 }
 \label{fig_join_tree}
 \end{figure}
-
 Project-join trees have previously been studied in the context of database-query optimization \cite{MPPV04}.
 Project-join trees are also closely related to contraction trees in the context of tensor networks \cite{EP14}.
-Once a rearrangement of Equation \eqref{eq_factored_wmc} has been represented by a project-join tree, we can model the computation process according to the rearrangement.
+
+Project-join trees model a rearrangement of Equation \eqref{eq_factored_wmc}.
+In detail, if $n$ is a leaf node, then $n$ corresponds to a clause $c = \gamma(n)$ in Equation \eqref{eq_factored_wmc}.
+If $n$ is an internal node, then $n$'s children $\C{T}{r}{n}$ are to be multiplied before the projections of variables in $\pi(n)$ are performed.
+The two properties in Defintition \ref{def_jointree} ensure that the resulting expression is equivalent to Equation \eqref{eq_factored_wmc} using early projection.
+
+Given a project-join tree, we can model the computation process according to the rearrangement specified by the tree.
 In particular, given a literal-weight function $W = \prod_{x \in X} W_x$, we define the $W$-\emph{valuation} of each node $n \in \V{T}$ as a pseudo-Boolean function associated with $n$.
 The $W$-valuation of a node $n \in \V{T}$ is denoted $f^W_n$ and defined as follows:
 \begin{equation}
@@ -96,9 +98,9 @@ The $W$-valuation of a node $n \in \V{T}$ is denoted $f^W_n$ and defined as foll
     \end{cases}
 \end{equation}
 
-Recall that $[\gamma(n)]$ is a pseudo-Boolean function $[\gamma(n)] : 2^{\vars(\gamma(n))} \rightarrow \mathbb{R}$ where $[\gamma(n)](\tau) = 1$ if and only if the assignment $\tau$ satisfies $\gamma(n)$ (and 0 otherwise). 
+Recall that $[\gamma(n)]$ is a pseudo-Boolean function $[\gamma(n)] : 2^{\vars(\gamma(n))} \rightarrow \mathbb{R}$ where $[\gamma(n)](\tau) = 1$ if and only if the assignment $\tau$ satisfies $\gamma(n)$ (and 0 otherwise).  
 
-The main idea is that the $W$-valuation at each node of $T$ is a pseudo-Boolean function computed as a subexpression of Equation \eqref{eq_factored_wmc}. The $W$-valuation of the root is exactly the result of Equation \eqref{eq_factored_wmc}, \ie, the weighted model count of $\phi$ \wrt{} $W$:
+The main idea is that the $W$-valuation at each node of $T$ is a pseudo-Boolean function computed as a subexpression of Equation \eqref{eq_factored_wmc}. The $W$-valuation of the root is exactly the result of Equation \eqref{eq_factored_wmc}, \ie, the $W$-weighted model count of $\phi$:
 \begin{theorem}
 \label{thm_valuation_wmc}
     Let $\phi$ be a CNF formula, $(T, r, \gamma, \pi)$ be a project-join tree of $\phi$, and let $W$ be a literal-weight function over $\vars(\phi)$.
@@ -133,7 +135,7 @@ where $A = \bigcup_{o \in \C{T}{r}{n}} P(o)$. Moreover, observe that $P(n) = \pi
 Finally, to complete the proof we observe that $P(r) = X$ and $\Phi(r) = [\varphi]$. It follows that $f^W_r(\emptyset) = \proj_X \pars{ [\varphi] \mult \prod_{x \in X} W_x } = W(\varphi)$, as desired.
 \end{proof}
 
-This gives us a two-phase algorithm for computing the weighted model count of a formula $\phi$.
+This gives us a two-phase algorithm for computing the $W$-weighted model count of a formula $\phi$.
 First, in the \emph{planning} phase, we construct a project-join tree $(T, r, \gamma, \pi)$ of $\phi$.
 We discuss algorithms for constructing project-join trees in Section \ref{sec_planning}.
 Second, in the \emph{execution} phase, we compute $f^W_r$ by following Equation \eqref{eq_valuation}.
@@ -154,7 +156,7 @@ For every literal-weight function $W$, the domain of the function $f^W_n$ is exa
 The number of variables that appear in each intermediate pseudo-Boolean function has a significant impact on the runtime.
 To characterize the difficulty of $W$-valuation, we define the \emph{size} of a node $n$, $\func{size}(n)$, to be $\size{\vars(n)}$ for leaf nodes and $\size{\vars(n) \cup \pi(n)}$ for internal nodes.
 The \emph{width} of a project-join tree $(T, r, \gamma, \pi)$ is $\func{width}(T) \equiv \max_{n \in \V T} \func{size}(n)$.
-The width of a project-join tree is analogous to the contraction complexity of a contraction tree in the context of tensor networks.
+The width of a project-join tree is analogous to the contraction complexity of a contraction tree in the context of tensor networks (see Section \ref{sec:tensors:planning:quality}).
 We see in Section \ref{sec_experiments} how the width impacts the computation of $W$-valuations.
 
 % Project-join trees are related to \emph{variable elimination} on factor graphs \cite{KDLD05,BDP09}, which uses tree decompositions of the primal graph of a factor graph.

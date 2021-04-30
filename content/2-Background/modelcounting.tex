@@ -3,6 +3,7 @@
 
 In discrete integration (also called constrained counting) the task is to count the total weight, subject to a given weight function, of the set of solutions of input constraints \cite{GSS08}. We represent weight functions as pseudo-Boolean functions. As is standard, we focus on literal-weight functions: 
 \begin{definition}[Literal-Weight Function]
+\label{def:literal-weight}
 A pseudo-Boolean function $W: 2^X \rightarrow \mathbb{R}$ is \emph{literal-weight} function if there exist pseudo-Boolean functions $W_x: 2^{\{x\}} \rightarrow \mathbb{R}$ for all $x \in X$ such that $W = \prod_{x \in X} W_x$. 
 \end{definition}
 Literal-weight functions are also called \emph{log-linear} functions and can be employed to capture a wide variety of probabilistic distributions that arise from graphical models, conditional random fields, skip-gram models, and the like~\cite{KF09}.

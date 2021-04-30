@@ -8,7 +8,7 @@ We aim to answer the following experimental research questions:
     \item[(RQ3)] Are project-join-tree-based weighted model counters competitive with state-of-the-art tools?
 \end{itemize}
 
-To answer RQ1, we build two implementations of the planning phase: \Htb{} (Heuristic Tree Builder, based on \cite{DPV20}) and \Lg{} (Line Graph).
+To answer RQ1, we build two implementations of the planning phase: \Htb{} (Heuristic Tree Builder, based on \cite{DPV20}) and \Lg{} (Line Graph, based on Chapter \ref{ch:tensors}).
 \Htb{} implements Algorithm \ref{alg_csp_jt} and so is representative of the constraint-satisfaction approach.
 \Htb{} contains implementations of four clustering heuristics (\Be-\ListH, \Be-\TreeH, \Bm-\ListH, and \Bm-\TreeH) and nine cluster-variable-order heuristics (\Random, \Mcs, \Invmcs, \Lexp, \Invlexp, \Lexm, \Invlexm, \Minfill, and \Invminfill).
 \Lg{} implements Algorithm \ref{alg_td_to_join} and so is representative of the tree-decomposition approach.

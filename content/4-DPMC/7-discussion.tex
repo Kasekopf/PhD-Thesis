@@ -1,8 +1,8 @@
 \section{Chapter Summary}
 \label{sec_discussion}
 
-In this work, we introduced the concept of project-join trees for weighted model counting.
-These trees are at the center of a dynamic-programming framework that unifies and generalizes several model counting algorithms, including those based on ADDs \cite{DPV20}, tensors \cite{DDV19}, and database management systems \cite{fichte2020exploiting}.
+In this chapter, we introduced the concept of project-join trees for weighted model counting.
+These trees are at the center of a dynamic-programming framework that unifies and generalizes several model counting algorithms, including those based on ADDs \cite{DPV20} and database management systems \cite{fichte2020exploiting}.
 This framework performs model counting in two phases.
 First, the planning phase produces a project-join tree from a CNF formula.
 Second, the execution phase uses the project-join tree to guide the dynamic-programming computation of the model count of the formula \wrt{} a literal-weight function.
@@ -12,7 +12,7 @@ For the planning phase, we implemented \Htb{} based on constraint-satisfaction h
 \cite{tarjan1984simple,koster2001treewidth,dechter03,dechter99,bouquet1999gestion}
 and \Lg{} based on tree-decomposition tools \cite{strasser2017computing,Tamaki17,AMW17}.
 Our empirical work indicates that tree-decomposition tools tend to produce project-join trees of lower widths in shorter times.
-This is a significant finding with applications beyond model counting, \eg, in Boolean functional synthesis \cite{tabajara2017factored}.
+% This is a significant finding with applications beyond model counting, \eg, in Boolean functional synthesis \cite{tabajara2017factored}.
 
 For the execution phase, we implemented \Dmc{} based on ADDs \cite{DPV20,somenzi2015cudd} and \Tensor{} based on tensors \cite{numpy}.
 Empirically, we observed that (sparse) ADDs outperform (dense) tensors on single CPU cores.

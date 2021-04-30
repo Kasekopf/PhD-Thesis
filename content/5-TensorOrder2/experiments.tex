@@ -3,13 +3,13 @@
 
 We aim to answer the following experimental research questions:
 \begin{enumerate}\itemsep0em 
-    \item[(RQ1)] Is the planning stage improved by a parallel portfolio of decomposition tools?
+    \item[(RQ1)] Is the planning phase improved by a parallel portfolio of decomposition tools?
     
-    \item[(RQ2)] Is the planning stage improved by adding a branch-decomposition tool?
+    \item[(RQ2)] Is the planning phase improved by adding a branch-decomposition tool?
     
-    \item[(RQ3)] When should Algorithm \ref{alg:wmc} transition from the planning stage to the execution stage (i.e., what should be the value of the performance factor $\alpha$)?
+    \item[(RQ3)] When should Algorithm \ref{alg:wmc} transition from the planning phase to the execution phase (i.e., what should be the value of the performance factor $\alpha$)?
     
-    \item[(RQ4)] Is the execution stage improved by leveraging multiple cores and a GPU?
+    \item[(RQ4)] Is the execution phase improved by leveraging multiple cores and a GPU?
     
     \item[(RQ5)] Do parallel tensor network approaches improve a portfolio of state-of-the-art weighted model counters (\tool{cachet}, \tool{miniC2D}, \tool{d4}, \tool{ADDMC}, and \tool{gpuSAT2})?
 \end{enumerate}
@@ -28,12 +28,12 @@ All counters are run in the Docker images (one for each counter) with Docker 19.
 \tool{TensorOrder2} is primarily implemented in Python 3 as a modified version of the tool from Chapter \ref{ch:tensors}, \tool{TensorOrder}. We replace portions of the Python code with C++ (\tool{g++} v7.4.0) using Cython 0.29.15 for general speedup, especially in $\func{FactorTree}(\cdot)$.
 
 \paragraph{Planning.} 
-\tool{TensorOrder} contains an implementation of the planning stage using a choice of three single-core tree-decomposition solvers: \pkg{Tamaki} \cite{Tamaki17}, \pkg{FlowCutter} \cite{HS18}, and \pkg{htd} \cite{AMW17}. We add to \tool{TensorOrder2} an implementation of Theorem \ref{thm:factorable-branch} and use it to add a branch-decomposition solver \pkg{Hicks} \cite{hicks02}.
+\tool{TensorOrder} contains an implementation of the planning phase using a choice of three single-core tree-decomposition solvers: \pkg{Tamaki} \cite{Tamaki17}, \pkg{FlowCutter} \cite{HS18}, and \pkg{htd} \cite{AMW17}. We add to \tool{TensorOrder2} an implementation of Theorem \ref{thm:factorable-branch} and use it to add a branch-decomposition solver \pkg{Hicks} \cite{hicks02}.
 We implement a parallel portfolio of graph-decomposition solvers in C++ and give \tool{TensorOrder2} access to two portfolios, each with access to all cores: \pkg{P3} (which combines \pkg{Tamaki},  \pkg{FlowCutter}, and \pkg{htd}) and \pkg{P4} (which includes \pkg{Hicks} as well).
 
 \paragraph{Execution.} 
-\tool{TensorOrder} is able to perform the execution stage on a single core and on multiple cores using \pkg{numpy} v1.18.1 and \pkg{OpenBLAS} v0.2.20. In \tool{TensorOrder2}, we add the ability to contract tensors on a GPU with \pkg{TensorFlow} v2.1.0 \cite{ABCCDDDGII16}. To avoid GPU kernel calls for small contractions, \tool{TensorOrder2} uses a GPU only for contractions where one of the tensors involved has rank $\geq 20$, and reverts back to using multi-core \pkg{numpy} otherwise. We also add an implementation of Algorithm \ref{alg:tn-sliced}.
-Overall, \tool{TensorOrder2} runs the execution stage on three hardware configurations: \pkg{CPU1} (restricted to a single CPU core), \pkg{CPU8} (allowed to use all 8 CPU cores), and \pkg{GPU} (allowed to use all 8 CPU cores and use a GPU).
+\tool{TensorOrder} is able to perform the execution phase on a single core and on multiple cores using \pkg{numpy} v1.18.1 and \pkg{OpenBLAS} v0.2.20. In \tool{TensorOrder2}, we add the ability to contract tensors on a GPU with \pkg{TensorFlow} v2.1.0 \cite{ABCCDDDGII16}. To avoid GPU kernel calls for small contractions, \tool{TensorOrder2} uses a GPU only for contractions where one of the tensors involved has rank $\geq 20$, and reverts back to using multi-core \pkg{numpy} otherwise. We also add an implementation of Algorithm \ref{alg:tn-sliced}.
+Overall, \tool{TensorOrder2} runs the execution phase on three hardware configurations: \pkg{CPU1} (restricted to a single CPU core), \pkg{CPU8} (allowed to use all 8 CPU cores), and \pkg{GPU} (allowed to use all 8 CPU cores and use a GPU).
 
 \begin{figure}
 	\centering
@@ -42,7 +42,7 @@ Overall, \tool{TensorOrder2} runs the execution stage on three hardware configur
 	\caption{\label{fig:parallel:planning} A cactus plot of the performance of various planners. A planner ``solves'' a benchmark when it finds a contraction tree of max rank 30 or smaller.}
 \end{figure}
 
-\subsection{Experiment 1: The Planning Stage (RQ1 and RQ2)}
+\subsection{Experiment 1: The Planning Phase (RQ1 and RQ2)}
 We run each planning implementation (\pkg{FlowCutter}, \pkg{htd}, \pkg{Tamaki}, \pkg{Hicks}, \pkg{P3}, and \pkg{P4}) once on each of our 1914 benchmarks and save all contraction trees found within 1000 seconds (without executing the contractions). Results are summarized in Figure \ref{fig:parallel:planning}. 
 
 % In this figure, we consider a benchmark to be solved by a planning implementation when the planner is able to find contraction tree whose max-rank is 30 or smaller.
@@ -56,7 +56,7 @@ We run each planning implementation (\pkg{FlowCutter}, \pkg{htd}, \pkg{Tamaki}, 
 %\end{figure}
 
 
-We observe that the parallel portfolio planners outperform all four single-core planners after 5 seconds. In fact, after 20 seconds both portfolios perform almost as well as the virtual best solver. We conclude that portfolio solvers significantly speed up the planning stage.
+We observe that the parallel portfolio planners outperform all four single-core planners after 5 seconds. In fact, after 20 seconds both portfolios perform almost as well as the virtual best solver. We conclude that portfolio solvers significantly speed up the planning phase.
 
 We also observe that \pkg{P3} and \pkg{P4} perform almost identically in Figure \ref{fig:parallel:planning}. Although after 1000 seconds \pkg{P4} has found better contraction trees than \pkg{P3} on 407 benchmarks, most improvements are small (reducing the max-rank by 1 or 2) or still do not result in good-enough contraction trees. We conclude that adding \pkg{Hicks} improves the portfolio slightly, but not significantly.
  
@@ -89,7 +89,7 @@ Figure \ref{fig:performance-factor} indicates how varying the performance factor
 % Selected results are summarized in Figure \ref{fig:performance-factor}. For each planner and hardware, we select the performance factor $\alpha$ that minimizes the simulated PAR-2 score (i.e., the sum of of the wall-clock times for each completed benchmark, plus 2000 for each uncompleted benchmark). We observe that the performance factor for $\pkg{GPU}$ is typically lower than for $\pkg{CPU8}$, which is lower than for $\pkg{CPU1}$. We conclude that different combinations of planners and hardware are optimized by different performance factors. The full set of selected values is available in the supplemental material.
 
 \subsection{Experiment 3: End-to-End Performance (RQ4 and RQ5)}
-Finally, we compare \tool{TensorOrder2} with state-of-the-art weighted model counters \tool{cachet}, \tool{miniC2D}, \tool{d4}, \tool{ADDMC}, and \tool{gpuSAT2}. We consider \tool{TensorOrder2} using \pkg{P4} combined with each hardware configuration (\pkg{CPU1}, \pkg{CPU8}, and \pkg{GPU}), along with \pkg{Tamaki} + \pkg{CPU1} as the best non-parallel configuration from \cite{DDV19}. Note that \tool{P4}+\tool{CPU1} still leverages multiple cores in the planning stage. The performance factor from Experiment 2 is used for each \tool{TensorOrder2} configuration.
+Finally, we compare \tool{TensorOrder2} with state-of-the-art weighted model counters \tool{cachet}, \tool{miniC2D}, \tool{d4}, \tool{ADDMC}, and \tool{gpuSAT2}. We consider \tool{TensorOrder2} using \pkg{P4} combined with each hardware configuration (\pkg{CPU1}, \pkg{CPU8}, and \pkg{GPU}), along with \pkg{Tamaki} + \pkg{CPU1} as the best non-parallel configuration from \cite{DDV19}. Note that \tool{P4}+\tool{CPU1} still leverages multiple cores in the planning phase. The performance factor from Experiment 2 is used for each \tool{TensorOrder2} configuration.
 
 We run each counter once on each benchmark (both with and without \pkg{pmc-eq} preprocessing) with a timeout of 1000 seconds and record the wall-clock time taken. When preprocessing is used, both the timeout and the recorded time include preprocessing time. For \tool{TensorOrder2}, recorded times include all of Algorithm \ref{alg:wmc}. Results are summarized in Figure \ref{fig:parallel:comparison} and Table \ref{tab:comparison}. 
 

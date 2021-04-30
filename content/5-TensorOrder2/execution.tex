@@ -1,4 +1,4 @@
-\section{Parallelizing the Execution Stage with TensorFlow and Slicing}
+\section{Parallelizing the Execution Phase with TensorFlow and Slicing}
 \label{sec:parallel:execution}
 As discussed in Chapter \ref{ch:background}, each contraction in Algorithm \ref{alg:network-contraction} can be implemented as a matrix multiplication.
 This was done in Chapter \ref{ch:tensors} using \tool{numpy} \cite{numpy}, and it is straightforward to adjust the implementation to leverage multiple cores with \tool{numpy} and a GPU with \tool{TensorFlow} \cite{ABCCDDDGII16}.
@@ -46,7 +46,7 @@ Choosing $I$ is itself a difficult problem. Our goal is to choose the smallest $
 
 Instead, in this work as a first step we use a heuristic from \cite{CZHNS18,GK20}: choose $I$ incrementally, greedily minimizing the memory cost of contracting $N[\eta]$ until the memory usage fits in onboard memory. Unlike cutset and recursive conditioning, the resulting networks $N[\eta]$ are typically still highly connected. One direction for future work is to compare other heuristics for choosing $I$ (e.g., see the discussion in Section 10 of \cite{dechter99}).
 
-This gives us Algorithm \ref{alg:tn-sliced}, which performs the execution stage with limited memory at the cost of additional time. $T[\eta]$ is the contraction tree obtained by computing the $\eta$-slice of every tensor in $T$. $\func{MemCost}(N, T, I)$ computes the memory for one $\func{Execute}(N[\eta], T[\eta])$ call. $\func{ChooseSliceIndex}(N,T,I)$ chooses the next slice index greedily to minimize memory cost.
+This gives us Algorithm \ref{alg:tn-sliced}, which performs the execution phase with limited memory at the cost of additional time. $T[\eta]$ is the contraction tree obtained by computing the $\eta$-slice of every tensor in $T$. $\func{MemCost}(N, T, I)$ computes the memory for one $\func{Execute}(N[\eta], T[\eta])$ call. $\func{ChooseSliceIndex}(N,T,I)$ chooses the next slice index greedily to minimize memory cost.
 
 %\begin{align*}
 %    \tntensor{N}(\tau) =& \sum_{\rho \in \domain{\tnbound{N}}} \prod_{A \in N} A((\rho \cup \tau)\restrict{\tdim{A}}) \\

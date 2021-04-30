@@ -112,4 +112,6 @@ The general idea of using a tree decomposition of a graph to split high-degree n
 %\end{theorem}
 
 
-The construction of Theorem \ref{thm:factorable-tree} gives us the \textbf{Factor-Tree} planner, which uses tree decompositions of the structure graph to preprocess the tensor network and factor high-rank tensors. See Figure \ref{fig:factor-example} for an example of the preprocessing. We show in Section \ref{sec:tensors:experiments:cachet} that \textbf{FT} can significantly improve the quality of the contraction tree on benchmarks with high-rank tensors.
+The construction of Theorem \ref{thm:factorable-tree} gives us the \textbf{Factor-Tree} planner, which uses tree decompositions of the structure graph to preprocess the tensor network and factor high-rank tensors. See Figure \ref{fig:factor-example} for an example of the preprocessing. 
+Since $M$ contracts to $\tntensor{N}$ in Theorem \ref{thm:factorable-tree}, the \textbf{Factor-Tree} planner satisfies Assumption 2 in Theorem \ref{thm:alg-correctness}.
+We show in Section \ref{sec:tensors:experiments:cachet} that \textbf{FT} can significantly improve the quality of the contraction tree on benchmarks with high-rank tensors.

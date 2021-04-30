@@ -10,14 +10,17 @@ In this section, we discuss the algorithm for literal-weighted model counting us
     \KwIn{$\varphi$: a CNF formula}
     \KwIn{$W$: a literal-weight function}
     \KwOut{$W(\varphi)$, the weighted model count of $\varphi$ w.r.t. $W$}
-    $N_\varphi \gets \text{tensor network constructed via Theorem \ref{thm:wmc-reduction}}$\;
-    $T \gets \func{FindContractionTree}(N_\varphi)$ \tcc*{e.g., \textbf{LG} or \textbf{FG}}
-    \Return{$\func{Contract}(N_\varphi,~T)$}
+    $N \gets \func{Reduce}(\varphi, W)$\;
+    \Repeat{$\alpha \cdot \func{TimeCost}(M, T) < \text{elapsed time in seconds}$}{
+      $M, T \gets \func{Plan}(N)$ \tcc*{e.g., \textbf{LG} or \textbf{FG}}
+    }
+    \Return{$\func{Execute}(M,T)$}
 \end{algorithm*}
 
-First, in the \emph{reduction} phase the input formula $\varphi$ and weight function $W$ is transformed into a tensor network $N$. We discuss in more detail in Section \ref{sec:tensors:wmc}.
+First, in the \emph{reduction} phase the input formula $\varphi$ and weight function $W$ is transformed into a tensor network $N$. The goal of the reduction phase is that the contraction of $N$, $\tntensor{N}$, should be equal to the $W$-weighted model count of $\varphi$. We discuss in more detail in Section \ref{sec:tensors:wmc}.
 
-Second, in the \emph{planning} phase a plan for contracting the tensor network $N$ is determined. This plan takes the form of a \emph{contraction tree} \cite{EP14}:
+Second, in the \emph{planning} phase an order to contract tensors in the network is determined.
+This order takes the form of a \emph{contraction tree} \cite{EP14}:
 \begin{definition}[Contraction Tree] \label{def:contraction-tree}
 	Let $N$ be a tensor network. A \emph{contraction tree} for $N$ is a rooted binary tree $T$ whose leaves are the tensors of $N$. %, i.e. $\Lv{T} = N$.
 \end{definition}
@@ -25,21 +28,27 @@ Second, in the \emph{planning} phase a plan for contracting the tensor network $
 In our database analogy from Section \ref{sec:tensors:tensors}, a contraction tree for a tensor network representing a project-join query is a join tree of that query (with projections done as early as possible). 
 In our factor-graph analogy from Section \ref{sec:tensors:tensors}, a contraction tree corresponds to a \emph{dtree} \cite{darwiche01}, to an elimination order \cite{darwiche01b}, and to a binary join tree \cite{shenoy97} where factors are assigned to leaf nodes.
 
-The planning phase is allowed to modify the input tensor network $N$ as long as the new tensor network $M$ contracts to an identical tensor. In this work we discuss two planning techniques: the \textbf{Line-Graph} planner (see Section \ref{sec:tensors:contraction-theory}) and the \textbf{Factor-Tree} planner (see Section \ref{sec:tensors:preprocessing}). 
+There are two subtleties in the planning process. 
+Firstly, the planning phase is allowed to modify the input tensor network $N$ as long as the new tensor network $M$ contracts to an identical tensor. 
+This allows the planning phase to tweak the tensor network to enable better contraction trees.
+Secondly, planning in Algorithm \ref{alg:wmc} is an anytime process: we heuristically generate better contraction trees until one is ``good enough'' to use (governed by a parameter $\alpha \in \mathbb{R}$). 
+This allows us to incorporate heuristic, anytime high-level reasoning tools into a planning algorithm. 
+% For this chapter, we choose $\alpha$ so that we expect to have spent about half of the running time in planning (see Section \ref{sec:tensors:experiments:implementation}), but note that we determine $\alpha$ empirically in Chapter \ref{ch:parallel}.
+In this work we discuss two planning techniques: the \textbf{Line-Graph} planner (see Section \ref{sec:tensors:contraction-theory}) and the \textbf{Factor-Tree} planner (see Section \ref{sec:tensors:preprocessing}).
 
-Planning in Algorithm \ref{alg:wmc} is an anytime process: we heuristically generate better contraction trees until one is ``good enough'' to use. The trade-off between planning and executing is governed by a parameter $\alpha \in \mathbb{R}$. 
-For this chapter, we choose $\alpha$ so that we expect to have spent more than half of the running time in planning (see Section \ref{sec:tensors:experiments:implementation}), but note that we determine $\alpha$ empirically in Chapter \ref{ch:parallel}.
-
-Third, in the \emph{execution} phase the chosen contraction tree is used to contract the tensor network. We discuss this algorithm in more detail in Section \ref{sec:tensors:execution}.
+Third, in the \emph{execution} phase the chosen contraction tree is used to contract the tensor network.
+The goal of the execution phase is to compute the contraction of $M$ and thus compute the $W$-weighted model count of $\varphi$. The computation cost of the execution phase is heavily determined by the chosen contraction tree. We discuss this phase in more detail in Section \ref{sec:tensors:execution}.
 
 We assert the correctness of Algorithm \ref{alg:wmc} in the following theorem.
 \begin{theorem}
 \label{thm:alg-correctness}
-Let $\varphi$ be a CNF formula and let $W$ be a weight function. 
+Let $\varphi$ be a CNF formula and let $W: 2^{\vars{\varphi}} \rightarrow \mathbb{R}$ be a literal-weight function.
     Assume:
-    (1) $\func{Reduce}(\varphi, W)$ returns a tensor network $N$ s.t. $\tntensor{N}(\emptyset) = W(\varphi)$,
-    (2) $\func{Plan}(N)$ returns a tensor network $M$ and a contraction tree $T$ for $M$ s.t. $\tntensor{M} = \tntensor{N}$, and
-    (3) $\func{Execute}(M, T)$ returns $\tntensor{M}$ for all tensor networks $M$ and contraction trees $T$ for $M$.
+    \begin{enumerate}
+        \item $\func{Reduce}(\varphi, W)$ returns a tensor network $N$ s.t. $\tntensor{N}(\emptyset) = W(\varphi)$,
+        \item $\func{Plan}(N)$ returns a tensor network $M$ and a contraction tree $T$ for $M$ s.t. $\tntensor{M} = \tntensor{N}$, and
+        \item $\func{Execute}(M, T)$ returns $\tntensor{M}$ for all tensor networks $M$ and contraction trees $T$ for $M$.
+    \end{enumerate}
 Then Algorithm \ref{alg:wmc} returns $W(\varphi)$.
 \end{theorem}
 \begin{proof}

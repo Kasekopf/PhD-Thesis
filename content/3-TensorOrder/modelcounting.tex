@@ -1,6 +1,6 @@
-\section{From Weighted Model Counting to Tensor Networks}
+\section{Reduction Phase: From Weighted Model Counting to Tensor Networks}
 \label{sec:tensors:wmc}
-In this section, we introduce a framework for solving the problem of weighted model counting with tensor networks. Existing reductions from model counting to tensor-network contraction \cite{BMT15,KCMR18} focus on unweighted model counting. Since we are interested in the more general problem of weighted model counting, we prove that the reduction can be easily extended:
+Existing reductions from model counting to tensor-network contraction \cite{BMT15,KCMR18} focus on unweighted model counting. Since we are interested in the more general problem of weighted model counting, we prove that the reduction can be easily extended:
 \begin{theorem}
 \label{thm:wmc-reduction}
 Let $\varphi$ be a CNF formula over Boolean variables $X$ and let $W: 2^X \rightarrow \mathbb{R}$ be a literal-weight function. One can construct in polynomial time a tensor network $N_\varphi$ such that $\tnfree{N_\varphi} = \emptyset$ and the contraction of $N_\varphi$ is $W(\varphi)$.
@@ -31,9 +31,9 @@ $$\tntensor{N_\varphi}(\emptyset) = \sum_{\tau \in \domain{X}} \prod_{x \in X} W
 	\caption{\label{fig:wmc-example} The tensor network (left) produced by Theorem \ref{thm:wmc-reduction} on $\varphi = (w \lor x \lor \neg y) \land (w \lor y \lor z) \land (\neg x \lor \neg y) \land (\neg y \lor \neg z)$, consisting of 8 tensors and 10 indices. Vertices in this diagram are tensors, while edges indicate that the tensors share an index. The weight function affects the entries of the tensors for $w$, $x$, $y$, and $z$. This tensor network has a contraction tree (right) of max rank 4, but no contraction trees of smaller max rank.}
 \end{figure}
 
-See Figure \ref{fig:wmc-example} for an example of the reduction. This reduction is closely related to the formulation of model counting as the marginalization of a factor graph representing the constraints. Unlike the reduction to factor-graph marginalization, which only assigns factors to clauses, we must also assign a tensor to each variable $x$. For example, if $x$ has weights $W(x, 0) = W(x,1) = 1$ then the tensor assigned to $x$ is a copy tensor. This reduction can also be extended beyond OR clauses to other types of constraints (e.g. parity or cardinality constraints). 
-
-
-% Nevertheless, on many benchmarks the carving width of the incidence graph is smaller than the treewidth. Since the width is in the exponent of the running time of decomposition-based counting algorithms, even a small decrease in width can dramatically decrease the running time.
-
+Theorem \ref{thm:wmc-reduction} proves that $\func{Reduce}(\varphi,W) = N_{\varphi, W}$ satisfies Assumption 1 in Theorem \ref{thm:alg-correctness}. See Figure \ref{fig:wmc-example} for an example of the reduction. 
+This reduction is closely related to the formulation of model counting as the marginalization of a factor graph representing the constraints. 
+Unlike the reduction to factor-graph marginalization, which only assigns factors to clauses, we must also assign a tensor to each variable $x$. 
+For example, if $x$ has weights $W(x, 0) = W(x,1) = 1$ then the tensor assigned to $x$ is a copy tensor.
+This reduction can also be extended beyond OR clauses to other types of constraints, e.g. parity or cardinality constraints.
 

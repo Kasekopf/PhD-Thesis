@@ -6,9 +6,9 @@ We aim to answer the following experimental research questions:
     \item[(RQ3)] What are the structural properties of benchmarks for which the tensor-network-based approaches perform well?
 \end{enumerate}
 
-To answer these questions, we implement Algorithm 2 in \tool{TensorOrder}, a new tool for weighted model counting using tensor networks. \tool{TensorOrder} can be configured to find contraction trees using existing methods \cite{KCMR18}-- \textbf{greedy} (using a greedy algorithm), \textbf{metis} (using graph partitioning), and \textbf{GN} (using community structure detection)-- or methods presented in this paper-- \textbf{LG} (Section \ref{sec:tensors:contraction-theory}) and \textbf{FT} (Section \ref{sec:tensors:preprocessing}). Implementation details appear in Section \ref{sec:tensors:experiments:implementation}.
+To answer these questions, we implement Algorithm 2 in \tool{TensorOrder}, a new tool for weighted model counting using tensor networks. \tool{TensorOrder} can be configured to find contraction trees using existing planning methods -- \textbf{greedy} (using a greedy algorithm), \textbf{metis} (using graph partitioning), and \textbf{GN} (using community structure detection) \cite{KCMR18}-- or planning methods presented in this paper-- \textbf{LG} (Section \ref{sec:tensors:contraction-theory}) and \textbf{FT} (Section \ref{sec:tensors:preprocessing}). Implementation details appear in Section \ref{sec:tensors:experiments:implementation}.
 
-To answer RQ1, in Section \ref{sec:tensors:experiments:cubic} we compare \tool{TensorOrder} with existing state-of-the-art tools for unweighted model counting (\tool{dynQBF} \cite{CW16}, \tool{dynasp} \cite{FHMW17}, \tool{SharpSAT} \cite{Thurley2006}, \tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) on formulas that count the number of vertex covers of randomly-generated cubic graphs \cite{KCMR18}. Note \tool{dynQBF} and \tool{dynasp} are solvers from related domains (that can be used as model counters) that also use tree decompositions.
+To answer RQ1, in Section \ref{sec:tensors:experiments:cubic} we compare \tool{TensorOrder} with existing state-of-the-art tools for unweighted model counting (\tool{dynQBF} \cite{CW16}, \tool{dynasp} \cite{FHMW17}, \tool{SharpSAT} \cite{Thurley2006}, \tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) on formulas that count the number of vertex covers of randomly-generated cubic graphs \cite{KCMR18}. Note \tool{dynQBF} and \tool{dynasp} are solvers from related domains (that can be used as tools for unweighted model counting) that also use tree decompositions.
 
 To answer RQ2, in Section \ref{sec:tensors:experiments:cachet} we compare \tool{TensorOrder} with existing state-of-the-art tools for weighted model counting (\tool{cachet} \cite{SBK05}, \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) on formulas whose weighted count corresponds to exact inference on Bayesian networks \cite{SBK05}. Note that the other tools (\tool{dynQBF}, \tool{dynasp}, and \tool{SharpSAT}) cannot perform weighted model counting.
 
@@ -47,7 +47,7 @@ Each experiment was run in a high-performance cluster (Linux kernel 2.6.32) usin
 	\centering
 	\input{figures/3/vertex_cover_time.pgf}
 	\input{figures/3/vertex_cover_rank.pgf}
-	\caption{\label{fig:cubic-time} Median solving time (top) and max-rank of the computed contraction tree (bottom) of various model counters and tensor-based methods run on benchmarks counting the number of vertex covers of 100 cubic graphs with $n$ vertices. Solving time of datapoints that ran out of time ($1000$ seconds) or memory (48 GB) are not shown. When $n \geq 170$, our contribution \textbf{LG+Flow} is faster than all other methods and finds contraction trees of lower max-rank than all other tensor-based methods.}
+	\caption{\label{fig:cubic-time} Median solving time (top) and max-rank of the computed contraction tree (bottom) of various counters and tensor-based methods, run on benchmarks counting the number of vertex covers of 100 cubic graphs with $n$ vertices. Solving time of datapoints that ran out of time ($1000$ seconds) or memory (48 GB) are not shown. When $n \geq 170$, our contribution \textbf{LG+Flow} is faster than all other methods and finds contraction trees of lower max-rank than all other tensor-based methods.}
 \end{figure}
 
 \subsection{Implementation Details of \tool{TensorOrder}}
@@ -56,7 +56,10 @@ Each experiment was run in a high-performance cluster (Linux kernel 2.6.32) usin
 
 Both \textbf{LG} and \textbf{FT} require first finding a tree decomposition. To do this, we leverage three heuristic tree-decomposition solvers: \pkg{Tamaki} \cite{Tamaki17}, \pkg{FlowCutter} \cite{HS18}, and \pkg{htd} \cite{AMW17}. \tool{TensorOrder} therefore has three implementations of \textbf{LG} (using \textbf{LG+Tamaki}, \textbf{LG+Flow}, and \textbf{LG+htd}) and three implementations of \textbf{FT} (using \textbf{FT+Tamaki}, \textbf{FT+Flow}, and \textbf{FT+htd}) for different choices of solver.
 
-All the tree-decomposition solvers we consider are online solvers and so each implementation must decide how long to run the solver (this time is included in the measured running time). \tool{TensorOrder} estimates the time to contract each potential contraction tree (using techniques from the \pkg{einsum} package of \pkg{numpy}) and continues to look for better tree decompositions until it expects to have spent more than half of the running time on finding a tree decomposition.  This strikes a balance between improving and using the contraction trees.
+All the tree-decomposition solvers we consider are anytime solvers and so each implementation must decide how long to run the solver (this time is included in the measured running time). 
+In Algorithm \ref{alg:wmc}, this is governed by the parameter $\alpha$.
+\tool{TensorOrder} estimates the time to contract each potential contraction tree (using techniques from the \pkg{einsum} package of \pkg{numpy}) and configures $\alpha$ so that it continues to look for better tree decompositions until it expects to have spent more than half of the running time on finding a tree decomposition.  This strikes a balance between improving and using the contraction trees.
+% Note that we determine $\alpha$ empirically in Chapter \ref{ch:parallel}.
 
 \begin{figure}
 	\centering

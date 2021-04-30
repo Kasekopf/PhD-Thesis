@@ -1,5 +1,5 @@
 \section{Separating Planning and Execution}
-\label{sec:algorithm}
+\label{sec:tensors:algorithm}
 In this section, we discuss the algorithm for literal-weighted model counting using tensor networks. This algorithm is presented as Algorithm \ref{alg:wmc} and has three stages.
 
 % TODO: References in TensorOrder2 assume that \alpha is incorporated
@@ -47,7 +47,7 @@ By Assumption 3, Algorithm \ref{alg:wmc} returns $\tntensor{M}(\emptyset)$.
 By Assumption 2, this is equal to $\tntensor{N}(\emptyset)$, which by Assumption 1 is exactly $W(\varphi)$.
 \end{proof}
 
-Organizationally, note that we discuss the execution stage in Section \ref{sec:tensors:execution} before we discuss the planning stage. 
+Organizationally, note that we discuss the execution stage in Section \ref{sec:tensors:execution} before we discuss the planning stage in Section \ref{sec:tensors:planning}. 
 This is because we must understand how plans are used before we can evaluate various planning algorithms.
 
 % TODO: Work in?

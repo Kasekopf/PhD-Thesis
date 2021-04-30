@@ -3,7 +3,7 @@
 We focus in this work on tensor networks with relatively few (or no) free indices and hundreds or thousands of bond indices. Such tensor networks are obtained in a variety of applications \cite{Cichocki14,DLVR18}, including the reduction from model counting to tensor network contraction \cite{BMT15}. Although the rank of the contraction of the tensor network $N$ is small in this case, computing entries of $\tntensor{N}$ by
 directly following Equation \ref{eqn:contraction} requires performing a summation over an exponential number of terms--- one for each assignment in $\domain{\tnbound{N}}$--- and is therefore infeasible.
 
-$\tntensor{N}$ can instead be computed by recursively decomposing the tensor network, as in Algorithm \ref{alg:network-contraction} \cite{EP14}. The choice of rooted binary tree $T$ does not affect the output of Algorithm \ref{alg:network-contraction} but may have a dramatic impact on the running-time and memory usage. We explore this in more detail in the following section.
+$\tntensor{N}$ can instead be computed by recursively decomposing the tensor network, as in Algorithm \ref{alg:network-contraction} \cite{EP14}. The choice of contraction tree $T$ does not affect the output of Algorithm \ref{alg:network-contraction} but may have a dramatic impact on the running-time and memory usage. We explore this in more detail in the following section.
 
 \begin{algorithm*}[t]
     \label{alg:network-contraction}

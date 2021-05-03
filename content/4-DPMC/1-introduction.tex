@@ -20,23 +20,25 @@ We argue that project-join trees provide a natural formalism to describe \emph{e
 In particular, considering project-join trees as execution plans enables us to decompose dynamic-programming algorithms for model counting such as the one in \cite{DPV20} into a 2-phase framework: a \emph{planning} phase, where a project-join tree is determined, and an \emph{execution} phase, where the the determined project-join tree is used to compute the model count.
 This framework mirrors the 3-phase framework for model counting through tensor-network contraction in Chapter \ref{ch:tensors}, although since we now attack model counting directly there is no need for a reduction phase.
 
-This breakdown enables us to study and compare different planning algorithms, different execution environments, and the interplay between planning and execution.
-Such a study is the main focus of this chapter. %TODO: expand the details
+This breakdown enables us to study and compare different planning algorithms, different execution libraries, and the interplay between planning and execution.
+Such a study is the main focus of this chapter. 
+For example, we replace the one-shot%
+\footnote{A \emph{one-shot} algorithm outputs exactly one solution and then terminates immediately.}
+planner based on constraint-satisfaction heuristics \cite{dechter03} used in \cite{DPV20} with an anytime%
+\footnote{An \emph{anytime} algorithm outputs better and better solutions the longer it runs.} planner based on tree-decomposition tools \cite{MPPV04,AMW17,HS18,Tamaki17}.
+We also replace the (sparse) ADD-based executor \cite{bahar1997algebraic} used in \cite{DPV20} with an executor based on (dense) tensors \cite{KKCLA17}.
 
 The primary contribution of this chapter is a dynamic-programming framework for weighted model counting based on project-join trees.
 In particular:
 \begin{enumerate}
     \item We show that several recent algorithms for weighted model counting \cite{DPV20,fichte2020exploiting} can be unified into a single framework using project-join trees.
-    \item We compare one-shot%
-    \footnote{A \emph{one-shot} algorithm outputs exactly one solution and then terminates immediately.}
-    constraint-satisfaction heuristics \cite{dechter03} used in \cite{DPV20} with anytime%
-    \footnote{An \emph{anytime} algorithm outputs better and better solutions the longer it runs.} tree-decomposition tools \cite{MPPV04,AMW17,HS18,Tamaki17} and find tree-decomposition tools to outperform constraint-satisfaction heuristics. %TODO: Cite original tree-decomposition paper instead of MPPV04?
-    \item We compare the (sparse) ADDs \cite{bahar1997algebraic} used in \cite{DPV20} with (dense) tensors \cite{KKCLA17} and find that ADDs outperform tensors on single CPU cores.
+    \item We compare the planner based on constraint-satisfaction heuristics \cite{dechter03} used in \cite{DPV20} with a planner based on tree-decomposition tools \cite{robertson1984graph,AMW17,HS18,Tamaki17} and find tree-decomposition tools to outperform constraint-satisfaction heuristics.
+    \item We compare the ADD-based executor \cite{bahar1997algebraic} used in \cite{DPV20} with an executor based on tensors \cite{KKCLA17} and find that ADDs outperform tensors on single CPU cores.
     \item We find that project-join-tree-based algorithms contribute to a portfolio of model counters containing \cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{LM17}, and \minictd{} \cite{OD15}.
 \end{enumerate}
-These conclusions have significance beyond model counting.
-The superiority of anytime tree-decomposition tools over classical one-shot constraint-satisfaction heuristics can have broad applicability.
-Similarly, the advantage of compact data structures for dynamic programming may apply to other optimization problems.
+% These conclusions have significance beyond model counting.
+% The superiority of anytime tree-decomposition tools over classical one-shot constraint-satisfaction heuristics can have broad applicability.
+% Similarly, the advantage of compact data structures for dynamic programming may apply to other optimization problems.
 
 %%MYV: Cut paragraph to save space
 % In Section \ref{sec_jointree}, we show how project-join trees can be used for weighted model counting.

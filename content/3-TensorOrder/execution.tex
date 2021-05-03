@@ -1,5 +1,11 @@
 \section{Execution Phase: Contracting the Tensor Network}
 \label{sec:tensors:execution}
+The goal in the execution phase is to compute the contraction of an input tensor network $N$, using an input contraction tree as a guide for the computation. Recall from Defintion \ref{def:contraction} that the contraction of $N$ is a function $\tntensor{N} : \domain{\tnfree{N}} \rightarrow \mathbb{C}$, that is defined for all $\tau \in \domain{\tnfree{N}}$ by
+		\begin{equation}
+		\label{eqn:contraction}
+        \tntensor{N}(\tau) \equiv \sum_{\rho \in \domain{\tnbound{N}}} \prod_{A \in N} A((\rho \cup \tau)\restrict{\tdim{A}}).
+        \end{equation}
+
 For formulas $\varphi$ with hundreds of clauses, the corresponding tensor network produced by Theorem \ref{thm:wmc-reduction} has hundreds of bond indices. Directly following Equation \ref{eqn:contraction} in this case is infeasible, since it sums over an exponential number of terms (one for each assignment in $\domain{\tnbound{N}}$).
 
 \begin{algorithm*}[t]
@@ -24,6 +30,6 @@ For formulas $\varphi$ with hundreds of clauses, the corresponding tensor networ
 
 Instead, Algorithm \ref{alg:network-contraction} shows how to compute $\tntensor{N}$ for a tensor network $N$ using a contraction tree $T$ as a guide \cite{EP14}. The key idea is to repeatedly choose two tensors $A_1, A_2 \in N$ (according to the structure of $T$) and contract them. One can prove inductively that Algorithm \ref{alg:network-contraction} satisfies Assumption 3 of Theorem \ref{thm:alg-correctness}.
 
-Each contraction in Algorithm \ref{alg:network-contraction} contains exactly two tensors and so can be implemented as a matrix multiplication with a variety of tensor libraries (e.g. \tool{numpy} \cite{numpy} or \tool{TensorFlow} \cite{ABCCDDDGII16})
+Each contraction in Algorithm \ref{alg:network-contraction} contains exactly two tensors and so can be implemented as a matrix multiplication with a variety of tensor libraries (e.g. \tool{numpy} \cite{numpy} or \tool{TensorFlow} \cite{ABCCDDDGII16}).
 Although the choice of contraction tree does not affect the correctness of Algorithm \ref{alg:network-contraction}, it may have a dramatic impact on the running-time and memory usage. We explore this further in the following section.
 

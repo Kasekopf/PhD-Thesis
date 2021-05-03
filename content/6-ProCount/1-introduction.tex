@@ -34,8 +34,8 @@ Our solution is to model multiple types of variables by requiring the project-jo
 The first advantage is that the construction of graded project-join trees can be done by using existing tools for standard project-join trees \cite{dudek2020dpmc} in a black-box way. Tools exist to construct standard project-join trees with tree decompositions \cite{RS91} or with constraint-satisfaction heuristics \cite{tarjan1984simple,koster2001treewidth,dechter03,dechter99,bouquet1999gestion}.
 We can thus easily leverage all current and future work in tree-decomposition solvers \cite{strasser2017computing,AMW17,Tamaki17} and constraint-satisfaction heuristics to produce graded project-join trees. This is crucial for the practical success of our tool.
 
-The second advantage to our approach is in the simplicity of the algorithm. Given a project-join tree, its gradedness can be easily verified. 
-Moreover, the algorithm to compute the projected model count from a graded project-join tree is straightforward. This gives us confidence in the correctness of our implementation. 
+The second advantage to our approach is in the simplicity of the algorithm. Given a project-join tree, its gradedness can be easily verified before starting the execution stage. 
+Moreover, the execution algorithm that computes the projected model count from a graded project-join tree is straightforward. This gives us confidence in the correctness of our implementation.
 During our experimental evaluation, we found correctness errors in \dfp{} \cite{lagniez2019recursive}, \projmc{} \cite{lagniez2019recursive}, and \ssat{} \cite{lee2017solving} that we reported to the authors, who then fixed the tools. 
 We believe that this work is a step towards a certificate for the verification of projected model counters, similar to SAT solver certificates \cite{wetzler2014drat}.
 

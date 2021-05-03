@@ -63,7 +63,6 @@ The problem of \emph{tensor-network contraction}, given an input tensor network 
 \begin{definition}[Tensor Network Contraction]\label{def:contraction}
 The \emph{contraction} of a tensor network $N$ is a tensor $\tntensor{N}$ with indices $\tnfree{N}$ (the set of free indices of $N$), i.e. a function $\tntensor{N} : \domain{\tnfree{N}} \rightarrow \mathbb{C}$, that is defined for all $\tau \in \domain{\tnfree{N}}$ by
 		\begin{equation}
-        \label{eqn:contraction} 
         \tntensor{N}(\tau) \equiv \sum_{\rho \in \domain{\tnbound{N}}} \prod_{A \in N} A((\rho \cup \tau)\restrict{\tdim{A}}).
         \end{equation}
 \end{definition}

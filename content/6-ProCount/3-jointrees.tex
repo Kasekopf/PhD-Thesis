@@ -7,7 +7,7 @@ In order to adapt this framework to perform weighted projected model counting, w
 
 % In \cite{dudek2020dpmc}, performing this traversal on \emph{every} project-join tree for a CNF formula $\phi$ produces the same result: the weighted model count of $\phi$. This stems from the fact that, for weighted model counting, all projections are $\Sigma$-projections and so all projections commute. There is therefore no restriction on the order that variables can appear in the project-join tree.
 
-The challenge is that not all projections commute: $\Sigma$-projections do not commute with $\exists$-projections. Since the $\exists$-projections appear on the inside of the expression for projected model counting, we must ensure that all $\exists$-projections occur before all $\Sigma$-projections while traversing the project-join tree. We formalize this by requiring the project-join tree to be \emph{graded}:
+The challenge is that not all projections commute: $\Sigma$-projections do not commute with $\exists$-projections in general. Since the $\exists$-projections appear on the inside of the expression for projected model counting, we must ensure that all $\exists$-projections occur before all $\Sigma$-projections while traversing the project-join tree. We formalize this by requiring the project-join tree to be \emph{graded}:
 \begin{definition}[Graded Project-Join Tree]
 \label{def:graded}
     Let $\phi$ be a CNF formula with project-join tree $\T = (T, r, \gamma, \pi)$, and let $\{X, Y\}$ be a partition of $\vars(\phi)$.

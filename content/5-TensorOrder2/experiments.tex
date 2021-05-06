@@ -14,14 +14,14 @@ We aim to answer the following experimental research questions:
     \item[(RQ5)] Do parallel tensor network approaches improve a portfolio of state-of-the-art weighted model counters (\tool{cachet}, \tool{miniC2D}, \tool{d4}, \tool{ADDMC}, and \tool{gpuSAT2})?
 \end{enumerate}
 
-We implement our changes on top of \tool{TensorOrder} \cite{DDV19} (which implements Algorithm \ref{alg:wmc}; see Section \ref{sec:tensors:experiments:implementation}) to produce \tool{TensorOrder2}, a new parallel weighted model counter. Implementation details are described in Section \ref{sec:experiments:impl}. All code is available at  \url{https://github.com/vardigroup/TensorOrder}.
+We implement our changes on top of \tool{TensorOrder} (which implements Algorithm \ref{alg:wmc}; see Section \ref{sec:tensors:experiments:implementation}) to produce \tool{TensorOrder2}, a new parallel weighted model counter. Implementation details are described in Section \ref{sec:experiments:impl}. All code is available at  \url{https://github.com/vardigroup/TensorOrder}.
 
 %\paragraph{Benchmarks.} 
 We use a standard set\footnote{\url{https://github.com/vardigroup/ADDMC/releases/tag/v1.0.0}} of 1914 weighted model counting benchmarks \cite{DPV20}. Of these, 1091 benchmarks\footnote{\url{https://www.cs.rochester.edu/u/kautz/Cachet/}} are from Bayesian inference problems \cite{SBK05} and 823 benchmarks\footnote{\url{http://www.cril.univ-artois.fr/KC/benchmarks.html}} are unweighted benchmarks (from various domains) that were artificially weighted by \cite{DPV20}. For weighted model counters that cannot handle real weights larger than 1 (\tool{cachet} and \tool{gpusat2}), we rescale the weights of benchmarks with larger weights. In Experiment 3, we also consider preprocessing these 1914 benchmarks by applying $\pkg{pmc-eq}$ \cite{LM14} (which preserves weighted model count). % We apply to each benchmark, with a timeout of 1000 seconds. We remove 61 benchmarks that were fully solved by $\pkg{pmc-eq}$ (either UNSAT., or with a single solution) and 11 benchmarks that timed out, resulting in 1842 preprocessed benchmarks.
 We evaluate the performance of each tool using the PAR-2 score, which is the sum of of the wall-clock times for each completed benchmark, plus twice the timeout for each uncompleted benchmark.
 
 %\paragraph{Experimental Setup.}
-All counters are run in the Docker images (one for each counter) with Docker 19.03.5. All experiments are run on Google Cloud \tool{n1-standard-8} machines with 8 cores (Intel Haswell, 2.3 GHz) and 30 GB RAM. GPU-based counters are provided an \tool{NVIDIA Tesla V100} GPU (16 GB of onboard RAM) using NVIDIA driver 418.67 and CUDA 10.1.243.
+All counters are run in Docker images (one for each counter) with Docker 19.03.5. All experiments are run on Google Cloud \tool{n1-standard-8} machines with 8 cores (Intel Haswell, 2.3 GHz) and 30 GB RAM. GPU-based counters are provided an \tool{NVIDIA Tesla V100} GPU (16 GB of onboard RAM) using NVIDIA driver 418.67 and CUDA 10.1.243.
 
 \subsection{Implementation Details of \tool{TensorOrder2}}
 \label{sec:experiments:impl}

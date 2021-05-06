@@ -9,8 +9,8 @@ The goal in the execution phase is to compute the contraction of an input tensor
 For formulas $\varphi$ with hundreds of clauses, the corresponding tensor network produced by Theorem \ref{thm:wmc-reduction} has hundreds of bond indices. Directly following Equation \ref{eqn:contraction} in this case is infeasible, since it sums over an exponential number of terms (one for each assignment in $\domain{\tnbound{N}}$).
 
 \begin{algorithm*}[t]
-    \label{alg:network-contraction}
     \caption{Recursively contracting a tensor network}
+    \label{alg:network-contraction}
     
     \DontPrintSemicolon
     \KwIn{A tensor network $N$}

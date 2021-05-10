@@ -122,5 +122,12 @@ This completes the induction.
 Finally, to complete the proof we observe that $P(r) = X \cup Y$ and $\Phi(r) = [\varphi]$. It follows that $g^W_r(\emptyset) = \proj_X \pars{ [\varphi] \mult \prod_{x \in X} W_x } = \func{WPMC}(\phi, W, Y)$, as desired.
 \end{proof}
 
+
+This gives us a two-phase algorithm for computing the $W$-weighted $Y$-projected model count of a formula $\phi$.
+First, in the \emph{planning} phase, we construct a graded project-join tree $(T, r, \gamma, \pi)$ of $\phi$.
+We discuss algorithms for constructing graded project-join trees in Section \ref{sec:procount:planning}.
+Second, in the \emph{execution} phase, we compute $g^W_r$ by following Definition \ref{def:graded_valuation}.
+We discuss data structures for computing Definition \ref{def:graded_valuation} in Section \ref{sec:procount:execution}.
+
 % We see in Section \ref{sec_experiments} how the width impacts the computation of $W$-valuations.
-In the next section, we show how to build graded project-join trees.
+% In the next section, we show how to build graded project-join trees.

@@ -1,0 +1,11 @@
+\section{Execution Phase: Performing the Valuation}
+\label{sec:procount:execution}
+
+In the execution phase, we are given a CNF formula $\phi$ over variables $X \cup Y$, an $\{X, Y\}$-graded project-join tree $(T, r, \gamma, \pi)$ of $\phi$, and a literal-weight function $W$ over $X$.
+The goal is to compute the valuation $g^W_r$ using Definition \ref{def:graded_valuation}.
+Several data structures can be used for the pseudo-Boolean functions that occur while using Definition \ref{def:graded_valuation}.
+
+In Chapter \ref{ch:dpmc}, \emph{algebraic decision diagrams (ADDs)} were found to perform outperform tensors for computing $W$-valuations.
+An ADD is a compact representation of a pseudo-Boolean function in a sparse way as a directed acyclic graph \cite{bahar1997algebraic}.
+In this work, we therefore use ADDs to compute $W$-projected-valuations.
+This was done by Vu H. N. Phan and is not a contribution of this thesis. We refer the reader to \cite{phan2021phd} for the complete details.

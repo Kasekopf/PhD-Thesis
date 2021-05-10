@@ -1,12 +1,13 @@
 \section{Implementation and Evaluation}
 \label{sec:procount:experiments}
 
-To implement our projected model counter \procount, we modify the unprojected model counter \dpmc{}, which is based on ungraded project-join trees \cite{dudek2020dpmc}.
+To implement our projected model counter \procount, we modify the unprojected model counter \dpmc{} (see Chapter \ref{ch:dpmc}), which is based on ungraded project-join trees.
 The \dpmc{} framework includes: 
 (1) the \Lg{} planner that uses tree-decomposition techniques, 
 (2) the \htb{} planner that uses constraint-satisfaction heuristics, and
-(3) the \dmc{} executor that uses \emph{algebraic decision diagrams (ADDs)}.
+(3) the \dmc{} executor that uses algebraic decision diagrams (ADDs).
 We generalize these three components to support graded project-join trees and projected model counting.
+%\footnote{\htb{} and \dmc{} were extended to projected model counting by Vu H. N. Phan \cite{phan2021phd}.}
 
 We aim to answer the following experimental research questions:
 \begin{enumerate}
@@ -23,9 +24,9 @@ To answer RQ1, in Experiment 1 we compare the planner \Lg{} (which uses tree dec
 .
 
 To answer RQ2, in Experiment 2 we compare variable-ordering heuristics for the ADD-based executor \dmc.
-An ADD \cite{bahar1997algebraic} is a directed acyclic graph that compactly represents a pseudo-Boolean function.
+% An ADD \cite{bahar1997algebraic} is a directed acyclic graph that compactly represents a pseudo-Boolean function.
 % Each internal node of an ADD corresponds to an input variable of the function.
-An ADD requires a variable order, which strongly influences the compactness of the ADD.
+The variable order of an ADD strongly influences its compactness.
 \dmc{} implements four variable-ordering heuristics (see above): \mcs, \lexp, \lexm, and \minfill{}.
 
 To answer RQ3, in Experiment 3 we compare \procount{} to state-of-the-art exact weighted projected model counters \dfp{} \cite{lagniez2019recursive}, \projmc{} \cite{lagniez2019recursive}, and \ssat{} \cite{lee2017solving}.

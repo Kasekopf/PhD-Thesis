@@ -1,6 +1,9 @@
 \section{Planning Phase: Building Graded Project-Join Trees}
+\label{sec:procount:planning}
 
-We now show how building graded project-join trees can be reduced to building ungraded project-join trees. 
+In the planning phase, we are given a CNF formula $\phi$ over Boolean variables $X \cup Y$.
+The goal is to construct an $\{X, Y\}$-graded project-join tree of $\phi$.
+We show how building graded project-join trees can be reduced to building ungraded project-join trees. 
 This allows us our techniques for ungraded project-join trees (see Section \ref{sec_planning}) to directly compute graded project-join trees.
 
 As a building block, we first show how constructing project-join trees with free variables can be reduced to constructing ungraded project-join trees. This both illustrates the key ideas of our approach and appears as a subroutine in the larger graded reduction.

@@ -8,7 +8,7 @@ We aim to answer the following experimental research questions:
     \item[(RQ3)] Are project-join-tree-based weighted model counters competitive with state-of-the-art tools?
 \end{itemize}
 
-To answer RQ1, we build two implementations of the planning phase: \Htb{} (Heuristic Tree Builder, based on \cite{DPV20}) and \Lg{} (Line Graph, based on Chapter \ref{ch:tensors}).
+To answer RQ1, we build two implementations of the planning phase: \Htb{} (Heuristic Tree Builder, based on \cite{DPV20,phan2019weighted}) and \Lg{} (Line Graph, based on Chapter \ref{ch:tensors}).
 \Htb{} implements Algorithm \ref{alg_csp_jt} and so is representative of the constraint-satisfaction approach.
 \Htb{} contains implementations of four clustering heuristics (\Be-\ListH, \Be-\TreeH, \Bm-\ListH, and \Bm-\TreeH) and nine cluster-variable-order heuristics (\Random, \Mcs, \Invmcs, \Lexp, \Invlexp, \Lexm, \Invlexm, \Minfill, and \Invminfill).
 \Lg{} implements Algorithm \ref{alg_td_to_join} and so is representative of the tree-decomposition approach.
@@ -17,7 +17,7 @@ These solvers are all \emph{anytime}, meaning that \Lg{} never halts but continu
 On the other hand, \Htb{} produces a single project-join tree.
 We compare these implementations on the planning phase in Section \ref{sec_experiments_planning}.
 
-To answer RQ2, we build two implementations of the execution phase: \Dmc{} (for Diagram Model Counter, based on \cite{DPV20}) and \Tensor{}.
+To answer RQ2, we build two implementations of the execution phase: \Dmc{} (Diagram Model Counter, based on \cite{DPV20,phan2019weighted}) and \Tensor{}.
 \Dmc{} uses ADDs as the underlying data structure with \cudd{} \cite{somenzi2015cudd}.
 \Tensor{} uses tensors as the underlying data structure with \Numpy{} \cite{numpy}.
 We compare these implementations on the execution phase in Section \ref{sec_experiments_execution}.

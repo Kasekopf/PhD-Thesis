@@ -24,9 +24,9 @@ This breakdown enables us to study and compare different planning algorithms, di
 Such a study is the main focus of this chapter. 
 First, we replace the one-shot%
 \footnote{A \emph{one-shot} algorithm outputs exactly one solution and then terminates immediately.}
-planner based on constraint-satisfaction heuristics \cite{dechter03} used in \cite{DPV20,phan2019weighted} with an anytime%
+planner based on constraint-satisfaction heuristics \cite{dechter03} used in \tool{ADDMC} \cite{DPV20,phan2019weighted} with an anytime%
 \footnote{An \emph{anytime} algorithm outputs better and better solutions the longer it runs.} planner based on tree-decomposition tools \cite{MPPV04,AMW17,HS18,Tamaki17}.
-Second, we replace the (sparse) ADD-based executor \cite{bahar1997algebraic} used in \cite{DPV20,phan2019weighted} with an executor based on (dense) tensors \cite{KKCLA17}.
+Second, we replace the (sparse) ADD-based executor \cite{bahar1997algebraic} used in \tool{ADDMC} \cite{DPV20,phan2019weighted} with an executor based on (dense) tensors \cite{KKCLA17}.
 
 The primary contribution of this work is a dynamic-programming framework for weighted model counting based on project-join trees.
 In particular:

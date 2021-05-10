@@ -109,14 +109,14 @@ We observe that the performance of \tool{TensorOrder2} is improved by the portfo
 % Moreover, by removing the benchmarks where slicing was needed (see the line labeled ``\pkg{P4}+\pkg{GPU} no slicing''), we see that index slicing significantly boosts the \pkg{GPU} executor. 
 
 Comparing \tool{TensorOrder2} with the other counters, \tool{TensorOrder2} is competitive without preprocessing but solves fewer benchmarks than all other counters, although \tool{TensorOrder2} (with some configuration) is faster than all other counters on 158 benchmarks before preprocessing. 
-We observe that preprocessing significantly boosts \tool{TensorOrder2} relative to other counters, similar to prior observations with \tool{gpusat2} \cite{FHZ19}. \tool{TensorOrder2} solves the third-most preprocessed benchmarks of any solver and has the second-lowest PAR-2 score (notably, outperforming \tool{gpusat2} in both measures). \tool{TensorOrder2} (with some configuration) is faster than all other counters on 200 benchmarks with preprocessing. Since \tool{TensorOrder2} improves the virtual best solver on 158 benchmarks without preprocessing and on 200 benchmarks with preprocessing, we conclude that \tool{TensorOrder2} is useful as part of a portfolio of counters.
+We observe that preprocessing significantly boosts \tool{TensorOrder2} relative to other counters, similar to prior observations with \tool{gpusat2} \cite{FHZ19}. \tool{TensorOrder2} solves the third-most preprocessed benchmarks of any solver and has the second-lowest PAR-2 score (notably, outperforming \tool{gpusat2} in both measures). \tool{TensorOrder2} (with some configuration) is faster than all other counters on 176 benchmarks with preprocessing. Since \tool{TensorOrder2} improves the virtual best solver on 151 benchmarks without preprocessing and on 176 benchmarks with preprocessing, we conclude that \tool{TensorOrder2} is useful as part of a portfolio of counters.
 
 \begin{table}[t]
   \caption{\label{tab:comparison} The numbers of benchmarks solved by each counter fastest and in total after 1000 seconds, and the PAR-2 score.}
   \centering
   \begin{tabular}{l||r|r|r||r|r|r|}
   & \multicolumn{3}{c||}{Without preprocessing} & \multicolumn{3}{c|}{With \tool{pmc-eq} preprocessing} \\
-  & \# Fastest & \# Solved & PAR-2 Score & \# Fastest & \# Solved & PAR-2 Score\\ \hline 
+  & \# Fastest & \# Solved & PAR-2 & \# Fastest & \# Solved & PAR-2\\ \hline 
 \pkg{T.}+\pkg{CPU1} & 0 & 1151 & 1640803. & 0 & 1453 & 811199.\\ \hline 
 \pkg{P4}+\pkg{CPU1} & 43 & 1164 & 1562474. & 80 & 1465 & 782475.\\ \hline 
 \pkg{P4}+\pkg{CPU8} & 48 & 1185 & 1500968. & 58 & 1481 & 748745.\\ \hline 

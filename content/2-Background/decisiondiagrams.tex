@@ -4,9 +4,9 @@ An \emph{algebraic decision diagram (ADD)} is a compact representation of a pseu
 For functions with logical structure, an ADD representation can be exponentially smaller than the explicit representation.
 Originally designed for matrix multiplication and shortest path algorithms, ADDs have also been used for Bayesian inference \cite{chavira2007compiling,gogate2011approximation}, stochastic planning \cite{hoey1999spudd}, model checking \cite{kwiatkowska2007stochastic}, and model counting \cite{fargier2014knowledge,DPV20}. Formally:
 
-\begin{definition}[Algebraic Decision Diagram]
+\begin{definition}[ADD]
 \label{def:add}
-An \emph{algebraic decision diagram (ADD)} is a tuple $(X, S, \sigma, G)$, where $X$ is a set of Boolean variables, $S$ is an arbitrary set (called the \textdef{carrier set}), $\sigma: X \to \N$ is an injection (called the \textdef{diagram variable order}), and $G$ is a rooted directed acyclic graph satisfying the following three properties:
+An \emph{algebraic decision diagram (ADD)} is a tuple $(X, S, \sigma, G)$ where $X$ is a set of Boolean variables, $S$ is an arbitrary set (called the \textdef{carrier set}), $\sigma: X \to \N$ is an injection (called the \textdef{diagram variable order}), and $G$ is a rooted directed acyclic graph satisfying the following three properties:
 \begin{enumerate}
     \item Every leaf node of $G$ is labeled with an element of $S$,
     \item Every internal node of $G$ is labeled with an element of $X$ and has two outgoing edges, labeled 0 and 1, and

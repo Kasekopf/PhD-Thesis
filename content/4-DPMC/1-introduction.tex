@@ -32,11 +32,11 @@ The primary contribution of this work is a dynamic-programming framework for wei
 In particular:
 \begin{enumerate}
     \item We show that several recent algorithms for weighted model counting \cite{DPV20,fichte2020exploiting} can be unified into a single framework using project-join trees.
-    \item We compare the planner based on constraint-satisfaction heuristics \cite{dechter03} used in \cite{DPV20,phan2019weighted} with a planner based on tree-decomposition tools \cite{robertson1984graph,AMW17,HS18,Tamaki17} and find tree-decomposition tools to outperform constraint-satisfaction heuristics.
-    \item We compare the ADD-based executor \cite{bahar1997algebraic} used in \cite{DPV20,phan2019weighted} with an executor based on tensors \cite{KKCLA17} and find that ADDs outperform tensors on single CPU cores.
+    \item We compare the planner based on constraint-satisfaction heuristics \cite{dechter03} used in \tool{ADDMC} \cite{DPV20,phan2019weighted} with a planner based on tree-decomposition tools \cite{robertson1984graph,AMW17,HS18,Tamaki17} and find that tree-decomposition tools outperform constraint-satisfaction heuristics.
+    \item We compare the ADD-based executor \cite{bahar1997algebraic} used in \tool{ADDMC} \cite{DPV20,phan2019weighted} with an executor based on tensors \cite{KKCLA17} and find that ADDs outperform tensors on single CPU cores.
     \item We find that project-join-tree-based algorithms contribute to a portfolio of model counters containing \cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{LM17}, and \minictd{} \cite{OD15}.
 \end{enumerate}
-This work was done as a collaboration in a joint paper \cite{dudek2020dpmc}.
+This work was done in collaboration as a joint paper \cite{dudek2020dpmc}.
 % These conclusions have significance beyond model counting.
 % The superiority of anytime tree-decomposition tools over classical one-shot constraint-satisfaction heuristics can have broad applicability.
 % Similarly, the advantage of compact data structures for dynamic programming may apply to other optimization problems.

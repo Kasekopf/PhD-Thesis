@@ -252,9 +252,11 @@ def find_hard_benchmarks(time_cutoff):
     for counter in weighted_counters:
         data = counter_pmc_experiments[counter.name].load_count_data()
         datas.append(data)
-    for benchmark, time in zip(benchmarks.cachet_pmc_eq + benchmarks.pseudoweighted_pmc_eq, util.vbs(*datas)):
+    benchmark_names = [b.name for b in pmc_eq_benchmarks]
+    benchmark_names.sort()
+    for benchmark, time in zip(benchmark_names, util.vbs(*datas)):
         if time > time_cutoff:
-            yield str(benchmark.name)
+            yield str(benchmark)
 
 
 def gen(output):

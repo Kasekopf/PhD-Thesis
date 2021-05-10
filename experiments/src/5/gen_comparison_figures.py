@@ -72,6 +72,12 @@ weighted_counters = [
         "python /wrappers/gpusat2_wrapper.py",
         {"color": "#000000", "linestyle": "--"},
     ),
+    ModelCounter(
+        "DPMC",
+        {},
+        "python /wrappers/dpmc_wrapper.py.py",
+        {"color": "#000000", "linestyle": ":"},
+    ),
 ]
 
 
@@ -86,6 +92,11 @@ class ComparisonData:
         data.loc[data["Count"].isnull(), "Total Time"] = TIMEOUT
         data.loc[data["Total Time"].isnull(), "Total Time"] = TIMEOUT
         data.loc[data["Total Time"] > TIMEOUT, "Total Time"] = TIMEOUT
+
+        # ADDMC and DPMC easily underflow, which we could as failures
+        if "ADDMC" in self.__instance._local_directory or 'DPMC' in self.__instance._local_directory:
+            data.loc[data["Count"] == '0', "Total Time"] = TIMEOUT
+            data.loc[data["Count"] == '0.0', "Total Time"] = TIMEOUT
 
         if expected is not None and len(data) != expected:
             print(
@@ -105,6 +116,9 @@ class ComparisonData:
             return times
         else:
             return list(data["Total Time"])
+
+    def query(self, query):
+        return self.__instance.query(query)
 
     def num_solved(self):
         times = self.load_count_data()

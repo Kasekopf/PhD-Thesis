@@ -116,15 +116,16 @@ We observe that preprocessing significantly boosts \tool{TensorOrder2} relative 
   \centering
   \begin{tabular}{l||r|r|r||r|r|r|}
   & \multicolumn{3}{c||}{Without preprocessing} & \multicolumn{3}{c|}{With \tool{pmc-eq} preprocessing} \\
- & \# Fastest & \# Solved & PAR-2 & \# Fastest & \# Solved & PAR-2\\ \hline 
-\pkg{T.}+\pkg{CPU1} & 0 & 1151 & 1640803. & 0 & 1514 & 834301.\\ 
-\pkg{P4}+\pkg{CPU1} & 45 & 1164 & 1562474. & 83 & 1526 & 805547.\\ 
-\pkg{P4}+\pkg{CPU8} & 50 & 1185 & 1500968. & 67 & 1542 & 771821.\\ 
-\pkg{P4}+\pkg{GPU} & 63 & 1210 & 1436949. & 50 & 1549 & 745659.\\ \hline 
-\tool{miniC2D} & 50 & 1381 & 1131457. & 221 & 1643 & 585908.\\ 
-\tool{d4} & 615 & 1508 & 883829. & 550 & 1575 & 747318.\\ 
-\tool{cachet} & 264 & 1363 & 1156309. & 221 & 1391 & 1099003.\\ 
-\tool{ADDMC} & 640 & 1415 & 1032903. & 491 & 1436 & 1008326.\\  
-\tool{gpusat2} & 37 & 1258 & 1342646. & 25 & 1497 & 854828.\\ \hline 
+  & \# Fastest & \# Solved & PAR-2 Score & \# Fastest & \# Solved & PAR-2 Score\\ \hline 
+\pkg{T.}+\pkg{CPU1} & 0 & 1151 & 1640803. & 0 & 1453 & 811199.\\ \hline 
+\pkg{P4}+\pkg{CPU1} & 43 & 1164 & 1562474. & 80 & 1465 & 782475.\\ \hline 
+\pkg{P4}+\pkg{CPU8} & 48 & 1185 & 1500968. & 58 & 1481 & 748745.\\ \hline 
+\pkg{P4}+\pkg{GPU} & 60 & 1210 & 1436949. & 38 & 1488 & 722582.\\ \hline 
+\tool{miniC2D} & 40 & 1381 & 1131457. & 124 & 1582 & 562259.\\ \hline 
+\tool{d4} & 541 & 1508 & 883829. & 436 & 1514 & 723207.\\ \hline 
+\tool{cachet} & 230 & 1363 & 1156309. & 207 & 1330 & 1075215.\\ \hline 
+\tool{ADDMC} & 184 & 1302 & 1245470. & 33 & 1290 & 1147473.\\ \hline 
+\tool{gpusat2} & 36 & 1258 & 1342646. & 24 & 1436 & 831762.\\ \hline 
+\tool{DPMC} & 585 & 1279 & 1301363. & 654 & 1427 & 849168.\\ \hline 
 \end{tabular}
 \end{table}

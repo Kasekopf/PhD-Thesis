@@ -114,6 +114,7 @@ venv.bak/
 experiments/data
 experiments/benchmarks/*/*
 experiments/figures_pdf
+experiments/.idea
 
 # Latex compilation
 *.aux

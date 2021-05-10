@@ -247,6 +247,16 @@ def gen_fastest_table(vbs_nopmc, vbs_pmc):
     return table
 
 
+def find_hard_benchmarks(time_cutoff):
+    datas = []
+    for counter in weighted_counters:
+        data = counter_pmc_experiments[counter.name].load_count_data()
+        datas.append(data)
+    for benchmark, time in zip(benchmarks.cachet_pmc_eq + benchmarks.pseudoweighted_pmc_eq, util.vbs(*datas)):
+        if time > time_cutoff:
+            yield str(benchmark.name)
+
+
 def gen(output):
     f, axs = output.figure(0.9, ncols=1, nrows=2)
     vbs_nopmc = plot_comparison_exp(
@@ -265,8 +275,13 @@ def gen(output):
     )[: -len(pmc_eq_benchmarks_trivial)]
     f.save("5/comparison_all")
 
+
     print(gen_fastest_table(vbs_nopmc, vbs_pmc))
 
+    # Record all benchmarks that were solved by no competing solver within 100sec
+    with open('../../benchmarks/hard_100.txt', 'w') as hard_file:
+        hard_file.write("# Benchmarks that take more than 100s for gpusat2, d4, cachet, ADDMC, DPMC, and miniC2D.\n")
+        hard_file.writelines(b + '\n' for b in find_hard_benchmarks(100))
 
 if __name__ == "__main__":
     gen(util.output_pdf())

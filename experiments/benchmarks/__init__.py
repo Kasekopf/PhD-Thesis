@@ -23,3 +23,10 @@ try:
     pseudoweighted_pmc_eq = load_local("pseudoweighted/pmc_eq")
 except:
     pass
+
+
+# noinspection PyBroadException
+try:
+    hard_100 = load_from_list('hard_100.txt', lambda b: 'cachet' if 'cachet' in b else 'minic2d')
+except:
+    pass

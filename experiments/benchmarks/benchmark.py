@@ -87,3 +87,12 @@ def load_local(folder, prefix="benchmarks"):
         )
         for b in benchmarks
     ]
+
+
+def load_from_list(list_path, weight_format_finder):
+    result = []
+    for line in open(os.path.join(os.path.dirname(__file__), list_path), "r"):
+        if len(line) <= 1 or line.startswith("#"):
+            continue
+        result.append(Benchmark(line.strip(), "", weight_format_finder(line)))
+    return result

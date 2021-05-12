@@ -1,4 +1,4 @@
-\section{Parallelizing the Planning Phase with a Portfolio}
+\section{Planning Phase: Parallelizing with a Portfolio}
 \label{sec:parallel:planning}
 As discussed in Section \ref{sec:tensors:preprocessing}, $\func{FactorTree}(N)$ first computes a tree decomposition of $\struct{N}$ and then applies Theorem \ref{thm:factorable-tree}. In \cite{DDV19}, most time in the planning phase was spent finding low-width tree decompositions with a choice of single-core heuristic tree-decomposition solvers \cite{AMW17,HS18,Tamaki17}. Finding low-width tree decompositions is thus a valuable target for parallelization.
 

@@ -1,4 +1,4 @@
-\section{Parallelizing the Execution Phase with Slicing}
+\section{Execution Phase: Parallelizing with Slicing}
 \label{sec:parallel:execution}
 As discussed in Chapter \ref{ch:background}, each contraction in Algorithm \ref{alg:network-contraction} can be implemented as a matrix multiplication.
 This was done in Chapter \ref{ch:tensors} using \tool{numpy} \cite{numpy}, and it is straightforward to adjust the implementation to leverage multiple cores with \tool{numpy}, a GPU with \tool{TensorFlow} \cite{ABCCDDDGII16}, and even a TPU with \tool{TensorFlow} or \tool{jax} \cite{jax2018github}.

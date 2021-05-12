@@ -11,7 +11,9 @@ We aim to answer the following experimental research questions:
     
     \item[(RQ4)] Is the execution phase improved by leveraging multiple cores and a GPU?
     
-    \item[(RQ5)] Do parallel tensor network approaches improve a portfolio of state-of-the-art weighted model counters (\tool{cachet}, \tool{miniC2D}, \tool{d4}, \tool{ADDMC}, and \tool{gpuSAT2})?
+    \item[(RQ5)] Is the execution phase improved by leveraging a TPU in graph execution mode?
+    
+    \item[(RQ6)] Do parallel tensor network approaches improve a portfolio of state-of-the-art weighted model counters (\tool{cachet}, \tool{miniC2D}, \tool{d4}, \tool{ADDMC}, and \tool{gpuSAT2})?
 \end{enumerate}
 
 We implement our changes on top of \tool{TensorOrder} (which implements Algorithm \ref{alg:wmc}; see Section \ref{sec:tensors:experiments:implementation}) to produce \tool{TensorOrder2}, a new parallel weighted model counter. Implementation details are described in Section \ref{sec:experiments:impl}. All code is available at  \url{https://github.com/vardigroup/TensorOrder}.
@@ -21,7 +23,7 @@ We use a standard set\footnote{\url{https://github.com/vardigroup/ADDMC/releases
 We evaluate the performance of each tool using the PAR-2 score, which is the sum of of the wall-clock times for each completed benchmark, plus twice the timeout for each uncompleted benchmark.
 
 %\paragraph{Experimental Setup.}
-All counters are run in Docker images (one for each counter) with Docker 19.03.5. All experiments are run on Google Cloud \tool{n1-standard-8} machines with 8 cores (Intel Haswell, 2.3 GHz) and 30 GB RAM. GPU-based counters are provided an \tool{NVIDIA Tesla V100} GPU (16 GB of onboard RAM) using NVIDIA driver 418.67 and CUDA 10.1.243.
+All counters are run in Docker images (one for each counter) with Docker 19.03.5. All experiments are run on Google Cloud \tool{n1-standard-8} machines with 8 cores (Intel Haswell, 2.3 GHz) and 30 GB RAM. GPU-based counters are provided an \tool{NVIDIA Tesla V100} GPU (16 GB of onboard RAM) using NVIDIA driver 418.67 and CUDA 10.1.243. For TPU experiments we used v2-8 TPUs, which contain 8 TPU cores and 8 GB of onboard RAM per core.
 
 \subsection{Implementation Details of \tool{TensorOrder2}}
 \label{sec:experiments:impl}
@@ -32,8 +34,16 @@ All counters are run in Docker images (one for each counter) with Docker 19.03.5
 We implement a parallel portfolio of graph-decomposition solvers in C++ and give \tool{TensorOrder2} access to two portfolios, each with access to all cores: \pkg{P3} (which combines \pkg{Tamaki},  \pkg{FlowCutter}, and \pkg{htd}) and \pkg{P4} (which includes \pkg{Hicks} as well).
 
 \paragraph{Execution.} 
-\tool{TensorOrder} is able to perform the execution phase on a single core and on multiple cores using \pkg{numpy} v1.18.1 and \pkg{OpenBLAS} v0.2.20. In \tool{TensorOrder2}, we add the ability to contract tensors on a GPU with \pkg{TensorFlow} v2.1.0 \cite{ABCCDDDGII16}. To avoid GPU kernel calls for small contractions, \tool{TensorOrder2} uses a GPU only for contractions where one of the tensors involved has rank $\geq 20$, and reverts back to using multi-core \pkg{numpy} otherwise. We also add an implementation of Algorithm \ref{alg:tn-sliced}.
-Overall, \tool{TensorOrder2} runs the execution phase on three hardware configurations: \pkg{CPU1} (restricted to a single CPU core), \pkg{CPU8} (allowed to use all 8 CPU cores), and \pkg{GPU} (allowed to use all 8 CPU cores and use a GPU).
+\tool{TensorOrder} is able to perform the execution phase on a single core and on multiple cores using \pkg{numpy} v1.18.1 and \pkg{OpenBLAS} v0.2.20. 
+
+In \tool{TensorOrder2}, we add the ability to contract tensors on a GPU with \pkg{TensorFlow} v2.1.0 \cite{ABCCDDDGII16}. To avoid GPU kernel calls for small contractions, \tool{TensorOrder2} uses a GPU only for contractions where one of the tensors involved has rank $\geq 20$, and reverts back to using multi-core \pkg{numpy} otherwise. We also add an implementation of Algorithm \ref{alg:tn-sliced}.
+
+We also add the ability to contract tensors on a TPU with \pkg{jax} v0.2.13 \cite{jax2018github} in graph execution mode. 
+We execute each slice (i.e., each call to \func{Execute} on Line \ref{line:tn-sliced:execute} of Algorithm \ref{alg:tn-sliced}) on a separate TPU core. 
+Thus on v2-8 TPUs we execute 8 slices in parallel. 
+For comparison, we also add support for contracting tensors on multiple-CPUs with \pkg{jax} in graph execution mode.
+
+Overall, \tool{TensorOrder2} runs the execution phase in three possible configurations in eager execution mode-- \pkg{CPU1} (restricted to a single CPU core), \pkg{CPU8} (allowed to use all 8 CPU cores), \pkg{GPU} (allowed to use all 8 CPU cores and use a GPU)-- and two possible configurations in graph execution mode-- \pkg{TPU-graph} (allowed to use all 8 CPU cores, and a TPU), and \pkg{CPU8-graph} (allowed to use all 8 CPU cores).
 
 \begin{figure}
 	\centering
@@ -62,7 +72,7 @@ We also observe that \pkg{P3} and \pkg{P4} perform almost identically in Figure 
  
 \subsection{Experiment 2: Determining the Performance Factor (RQ3)}
 \label{sec:experiments:pf}
-We take each contraction tree discovered in Experiment 1 (with max-rank below 36) and use \tool{TensorOrder2} to execute the tree with a timeout of 1000 seconds on each of three hardware configurations (\pkg{CPU1}, \pkg{CPU8}, and \pkg{GPU}). We observe that the max-rank of almost all solved contraction trees is 30 or smaller.
+We take each contraction tree discovered in Experiment 1 (with max-rank below 36) and use \tool{TensorOrder2} to execute the tree with a timeout of 1000 seconds on each of the three hardware configurations in eager execution mode (\pkg{CPU1}, \pkg{CPU8}, and \pkg{GPU}). We observe that the max-rank of almost all solved contraction trees is 30 or smaller.
 
 Given a performance factor, a benchmark, and a planner, we use the planning times from Experiment 1 to determine which contraction tree would have been chosen in step 4 of Algorithm \ref{alg:wmc}. We then add the execution time of the relevant contraction tree on each hardware. In this way, we simulate Algorithm \ref{alg:wmc} for a given planner and hardware with many performance factors. 
 
@@ -88,25 +98,21 @@ Figure \ref{fig:performance-factor} indicates how varying the performance factor
 
 % Selected results are summarized in Figure \ref{fig:performance-factor}. For each planner and hardware, we select the performance factor $\alpha$ that minimizes the simulated PAR-2 score (i.e., the sum of of the wall-clock times for each completed benchmark, plus 2000 for each uncompleted benchmark). We observe that the performance factor for $\pkg{GPU}$ is typically lower than for $\pkg{CPU8}$, which is lower than for $\pkg{CPU1}$. We conclude that different combinations of planners and hardware are optimized by different performance factors. The full set of selected values is available in the supplemental material.
 
-\subsection{Experiment 3: End-to-End Performance (RQ4 and RQ5)}
-Finally, we compare \tool{TensorOrder2} with state-of-the-art weighted model counters \tool{cachet}, \tool{miniC2D}, \tool{d4}, \tool{ADDMC}, and \tool{gpuSAT2}. We consider \tool{TensorOrder2} using \pkg{P4} combined with each hardware configuration (\pkg{CPU1}, \pkg{CPU8}, and \pkg{GPU}), along with \pkg{Tamaki} + \pkg{CPU1} as the best non-parallel configuration from \cite{DDV19}. Note that \tool{P4}+\tool{CPU1} still leverages multiple cores in the planning phase. The performance factor from Experiment 2 is used for each \tool{TensorOrder2} configuration.
+\subsection{Experiment 3: End-to-End Performance (RQ4 and RQ6)}
+Next, we compare \tool{TensorOrder2} with state-of-the-art weighted model counters \tool{cachet}, \tool{miniC2D}, \tool{d4}, \tool{ADDMC}, and \tool{gpuSAT2}. We consider \tool{TensorOrder2} using \pkg{P4} combined with each the three hardware configurations in eager execution mode (\pkg{CPU1}, \pkg{CPU8}, and \pkg{GPU}), along with \pkg{Tamaki} + \pkg{CPU1} as the best non-parallel configuration from \cite{DDV19}. Note that \tool{P4}+\tool{CPU1} still leverages multiple cores in the planning phase. The performance factor from Experiment 2 is used for each \tool{TensorOrder2} configuration.
 
 We run each counter once on each benchmark (both with and without \pkg{pmc-eq} preprocessing) with a timeout of 1000 seconds and record the wall-clock time taken. When preprocessing is used, both the timeout and the recorded time include preprocessing time. For \tool{TensorOrder2}, recorded times include all of Algorithm \ref{alg:wmc}. Results are summarized in Figure \ref{fig:parallel:comparison} and Table \ref{tab:comparison}. 
 
 \begin{figure}[t]
 \begin{center}
 \input{figures/5/comparison_all.pgf}
-%\input{figures/comparison_pmc_eq.pgf}
 \vspace*{-0.5cm}
 \caption{\label{fig:parallel:comparison} A cactus plot of the number of benchmarks solved by various counters, without (above) and with (below) the \tool{pmc-eq}  preprocessor.}
 \end{center}
 \vspace*{-0.8cm}
 \end{figure}
 
-We observe that the performance of \tool{TensorOrder2} is improved by the portfolio planner and, on hard benchmarks, by executing on a multi-core CPU and on a GPU. The flat line at 3 seconds for $\pkg{P4}+\pkg{GPU}$ is caused by overhead from initializing the GPU.
-
-
-% Moreover, by removing the benchmarks where slicing was needed (see the line labeled ``\pkg{P4}+\pkg{GPU} no slicing''), we see that index slicing significantly boosts the \pkg{GPU} executor. 
+We observe that \tool{TensorOrder2} is improved by the portfolio planner and, on hard benchmarks, by executing on a multi-core CPU and on a GPU. The flat line at 3 seconds for $\pkg{P4}+\pkg{GPU}$ is caused by overhead from initializing the GPU.
 
 Comparing \tool{TensorOrder2} with the other counters, \tool{TensorOrder2} is competitive without preprocessing but solves fewer benchmarks than all other counters, although \tool{TensorOrder2} (with some configuration) is faster than all other counters on 158 benchmarks before preprocessing. 
 We observe that preprocessing significantly boosts \tool{TensorOrder2} relative to other counters, similar to prior observations with \tool{gpusat2} \cite{FHZ19}. \tool{TensorOrder2} solves the third-most preprocessed benchmarks of any solver and has the second-lowest PAR-2 score (notably, outperforming \tool{gpusat2} in both measures). \tool{TensorOrder2} (with some configuration) is faster than all other counters on 176 benchmarks with preprocessing. Since \tool{TensorOrder2} improves the virtual best solver on 151 benchmarks without preprocessing and on 176 benchmarks with preprocessing, we conclude that \tool{TensorOrder2} is useful as part of a portfolio of counters.
@@ -129,3 +135,49 @@ We observe that preprocessing significantly boosts \tool{TensorOrder2} relative 
 \tool{DPMC} & 585 & 1279 & 1301363. & 654 & 1427 & 849168.\\ \hline 
 \end{tabular}
 \end{table}
+
+\section{Experiment 4: Executing on a TPU (RQ5)}
+\label{sec:parallel:exp:tpu}
+\begin{figure}[t]
+\begin{center}
+\input{figures/5/tpu.pgf}
+%\input{figures/comparison_pmc_eq.pgf}
+\vspace*{-0.5cm}
+\caption{\label{fig:parallel:tpu} The compilation and execution time of performing tensor-network contraction on a CPU vs. on a TPU, based on the max-rank of the contraction tree. \tool{TPU-graph} took more than 1000 seconds in the compilation step when the sliced max-rank is above 17.}
+\end{center}
+\vspace*{-0.8cm}
+\end{figure}
+
+Finally, we examine the feasibility of leveraging a TPU in the execution phase.
+
+
+% Based on Section \ref{sec:parallel:execution:tpu}, we expect TPU approaches to perform well on benchmarks that require significant slicing. 
+
+% We first consider a set of 32 tensor network benchmarks $N$ where every counter in Experiment 3 timed out but where $\tool{P4}$ was able to find a contraction tree $T$ for $N$ and a set of slice variables $I \subseteq \tnbound{N}$ (with a timeout of 1000 seconds) s.t. $|I| < 20$ and the memory cost $\func{MemCost}(N,T,I)$ is below 8GB (the memory available on each TPU core).
+% On each benchmark $(N, T, I)$ with a timeout of 1000 seconds, we run $\func{Execute}(N[\eta], T[\eta])$ using \pkg{TPU-graph} for each $\eta \in [I]$ and record the compilation time along with the total execution time.
+% Unfortunately, we observe that on all 32 benchmarks the compilation takes more than 1000 seconds and so the computation times out.
+
+We consider a tensor network $N$ whose contraction is the number of vertex covers of a randomly-generated cubic graph with 200 vertices \cite{KCMR18}. 
+Using the \pkg{FlowCutter} planner, we construct a contraction tree $T$ for $N$ of max-rank 27. 
+For each $k \in \{10, 11, \cdots, 20\}$, then, we slice $N$ greedily to get slice variables $I_k \subseteq \tnbound{N}$ so that $T[I_k]$ has max-rank $k$. 
+Using each of the execution configurations \pkg{CPU8}, \pkg{CPU8-graph}, and \pkg{TPU-graph}, we compute $\func{Execute}(N[\eta], T[\eta])$ for the first 80 slices $\eta \in [I_k]$. 
+We then compute the average time to contract each slice and (for configurations in graph execution mode) the XLA compilation time.
+
+Results are summarized in Figure \ref{fig:parallel:tpu}. 
+We observe that, as expected, the compilation time in graph execution mode (both \pkg{CPU8-graph} and \pkg{TPU-graph}) is significantly longer than the time for a single slice in eager execution mode (\pkg{CPU8}). 
+Moreover, the execution time in graph execution mode is faster than the execution time in eager execution mode.
+
+We also observe that the compilation time of \pkg{TPU-graph} scales dramatically in sliced max-rank, which is the maximum number of indices of the tensors involved in the computation.
+In particular, on tensors with more than 17 dimensions the compilation time of \pkg{TPU-graph} is above 1000 seconds and so the compilation times out.
+% Further manual investigations
+% This observation explains why all 32 of our initial benchmark set also timed out: all 32 benchmarks involved tensors with more than 25 indices.
+% On the other hand, the compilation time of \pkg{CPU8-graph} does not increase as the number of tensor indices increases.
+
+Finally, we observe that the execution time of \pkg{CPU8-graph} is less than the execution time of \pkg{TPU-graph}.
+We hypothesize that this is an artifact of the small tensors involved in these experiments. Since every index in the tensors we consider has size 2, tensors with no more than 17 indices are no larger than 1MB.
+Once the compilation bottleneck is improved and tensor networks with larger tensors may be used, the execution time of \pkg{TPU-graph} may outperform \pkg{CPU8-graph}.
+
+We emphasize that these results should be taken only as initial observations.
+% We hope that future development of tensor libraries for TPUs, especially in the compilation of the XLA graph programs with high-dimensional tensors, will improve performance.
+Further analysis of XLA compilation with high-dimensional tensors may help to understand and improve the poor performance of tensor-network-based methods for model counting on a TPU.
+Unfortunately, as the implementation of the XLA compiler for a TPU is proprietary and available for use only as a black-box tool, we leave an in-depth analysis for future work.

@@ -84,7 +84,7 @@ def gen(output):
     ax.set_ylim(bottom=0.0001, top=1000)
     ax.set_xlim(left=9, right=21)
     ax.set_ylabel("Time (s)")
-    ax.set_xlabel("Sliced Max Rank")
+    ax.set_xlabel("$k$: Sliced Max Rank")
     util.set_legend(ax, loc="upper right")
 
     f.save("5/tpu")

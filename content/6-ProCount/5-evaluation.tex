@@ -55,22 +55,10 @@ All code and data are available (\url{https://github.com/vardigroup/DPMC/tree/v2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Experiment 1: Comparing Planners}
-
-In this experiment, we run all configurations of the planners \Lg{} and \htb{} once on each CNF benchmark with a timeout of 100 seconds.
-We present results in Figure \ref{figPlanning}.
-Each point $(x, y)$ on a plotted curve indicates that, within $x$ seconds on each of $y$ benchmarks, the first graded project-join tree produced by the corresponding planner has width at most \maxWidth{}.
-We choose \maxWidth{} because previous work shows that executors do not handle larger project-join trees well \cite{DDV19,dudek2020dpmc}. % JD: This is more true for tensors than for ADDs, let's just leave it out
-% Figure \ref{figPlanning} is qualitatively similar for other width cutoffs.
-
-While \Lg{} is an \emph{anytime} tool that produces several trees (of decreasing widths) for each benchmark, we use only the first tree produced on each benchmark.
-We find that this does not significantly affect the performance of \procount{}.
-
-The tree-decomposition-based planner \Lg{} outputs more low-width trees than the constraint-satisfaction-based planner \htb{}.
-Moreover, for \Lg{}, the tree decomposer \flowcutter{} is faster than \htd{} and \tamaki{}.
-Thus we use \Lg{} with \flowcutter{} in \procount{} for later experiments.
 \begin{figure}[t]
     \centering
     \input{figures/6/figPlanning.pgf}
+    \vspace*{-0.9cm}
     \caption{
         Experiment 1 compares the tree-decomposition-based planner \Lg{} to the constraint-satisfaction-based planner \htb{}.
 	    A planner ``solves'' a benchmark when it finds a project-join tree of width \maxWidth{} or lower.
@@ -85,18 +73,26 @@ Thus we use \Lg{} with \flowcutter{} in \procount{} for later experiments.
     \label{figPlanning}
 \end{figure}
 
+In this experiment, we run all configurations of the planners \Lg{} and \htb{} once on each CNF benchmark with a timeout of 100 seconds.
+We present results in Figure \ref{figPlanning}.
+Each point $(x, y)$ on a plotted curve indicates that, within $x$ seconds on each of $y$ benchmarks, the first graded project-join tree produced by the corresponding planner has width at most \maxWidth{}.
+We choose \maxWidth{} because previous work shows that executors do not handle larger project-join trees well \cite{DDV19,dudek2020dpmc}. % JD: This is more true for tensors than for ADDs, let's just leave it out
+% Figure \ref{figPlanning} is qualitatively similar for other width cutoffs.
+
+While \Lg{} is an \emph{anytime} tool that produces several trees (of decreasing widths) for each benchmark, we use only the first tree produced on each benchmark.
+We find that this does not significantly affect the performance of \procount{}.
+
+The tree-decomposition-based planner \Lg{} outputs more low-width trees than the constraint-satisfaction-based planner \htb{}.
+Moreover, for \Lg{}, the tree decomposer \flowcutter{} is faster than \htd{} and \tamaki{}.
+Thus we use \Lg{} with \flowcutter{} in \procount{} for later experiments.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Experiment 2: Comparing Execution Heuristics}
-
-In this experiment, we take the 346 graded project-join trees produced by \Lg{} with \flowcutter{} in Experiment 1 % (107 trees of widths 1-30 and 239 trees of widths 31-99)
-and run \dmc{} once for 100 seconds with each of four ADD variable-ordering heuristics. 
-We present the execution time of each heuristic (excluding planning time) in Figure \ref{figExecution}. 
-We observe that \mcs{} and \lexp{} outperform \lexm{} and \minfill{}.
-We use \dmc{} with \mcs{} in \procount{} for Experiment 3.
 \begin{figure}[t]
     \centering
     \input{figures/6/figExecution.pgf}
+    \vspace*{-0.9cm}
     \caption{
         Experiment 2 compares variable-ordering heuristics (\mcs{}, \lexp, \lexm, and \minfill{}) for the ADD-based executor \dmc.
         \mcs{} and \lexp{} are significantly faster than \lexm{} and \minfill{}.
@@ -105,27 +101,19 @@ We use \dmc{} with \mcs{} in \procount{} for Experiment 3.
     \label{figExecution}
 \end{figure}
 
+In this experiment, we take the 346 graded project-join trees produced by \Lg{} with \flowcutter{} in Experiment 1 % (107 trees of widths 1-30 and 239 trees of widths 31-99)
+and run \dmc{} once for 100 seconds with each of four ADD variable-ordering heuristics. 
+We present the execution time of each heuristic (excluding planning time) in Figure \ref{figExecution}. 
+We observe that \mcs{} and \lexp{} outperform \lexm{} and \minfill{}.
+We use \dmc{} with \mcs{} in \procount{} for Experiment 3.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Experiment 3: Comparing Weighted Projected Model Counters}
-
-Informed by Experiments 1 and 2, we choose \Lg{} with \flowcutter{} as the planner and \dmc{} with \mcs{} as the executor for our framework \procount.
-We compare \procount{} with the weighted projected model counters \dfp{}, \projmc{}, and \ssat{}.
-Since all benchmarks are satisfiable
-% (checked by the SAT solver \sat{} \cite{soos2009extending})
-with positive literal weights, the model counts must be positive.
-Thus, for all tools, we exclude outputs that are zero (possible floating-point underflow).
-We are confident that the remaining results are correct.
-Differences in model counts among tools are less than $10^{-6}$.
-
-Figure \ref{figSolving} shows the performance of \procount{}, \dfp{}, \projmc{}, and \ssat{} with a 1000-second timeout. 
-Additional statistics are given in Table \ref{tableSolving}. 
-Of \benchmarks{} benchmarks, 390 are solved by at least one of four tools.
-\procount{} achieves the shortest solving time on 131 benchmarks, including \dpmcUniqueBenchmarks{} solved by none of the other three tools.
-Between the two \emph{virtual best solvers} in Figure \ref{figSolving}, \vbs1 (all four tools) is significantly faster than \vbs0 (three existing tools, without \procount).
 \begin{figure}[t]
     \centering
     \input{figures/6/figSolving.pgf}
+    \vspace*{-0.9cm}
     \caption{
         Experiment 3 compares our framework \procount{} to the state-of-the-art exact weighted projected model counters \dfp, \projmc{}, and \ssat{}.
         \vbs0 is the virtual best solver of the three existing tools, excluding \procount.
@@ -142,7 +130,8 @@ Between the two \emph{virtual best solvers} in Figure \ref{figSolving}, \vbs1 (a
         There are \solvedBenchmarks{} benchmarks solved by at least one of four tools.
         By including \procount, the portfolio of tools solves \dpmcUniqueBenchmarks{} more benchmarks and achieves shorter solving time on 87 other benchmarks.
     }
-    \begin{tabular}{|l|r|r|r|r|} \hline
+    \vspace*{0.1cm}
+    \begin{tabular}{l|r|r|r|r|}
         \multirow{2}{*}{Tool} & \multicolumn{3}{c|}{Number of benchmarks solved (of \benchmarks)} & \multirow{2}{*}{PAR-2 score} \\ \cline{2-4}
         & By no other & In shortest time & In total & \\ \hline
         \procount & \dpmcUniqueBenchmarks & \dpmcFastestBenchmarks & 283 & 1139215 \\ \hline
@@ -154,6 +143,22 @@ Between the two \emph{virtual best solvers} in Figure \ref{figSolving}, \vbs1 (a
     \end{tabular}
     \label{tableSolving}
 \end{table}
+
+Informed by Experiments 1 and 2, we choose \Lg{} with \flowcutter{} as the planner and \dmc{} with \mcs{} as the executor for our framework \procount.
+We compare \procount{} with the weighted projected model counters \dfp{}, \projmc{}, and \ssat{}.
+Since all benchmarks are satisfiable
+% (checked by the SAT solver \sat{} \cite{soos2009extending})
+with positive literal weights, the model counts must be positive.
+Thus, for all tools, we exclude outputs that are zero (possible floating-point underflow).
+We are confident that the remaining results are correct.
+Differences in model counts among tools are less than $10^{-6}$.
+
+Figure \ref{figSolving} shows the performance of \procount{}, \dfp{}, \projmc{}, and \ssat{} with a 1000-second timeout. 
+Additional statistics are given in Table \ref{tableSolving}. 
+Of \benchmarks{} benchmarks, 390 are solved by at least one of four tools.
+\procount{} achieves the shortest solving time on 131 benchmarks, including \dpmcUniqueBenchmarks{} solved by none of the other three tools.
+Between the two \emph{virtual best solvers} in Figure \ref{figSolving}, \vbs1 (all four tools) is significantly faster than \vbs0 (three existing tools, without \procount).
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -168,6 +173,7 @@ Figure \ref{time_vs_width} shows how these widths relate to PAR-2 scores of proj
 \begin{figure}[t]
     \centering
     \input{figures/6/figWidths.pgf}
+    \vspace*{-0.9cm}
     \caption{
         A plot of mean PAR-2 scores (in seconds) against mean project-join tree widths.
         On this plot, each projected model counter (\procount{}, \dfp{}, \projmc, or \ssat) is represented by a curve, on which a point $(x, y)$ indicates that $x$ is the central moving average of 10 consecutive project-join tree widths ($1 \le w_1 < w_2 < \ldots < w_{10} \le 99$) and $y$ is the average PAR-2 score of the benchmarks whose project-join trees have widths $w$ where $w_1 \le w \le w_{10}$.

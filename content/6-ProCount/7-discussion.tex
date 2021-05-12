@@ -5,7 +5,7 @@ We adapted an existing dynamic-programming framework \cite{dudek2020dpmc} to per
 This framework decomposes projected model counting into two phases.
 First, the planning phase produces a graded project-join tree from a CNF formula.
 Second, the execution phase uses the this tree to guide the computation of the projected model count of the formula \wrt{} a literal-weight function. 
-We proved that algorithms for building project-join trees can be used to build graded project-join trees.
+We proved that algorithms for building project-join trees can be used in a black-box way to build graded project-join trees.
 
 Our framework \procount{} is competitive with the exact weighted projected model counters \dfp{} \cite{lagniez2019recursive}, \projmc{} \cite{lagniez2019recursive}, and \ssat{} \cite{lee2017solving}. 
 \procount{} considerably improves the virtual best solver and thus is a valuable addition to the portfolio.

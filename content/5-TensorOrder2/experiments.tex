@@ -36,9 +36,9 @@ We implement a parallel portfolio of graph-decomposition solvers in C++ and give
 \paragraph{Execution.} 
 \tool{TensorOrder} is able to perform the execution phase on a single core and on multiple cores using \pkg{numpy} v1.18.1 and \pkg{OpenBLAS} v0.2.20. 
 
-In \tool{TensorOrder2}, we add the ability to contract tensors on a GPU with \pkg{TensorFlow} v2.1.0 \cite{ABCCDDDGII16}. To avoid GPU kernel calls for small contractions, \tool{TensorOrder2} uses a GPU only for contractions where one of the tensors involved has rank $\geq 20$, and reverts back to using multi-core \pkg{numpy} otherwise. We also add an implementation of Algorithm \ref{alg:tn-sliced}.
+We add to \tool{TensorOrder2} a way to contract tensors on a GPU with \pkg{TensorFlow} v2.1.0 \cite{ABCCDDDGII16}. To avoid GPU kernel calls for small contractions, \tool{TensorOrder2} uses a GPU only for contractions where one of the tensors involved has rank $\geq 20$, and reverts back to using multi-core \pkg{numpy} otherwise. We also add an implementation of Algorithm \ref{alg:tn-sliced}.
 
-We also add the ability to contract tensors on a TPU with \pkg{jax} v0.2.13 \cite{jax2018github} in graph execution mode. 
+We also add a way to contract tensors on a TPU with \pkg{jax} v0.2.13 \cite{jax2018github} in graph execution mode. 
 We execute each slice (i.e., each call to \func{Execute} on Line \ref{line:tn-sliced:execute} of Algorithm \ref{alg:tn-sliced}) on a separate TPU core. 
 Thus on v2-8 TPUs we execute 8 slices in parallel. 
 For comparison, we also add support for contracting tensors on multiple-CPUs with \pkg{jax} in graph execution mode.
@@ -132,7 +132,7 @@ Figure \ref{fig:performance-factor} indicates how varying the performance factor
 \end{table}
 
 \subsection{Experiment 3: End-to-End Performance (RQ4 and RQ6)}
-Next, we compare \tool{TensorOrder2} with state-of-the-art weighted model counters \tool{cachet}, \tool{miniC2D}, \tool{d4}, \tool{ADDMC}, and \tool{gpuSAT2}. We consider \tool{TensorOrder2} using \pkg{P4} combined with each the three hardware configurations in eager execution mode (\pkg{CPU1}, \pkg{CPU8}, and \pkg{GPU}), along with \pkg{Tamaki} + \pkg{CPU1} as the best non-parallel configuration from \cite{DDV19}. Note that \tool{P4}+\tool{CPU1} still leverages multiple cores in the planning phase. The performance factor from Experiment 2 is used for each \tool{TensorOrder2} configuration.
+Next, we compare \tool{TensorOrder2} with existing state-of-the-art weighted model counters \tool{cachet}, \tool{miniC2D}, \tool{d4}, \tool{ADDMC}, and \tool{gpuSAT2}. We consider \tool{TensorOrder2} using \pkg{P4} as the planner combined with each the three hardware configurations in eager execution mode (\pkg{CPU1}, \pkg{CPU8}, and \pkg{GPU}), along with \pkg{Tamaki}+\pkg{CPU1} as the best non-parallel configuration from \cite{DDV19}. Note that \tool{P4}+\tool{CPU1} still leverages multiple cores in the planning phase. The performance factor from Experiment 2 is used for each \tool{TensorOrder2} configuration.
 
 We run each counter once on each benchmark (both with and without \pkg{pmc-eq} preprocessing) with a timeout of 1000 seconds and record the wall-clock time taken. When preprocessing is used, both the timeout and the recorded time include preprocessing time. For \tool{TensorOrder2}, recorded times include all of Algorithm \ref{alg:wmc}. Results are summarized in Figure \ref{fig:parallel:comparison} and Table \ref{tab:comparison}. 
 

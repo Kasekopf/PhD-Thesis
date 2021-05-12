@@ -141,7 +141,7 @@ We observe that \tool{TensorOrder2} is improved by the portfolio planner and, on
 Comparing \tool{TensorOrder2} with the other counters, \tool{TensorOrder2} is competitive without preprocessing but solves fewer benchmarks than all other counters, although \tool{TensorOrder2} (with some configuration) is faster than all other counters on 158 benchmarks before preprocessing. 
 We observe that preprocessing significantly boosts \tool{TensorOrder2} relative to other counters, similar to prior observations with \tool{gpusat2} \cite{FHZ19}. \tool{TensorOrder2} solves the third-most preprocessed benchmarks of any solver and has the second-lowest PAR-2 score (notably, outperforming \tool{gpusat2} in both measures). \tool{TensorOrder2} (with some configuration) is faster than all other counters on 176 benchmarks with preprocessing. Since \tool{TensorOrder2} improves the virtual best solver on 151 benchmarks without preprocessing and on 176 benchmarks with preprocessing, we conclude that \tool{TensorOrder2} is useful as part of a portfolio of counters.
 
-\section{Experiment 4: Executing on a TPU (RQ5)}
+\subsection{Experiment 4: Executing on a TPU (RQ5)}
 \label{sec:parallel:exp:tpu}
 \begin{figure}[t]
 \begin{center}

@@ -59,11 +59,11 @@ def gen(output):
         "DisplayInfo", ["name", "data", "color", "marker"]
     )
     lines = [
-        DisplayInfo("Compile (TPU)", jax_tpu.compilation_time(), "#ffb14e", "p"),
-        DisplayInfo("Compile (CPU)", jax_cpu.compilation_time(), "#0000dd", "p"),
-        DisplayInfo("numpy", numpy.avg_time_per_slice_from_total(), "#dd0f0f", "o"),
-        DisplayInfo("Execute (TPU)", jax_tpu.avg_time_per_slice(), "#ffb14e", "P"),
-        DisplayInfo("Execute (CPU)", jax_cpu.avg_time_per_slice(), "#0000dd", "P"),
+        DisplayInfo("Compile (TPU8-graph)", jax_tpu.compilation_time(), "#ffb14e", "p"),
+        DisplayInfo("Compile (CPU8-graph)", jax_cpu.compilation_time(), "#0000dd", "p"),
+        DisplayInfo("Execute (CPU8)", numpy.avg_time_per_slice_from_total(), "#dd0f0f", "o"),
+        DisplayInfo("Execute (TPU8-graph)", jax_tpu.avg_time_per_slice(), "#ffb14e", "P"),
+        DisplayInfo("Execute (CPU8-graph)", jax_cpu.avg_time_per_slice(), "#0000dd", "P"),
     ]
 
     for exp_info in lines:

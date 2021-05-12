@@ -1962,8 +1962,8 @@
 \definecolor{currentstroke}{rgb}{1.000000,0.694118,0.305882}%
 \pgfsetstrokecolor{currentstroke}%
 \pgfsetdash{}{0pt}%
-\pgfpathmoveto{\pgfqpoint{4.641951in}{2.505298in}}%
-\pgfpathlineto{\pgfqpoint{4.891951in}{2.505298in}}%
+\pgfpathmoveto{\pgfqpoint{4.213526in}{2.505298in}}%
+\pgfpathlineto{\pgfqpoint{4.463526in}{2.505298in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
@@ -1985,7 +1985,7 @@
 \pgfusepath{stroke,fill}%
 }%
 \begin{pgfscope}%
-\pgfsys@transformshift{4.766951in}{2.505298in}%
+\pgfsys@transformshift{4.338526in}{2.505298in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \end{pgfscope}%
@@ -1993,7 +1993,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=4.916951in,y=2.461548in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont Compile (TPU)}%
+\pgftext[x=4.488526in,y=2.461548in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont Compile (TPU8-graph)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetrectcap%
@@ -2002,8 +2002,8 @@
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.866667}%
 \pgfsetstrokecolor{currentstroke}%
 \pgfsetdash{}{0pt}%
-\pgfpathmoveto{\pgfqpoint{4.641951in}{2.330329in}}%
-\pgfpathlineto{\pgfqpoint{4.891951in}{2.330329in}}%
+\pgfpathmoveto{\pgfqpoint{4.213526in}{2.330329in}}%
+\pgfpathlineto{\pgfqpoint{4.463526in}{2.330329in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
@@ -2025,7 +2025,7 @@
 \pgfusepath{stroke,fill}%
 }%
 \begin{pgfscope}%
-\pgfsys@transformshift{4.766951in}{2.330329in}%
+\pgfsys@transformshift{4.338526in}{2.330329in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \end{pgfscope}%
@@ -2033,7 +2033,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=4.916951in,y=2.286579in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont Compile (CPU)}%
+\pgftext[x=4.488526in,y=2.286579in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont Compile (CPU8-graph)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetrectcap%
@@ -2042,8 +2042,8 @@
 \definecolor{currentstroke}{rgb}{0.866667,0.058824,0.058824}%
 \pgfsetstrokecolor{currentstroke}%
 \pgfsetdash{}{0pt}%
-\pgfpathmoveto{\pgfqpoint{4.641951in}{2.161586in}}%
-\pgfpathlineto{\pgfqpoint{4.891951in}{2.161586in}}%
+\pgfpathmoveto{\pgfqpoint{4.213526in}{2.155359in}}%
+\pgfpathlineto{\pgfqpoint{4.463526in}{2.155359in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
@@ -2069,7 +2069,7 @@
 \pgfusepath{stroke,fill}%
 }%
 \begin{pgfscope}%
-\pgfsys@transformshift{4.766951in}{2.161586in}%
+\pgfsys@transformshift{4.338526in}{2.155359in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \end{pgfscope}%
@@ -2077,7 +2077,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=4.916951in,y=2.117836in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont numpy}%
+\pgftext[x=4.488526in,y=2.111609in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont Execute (CPU8)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetrectcap%
@@ -2086,8 +2086,8 @@
 \definecolor{currentstroke}{rgb}{1.000000,0.694118,0.305882}%
 \pgfsetstrokecolor{currentstroke}%
 \pgfsetdash{}{0pt}%
-\pgfpathmoveto{\pgfqpoint{4.641951in}{1.993560in}}%
-\pgfpathlineto{\pgfqpoint{4.891951in}{1.993560in}}%
+\pgfpathmoveto{\pgfqpoint{4.213526in}{1.980390in}}%
+\pgfpathlineto{\pgfqpoint{4.463526in}{1.980390in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
@@ -2116,7 +2116,7 @@
 \pgfusepath{stroke,fill}%
 }%
 \begin{pgfscope}%
-\pgfsys@transformshift{4.766951in}{1.993560in}%
+\pgfsys@transformshift{4.338526in}{1.980390in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \end{pgfscope}%
@@ -2124,7 +2124,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=4.916951in,y=1.949810in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont Execute (TPU)}%
+\pgftext[x=4.488526in,y=1.936640in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont Execute (TPU8-graph)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetrectcap%
@@ -2133,8 +2133,8 @@
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.866667}%
 \pgfsetstrokecolor{currentstroke}%
 \pgfsetdash{}{0pt}%
-\pgfpathmoveto{\pgfqpoint{4.641951in}{1.818590in}}%
-\pgfpathlineto{\pgfqpoint{4.891951in}{1.818590in}}%
+\pgfpathmoveto{\pgfqpoint{4.213526in}{1.805420in}}%
+\pgfpathlineto{\pgfqpoint{4.463526in}{1.805420in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
@@ -2163,7 +2163,7 @@
 \pgfusepath{stroke,fill}%
 }%
 \begin{pgfscope}%
-\pgfsys@transformshift{4.766951in}{1.818590in}%
+\pgfsys@transformshift{4.338526in}{1.805420in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \end{pgfscope}%
@@ -2171,7 +2171,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=4.916951in,y=1.774840in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont Execute (CPU)}%
+\pgftext[x=4.488526in,y=1.761670in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont Execute (CPU8-graph)}%
 \end{pgfscope}%
 \end{pgfpicture}%
 \makeatother%

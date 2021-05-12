@@ -1,11 +1,11 @@
-\section{Execution Phase: Parallelizing with Slicing}
+\section{Execution Phase: Parallelizing with Index Slicing}
 \label{sec:parallel:execution}
 As discussed in Chapter \ref{ch:background}, each contraction in Algorithm \ref{alg:network-contraction} can be implemented as a matrix multiplication.
-This was done in Chapter \ref{ch:tensors} using \tool{numpy} \cite{numpy}, and it is straightforward to adjust the implementation to leverage multiple cores with \tool{numpy}, a GPU with \tool{TensorFlow} \cite{ABCCDDDGII16}, and even a TPU with \tool{TensorFlow} or \tool{jax} \cite{jax2018github}.
-
-In this section, we first discuss challenges in dealing with GPU on-board memory and our solution of index slicing. We then discuss how index slicing can also be used to run the execution phase on a TPU.
+This was done in Chapter \ref{ch:tensors} using \tool{numpy} \cite{numpy}, and it is straightforward to adjust the implementation to leverage multiple cores with \tool{numpy} or on a GPU with \tool{TensorFlow} \cite{ABCCDDDGII16}. 
+In Section \ref{sec:parallel:execution:gpu}, we discuss challenges in dealing with GPU on-board memory and our solution of index slicing. In Section \ref{sec:parallel:execution:tpu}, we then discuss how index slicing allows us to efficiently run the execution phase on a TPU using \tool{jax} \cite{jax2018github}.
 
 \subsection{Contraction on a GPU}
+\label{sec:parallel:execution:gpu}
 The primary challenge that emerges when using a GPU is dealing with the small onboard memory. For example, the \tool{NVIDIA Tesla-V100} (which we use in Section \ref{sec:experiments}) has just 16GB of onboard memory. This limits the size of tensors that can be easily manipulated. One solution is to perform a single contraction of two tensors cross multiple GPU kernel calls \cite{RRBSKH08}. This is similar to the technique implemented in \tool{gpusat2} \cite{FHZ19}. This solution, however, require parts of the input tensors to be copied into and out of GPU memory multiple times for each contraction, which incurs significant slowdown.
 
 Instead, we use \emph{index slicing} \cite{CZHNS18,GK20,VBNHRBM19} of a tensor network $N$. This technique is analogous to \emph{conditioning} on Bayesian networks \cite{darwiche01,dechter99,pearl86,SAS94}. The idea is to represent $\tntensor{N}$ as the sum of contractions of smaller tensor networks. Each smaller network contains tensor slices:
@@ -57,7 +57,7 @@ A TPU (tensor processing unit) \cite{JYPPABBBBB17} is a specialized hardware des
 Several tensor libraries (e.g. \tool{TensorFlow} \cite{ABCCDDDGII16} and \tool{jax} \cite{jax2018github}) support tensor contraction on a TPU.
 Thus tensor networks provide a natural framework to leverage TPUs for model counting.
 
-The primary challenge that emerges is that leveraging a TPU requires an additional compilation step.
+The primary challenge that emerges is that computing on a TPU requires an additional compilation step.
 So far, we have focused on using tensor libraries (\tool{numpy} \cite{numpy} and \tool{TensorFlow} \cite{ABCCDDDGII16}) in \emph{eager execution} mode.
 In eager execution mode, a tensor library performs each tensor operation directly on a CPU or GPU using precompiled and preoptimized code.
 Thus no extra compilation is needed at runtime.
@@ -71,7 +71,8 @@ In general, the compilation step required by graph execution may take orders of 
 This trade-off is beneficial in the context of neural network training and inference, where the same computation (say, training a neural network once on a single batch of examples) is repeated many times with different inputs.
 The challenge, then, is to identify repeated, independent computations in the contraction of a tensor network that may be profitably compiled.
 
-Our key observation is that Algorithm \ref{alg:tn-sliced} computes the contraction of a tensor network through a sequence of similar, independent computations: the contraction of the sliced networks $N[\eta]$. In particular, each call to $\func{Execute}$ on Line \ref{line:tn-sliced:execute} of Algorithm \ref{alg:tn-sliced} has the same computational structure when following Algorithm \ref{alg:network-contraction}. For each pair $\eta, \eta' \in [I]$, 
+Our key observation is that Algorithm \ref{alg:tn-sliced} computes the contraction of a tensor network through a sequence of similar, independent computations: the contraction of the sliced networks $N[\eta]$. In particular, each call to $\func{Execute}$ on Line \ref{line:tn-sliced:execute} of Algorithm \ref{alg:tn-sliced} has the same computational structure when following Algorithm \ref{alg:network-contraction}. This occurs because, for each pair $\eta, \eta' \in [I]$, there is a natural correspondence between the tensors of $N[\eta]$ and $N[\eta']$, where two tensors $A[\eta] \in N[\eta]$ and $A[\eta'] \in N[\eta']$ correspond if they are each slices of the same tensor $A \in N$. The tensors $A[\eta]$ and $A[\eta']$ have the same set of indices and differ only in their specific entries.
+It follows that the computations of $\func{Execute}(N[\eta], T[\eta])$ and $\func{Execute}(N[\eta'], T[\eta'])$ proceed in lockstep in Algorithm \ref{alg:network-contraction}, differing only in the entries of the relevant tensors.
 
 This allows us to run Line \ref{line:tn-sliced:execute} of Algorithm \ref{alg:tn-sliced} in graph execution mode on a TPU.
 For a given tensor network $N$, contraction tree $T$ for $N$, and $I \subseteq \tnbound{N}$, consider the function $f_{N,T,I}$ that takes as input $\eta \in [I]$ and outputs $\func{Execute}(N[\eta], T[\eta])$.

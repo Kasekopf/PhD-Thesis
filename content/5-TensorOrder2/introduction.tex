@@ -6,7 +6,7 @@ Developing discrete integration tools that can leverage available parallelism is
 
 Neural networks are a recent success story of parallelization. The parallelization of neural network training and inference has seen massive research across the machine learning and high-performance computing communities \cite{ABCCDDDGII16,JYPPABBBBB17,PGMLJGKLGA19}. Consequently, GPUs give orders of magnitude of speedup over a single core for neural-network algorithms \cite{KSTKPPRS19,NRBHHJN15}. 
 Another line of recent work has focused on specialized hardware (e.g., using TPUs--Tensor Processing Units \cite{JYPPABBBBB17}) to provide further speedup.
-In this work, we aim to directly leverage advances in multi-core, GPU, and TPU performance designed for neural-network algorithms in the service of weighted model counting. % We leave as future work leveraging advances in specialized hardware (e.g., using TPUs--Tensor Processing Units \cite{JYPPABBBBB17}).
+In this work, we aim to directly leverage advances in parallelization designed for neural-network algorithms in the service of weighted model counting. % We leave as future work leveraging advances in specialized hardware (e.g., using TPUs--Tensor Processing Units \cite{JYPPABBBBB17}).
 % Contraction is a key operation in neural network training and inference \cite{BK07,Hirata03,KKCLA17,VZTGDMVAC18}, and, as such, many of the optimizations for neural networks also apply to tensor-network contraction \cite{KSTKPPRS19,NRBHHJN15,RMGZFZHVL19}.
 
 Chapter \ref{ch:tensors} demonstrated that \emph{tensor networks} are a natural bridge between high-performance computing and weighted model counting.
@@ -16,9 +16,9 @@ In detail, Chapter \ref{ch:tensors} presented a 3-phase algorithm for weighted m
 
 The planning phase in Chapter \ref{ch:tensors} was done using a choice of several single-core heuristic tree-decomposition solvers \cite{AMW17,HS18,Tamaki17}. There is little recent work on parallelizing heuristic tree-decomposition solvers. Instead, we implement a parallel portfolio of single-core tree-decomposition solvers and find that this portfolio significantly improves planning on multiple cores. Similar portfolio approaches have been well-studied and shown to be beneficial in the context of SAT solvers \cite{BSS15,XHHL08}. As a theoretical contribution, we prove that branch-decomposition solvers can also be included in this portfolio. Unfortunately, we find that a current branch-decomposition solver does not significantly improve the portfolio.
 
-The execution phase in Chapter \ref{ch:tensors} was done using \tool{numpy} \cite{numpy} and evaluated on a single core. We add an implementation of the execution phase that uses \tool{TensorFlow} \cite{ABCCDDDGII16} to leverage a GPU for large contractions. Since GPU memory is significantly more limited than CPU memory, we add an implementation of \emph{index slicing}. Index slicing is a recent technique from the tensor-network community \cite{CZHNS18,GK20,VBNHRBM19}, analogous to the classic technique of conditioning in Bayesian Network reasoning \cite{darwiche01,dechter99,pearl86,SAS94}, that allows memory to be significantly reduced at the cost of additional time. We find that, while multiple cores do not significantly improve the contraction phase, a GPU provides significant speedup, especially when augmented with index slicing. 
+The execution phase in Chapter \ref{ch:tensors} was done using \pkg{numpy} \cite{numpy} and evaluated on a single core. We add an implementation of the execution phase that uses \pkg{TensorFlow} \cite{ABCCDDDGII16} to leverage a GPU for large contractions. Since GPU memory is significantly more limited than CPU memory, we add an implementation of \emph{index slicing}. Index slicing is a recent technique from the tensor-network community \cite{CZHNS18,GK20,VBNHRBM19}, analogous to the classic technique of conditioning in Bayesian Network reasoning \cite{darwiche01,dechter99,pearl86,SAS94}, that allows memory to be significantly reduced at the cost of additional time. We find that, while multiple cores do not significantly improve the contraction phase, a GPU provides significant speedup, especially when augmented with index slicing. 
 
-We also add an implementation of the execution phase that uses index slicing in order to efficiently leverage a TPU. 
+We also add an implementation of the execution phase that uses index slicing with \pkg{jax} \cite{jax2018github} in order to efficiently leverage a TPU. 
 Unfortunately, we observe that current tensor libraries fail to compile tensor computations with high-dimensional tensors to a TPU.
 Thus our approach does not scale well on a TPU for practical model counting benchmarks.
 
@@ -28,7 +28,7 @@ The rest of the chapter is organized as follows.
 % In Section~\ref{sec:prelim}, we give background information on weighted model counting, graph decompositions, and tensor networks. 
 % In Section~\ref{sec:algorithm}, we discuss the algorithm for performing weighted model counting using tensor networks as outlined by \cite{DDV19}.
 In Section~\ref{sec:parallel:planning}, we describe parallelization of the planning phase with an algorithmic portfolio and planning with branch decompositions.
-In Section~\ref{sec:parallel:execution}, we describe parallelization of the execution phase with index slicing. 
+In Section~\ref{sec:parallel:execution}, we describe parallelization of the execution phase with index slicing on a GPU and on a TPU. 
 In Section~\ref{sec:experiments}, we implement this parallelization in \tool{TensorOrder2} and analyze its performance experimentally.
 
 %both the machine learning and the high-performance computing communities.

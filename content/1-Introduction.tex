@@ -27,8 +27,8 @@ Dynamic programming is a powerful technique that has been applied across compute
 The key idea is to solve a sequence of smaller subproblems, formed by partitioning the input constraints, and then incrementally combine these solutions into the final result.
 The techniques developed in this thesis are all based on dynamic programming.
 
-The key idea of this thesis is that dynamic-programming algorithms for discrete integration can be cleanly separated into two phases: a \emph{planning phase} of high-level reasoning to construct subproblems, followed by an \emph{execution phase} of low-level computation which solves subproblems.
-Existing dynamic-programming-based counters perform both high-level reasoning and low-level planning, but in an intermixed way that is tightly coupled to a single existing library.
+The key idea of this thesis is that dynamic-programming algorithms for discrete integration can be cleanly separated into two phases: a \emph{planning phase} of high-level reasoning to construct subproblems, followed by an \emph{execution phase} of low-level computation to solve subproblems.
+Existing dynamic-programming-based counters perform both high-level reasoning and low-level planning, but in an intermixed way that is often tightly coupled to a single existing library.
 Explicitly separating planning and execution enables us to separately reason about, implement, and optimize each phase.
 Instead of building tightly on any particular library, we target APIs that can be fulfilled by multiple planning or execution implementations.
 The resulting counters scale to large problem instances and run flexibly in a variety of hardware environments.
@@ -55,18 +55,18 @@ The resulting counters scale to large problem instances and run flexibly in a va
 
 
 \section{Planning: High-Level Reasoning}
-In the planning phase, we aim to leverage graph decompositions as a tool for high-level reasoning. \emph{Graph decompositions} \cite{halin1976s,robertson1984graph,RS91,ST94} aim to decompose a graph into subgraphs in such a way that the decomposition can aid algorithms running on the graph.
+In the planning phase, we aim to leverage graph decompositions as a tool for high-level reasoning. \emph{Graph decompositions} \cite{halin1976s,robertson1984graph,RS91,ST94} decompose a graph into subgraphs in such a way that the decomposition can aid algorithms running on the graph.
 % Thus a graph decomposition crystallizes a particular strategy for reasoning on the graph.
 For example, a \emph{tree decomposition} \cite{halin1976s,robertson1984graph} decomposes a graph into a tree structure that captures information on graph cycles.
-Algorithms based on graph decompositions have been successful across computer science \cite{GLST17,MPPV04}.
+Algorithms based on graph decompositions have been successful across computer science \cite{MPPV04,GLST17}. %TODO: more citations?
 
 The success of graph-decomposition algorithms in practice relies on finding good decompositions of arbitrary graphs.
 This has spurred the development of a variety of heuristics and tools for efficiently finding graph decompositions \cite{AMW17,HS18,Tamaki17,hicks02}. 
 Moreover, recent competitions \cite{DKTW18} ensured that many graph decomposition tools can be used through a single unified API and thus, with careful design, can be interchanged.
 
 A variety of dynamic-programming algorithms \cite{FMR08,SS10} and counters \cite{CW16,FHMW17,FHWZ18,FHZ19} exist for performing discrete integration using graph decompositions.
-These counters are typically closely integrated with a a single graph-decomposition tool.
-For example \tool{gpuSAT2} \cite{FHWZ18,FHZ19} is a tool for weighted model counting that is closely integrated with the tree-decomposition solver \pkg{htd} \cite{AMW17}. While \tool{gpuSAT2} also includes some low-level computational optimizations, it uses handwritten GPU kernel calls instead of leveraging low-level computational libraries.
+These counters are typically tightly integrated with a a single graph-decomposition tool.
+For example \tool{gpuSAT2} \cite{FHWZ18,FHZ19} is a tool for weighted model counting that is tightly integrated with the tree-decomposition solver \pkg{htd} \cite{AMW17}. While \tool{gpuSAT2} also includes some low-level computational optimizations, it uses handwritten GPU kernel calls instead of leveraging low-level computational libraries.
 
 
 \section{Execution: Low-Level Computation}
@@ -76,7 +76,9 @@ In the execution phase, we aim to leverage two existing classes of low-level com
 \emph{Tensors} are a tool used across quantum physics and computer science for describing and reasoning about quantum systems, big-data processing, and more \cite{BB17,Cichocki14,Orus19}.
 Contraction is a key operation in neural network training and inference \cite{BK07,Hirata03,KKCLA17,VZTGDMVAC18}.
 Consequently, there is massive practical work across machine learning and high-performance computing on tensor contraction \cite{BK07,Hirata03,KKCLA17,VZTGDMVAC18} (often with support for GPUs \cite{KSTKPPRS19,NRBHHJN15} or other specialized hardware \cite{JYPPABBBBB17}).
-This includes a variety of high-performance libraries that can perform tensor contraction \cite{numpy,ABCCDDDGII16,PGMLJGKLGA19} in a variety of hardware settings with a single unified API. 
+This includes a variety of high-performance libraries that can perform tensor contraction \cite{numpy,ABCCDDDGII16,PGMLJGKLGA19} in a variety of hardware settings with a single unified API.
+Several works have applied these libraries towards discrete integration \cite{BMT15,KCMR18}, but these approaches are limited to unweighted model counting on a single CPU core.
+
 % While one work \cite{KCMR18} has applied these libraries towards discrete integration, the high-level reasoning was limited to several heuristics.
 % These libraries have only seen limited application towards discrete integration  \cite{KCMR18}.
 

@@ -8,21 +8,11 @@ We aim to answer the following experimental research questions:
     \item[(RQ3)] Are project-join-tree-based weighted model counters competitive with state-of-the-art tools?
 \end{itemize}
 
-To answer RQ1, we build two implementations of the planning phase: \Htb{} (Heuristic Tree Builder, based on \tool{ADDMC} \cite{DPV20,phan2019weighted}) and \Lg{} (Line Graph, based on Chapter \ref{ch:tensors}).
-\Htb{} implements Algorithm \ref{alg_csp_jt} and so is representative of the constraint-satisfaction approach.
-\Htb{} contains four clustering heuristics (\Be-\ListH, \Be-\TreeH, \Bm-\ListH, and \Bm-\TreeH) and nine cluster-variable-order heuristics (\Random, \Mcs, \Invmcs, \Lexp, \Invlexp, \Lexm, \Invlexm, \Minfill, and \Invminfill).
-\Lg{} implements Algorithm \ref{alg_td_to_join} and so is representative of the tree-decomposition approach.
-In order to find tree decompositions, \Lg{} leverages three state-of-the-art heuristic tree-decomposition solvers: \Flowcutter{} \cite{strasser2017computing}, \Htd{} \cite{AMW17}, and \Tamaki{} \cite{Tamaki17}.
-These solvers are all \emph{anytime}, meaning that \Lg{} never halts but continues to produce better and better project-join trees when given additional time.
-On the other hand, \Htb{} produces a single project-join tree.
+To answer RQ1, we build two implementations of the planning phase: \Htb{}, based on constraint satisfaction heuristics, and \Lg{}, based on tree-decomposition solvers.
 We compare these implementations on the planning phase in Section \ref{sec_experiments_planning}.
 
-To answer RQ2, we build two implementations of the execution phase: \Dmc{} (Diagram Model Counter, based on \tool{ADDMC} \cite{DPV20,phan2019weighted}) and \Tensor{}.
-\Dmc{} uses ADDs as the underlying data structure with \cudd{} \cite{somenzi2015cudd}.
-\Tensor{} uses tensors as the underlying data structure with \Numpy{} \cite{numpy}.
+To answer RQ2, we build two implementations of the execution phase: \Dmc{}, which uses ADDs as the underlying data structure, and \Tensor{}, which uses tensors as the underlying data structure.
 We compare these implementations on the execution phase in Section \ref{sec_experiments_execution}.
-Since \Lg{} is an anytime tool, each execution tool must additionally determine the best time to terminate \Lg{} and begin performing the valuation.
-We explore options for this in Section \ref{sec_experiments_execution}.
 
 To answer RQ3, we combine each implementation of the planning phase and each implementation of the execution phase to produce model counters that use project-join trees.
 We then compare these model counters with the state-of-the-art tools \cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{LM17}, and \minictd{} \cite{OD15} in Section \ref{sec_experiments_wmc}.
@@ -50,10 +40,32 @@ Each variable $x$ is randomly assigned literal weights: either $W_x(\set{x}) = 0
 % }
 Generating weights in this particular fashion results in a reasonably low amount of floating-point underflow and overflow for all model counters.
 
-We ran all experiments on single CPU cores of a Linux cluster with Xeon E5-2650v2 processors (2.60-GHz) and 30 GB of memory.
+We ran all experiments on single CPU cores of a Linux cluster with Xeon E5-2650v2 processors (2.60-GHz) and 30 GB of memory\footnote{
+Vu H. N. Phan implemented \Htb{} and \Dmc{}, and ran experiments for the counter \tool{c2d}.}.
 All code, benchmarks, and experimental data are available at \url{https://github.com/vardigroup/DPMC}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Implementation Details of \tool{DPMC}}
+\label{sec:dpmc:experiments:impl}
+
+\paragraph{Planning.} 
+\tool{DPMC} contains two implementations of the planning phase: \Htb{} (Heuristic Tree Builder, based on \tool{ADDMC} \cite{DPV20,phan2019weighted}) and \Lg{} (Line Graph, based on Chapter \ref{ch:tensors}).
+\Htb{} implements Algorithm \ref{alg_csp_jt} and so is representative of the constraint-satisfaction approach.
+\Htb{} contains four clustering heuristics (\Be-\ListH, \Be-\TreeH, \Bm-\ListH, and \Bm-\TreeH) and nine cluster-variable-order heuristics (\Random, \Mcs, \Invmcs, \Lexp, \Invlexp, \Lexm, \Invlexm, \Minfill, and \Invminfill).
+\Lg{} implements Algorithm \ref{alg_td_to_join} and so is representative of the tree-decomposition approach.
+In order to find tree decompositions, \Lg{} leverages three state-of-the-art heuristic tree-decomposition solvers: \Flowcutter{} \cite{strasser2017computing}, \Htd{} \cite{AMW17}, and \Tamaki{} \cite{Tamaki17}.
+These solvers are all \emph{anytime}, meaning that \Lg{} never halts but continues to produce better and better project-join trees when given additional time.
+On the other hand, \Htb{} produces a single project-join tree.
+
+\paragraph{Execution.} 
+\tool{DPMC} contains two implementations of the execution phase: \Dmc{} (Diagram Model Counter, based on \tool{ADDMC} \cite{DPV20,phan2019weighted}) and \Tensor{}.
+\Dmc{} uses ADDs as the underlying data structure with \cudd{} \cite{somenzi2015cudd}.
+\Tensor{} uses tensors as the underlying data structure with \Numpy{} \cite{numpy}.
+Since \Lg{} is an anytime tool, each execution tool must additionally determine the best time to terminate \Lg{} and begin performing the valuation.
+We explore options for this in Section \ref{sec_experiments_execution}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Experiment 1: Comparing Project-Join Planners}
 \label{sec_experiments_planning}

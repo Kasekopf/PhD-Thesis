@@ -16,19 +16,11 @@ We aim to answer the following experimental research questions:
     \item[(RQ3)] How does \procount{} compare to other exact weighted projected tools?
 \end{enumerate}
 
-To answer RQ1, in Experiment 1 we compare the planner \Lg{} (which uses tree decompositions) to \htb{} (which uses constraint-satisfaction heuristics).
-\Lg{} uses the tree decomposers \flowcutter{} \cite{strasser2017computing}, \htd{} \cite{AMW17}, and \tamaki{} \cite{Tamaki17}.
-\htb{} implements four heuristics for variable ordering: maximal-cardinality search (\mcs{}) \cite{tarjan1984simple}, lexicographic search for perfect/minimal orders (\lexp/\lexm{}) \cite{koster2001treewidth}, and min-fill (\minfill{}) \cite{dechter03}.
-\htb{} also implements two clause-ordering heuristics: bucket elimination (\be) \cite{dechter99} and Bouquet's Method (\bm) \cite{bouquet1999gestion}%
-% as well as two clause clustering heuristics \List{} and \tree{} \cite{DPV20}
-.
-
-To answer RQ2, in Experiment 2 we compare variable-ordering heuristics for the ADD-based executor \dmc.
+To answer RQ1, in Experiment 1 we compare the planner \Lg{} (which uses tree decompositions) to \htb{} (which uses constraint-satisfaction heuristics). To answer RQ2, in Experiment 2 we compare variable-ordering heuristics for the ADD-based executor \dmc.
 % An ADD \cite{bahar1997algebraic} is a directed acyclic graph that compactly represents a pseudo-Boolean function.
 % Each internal node of an ADD corresponds to an input variable of the function.
-The variable order of an ADD strongly influences its compactness.
-\dmc{} implements four variable-ordering heuristics (see above): \mcs, \lexp, \lexm, and \minfill{}.
-
+% The variable order of an ADD strongly influences its compactness.
+% \dmc{} implements four variable-ordering heuristics (see above): \mcs, \lexp, \lexm, and \minfill{}.
 To answer RQ3, in Experiment 3 we compare \procount{} to state-of-the-art exact weighted projected model counters \dfp{} \cite{lagniez2019recursive}, \projmc{} \cite{lagniez2019recursive}, and \ssat{} \cite{lee2017solving}.
 % We do not consider tools that are probabilistic, approximate, or unweighted.
 
@@ -41,16 +33,34 @@ The first family contains \wapsBenchmarks{} formulas and was used for weighted p
 For each benchmark in this family, a positive literal $x$ has weight $0 < W_x(\set{x}) < 1$, and a negative literal $\neg x$ has weight $W(\emptyset) = 1 - W_x(\set{x})$.
 The second family contains \birdBenchmarks{} formulas and was used for unweighted projected model counting \cite{soos2019bird}.
 We add weights to this family by randomly assigning $W_x(\set{x}) = 0.4$ and $W_x(\emptyset) = 0.6$ or vice versa to each variable $x$.
-All \benchmarks{} benchmarks are satisfiable, as verified by the SAT solver \sat{} \cite{soos2009extending}.
+All \benchmarks{} benchmarks are satisfiable according to the SAT solver \sat{} \cite{soos2009extending}.
 
-We run all experiments on single CPU cores of a Linux cluster with Intel Xeon E5-2650v2 processors (2.60-GHz) and 30 GB of RAM.
+We run all experiments on single CPU cores of a Linux cluster with Intel Xeon E5-2650v2 processors (2.60-GHz) and 30 GB of RAM\footnote{
+Vu H. N. Phan implemented the modifications in \Htb{} and \Dmc{}, and ran the experiments.}.
 All code and data are available (\url{https://github.com/vardigroup/DPMC/tree/v2.0.0}).
 
 \noindent
-% \the\columnwidth    \\ % 347.12354pt
-% \the\textwidth      \\ % 347.12354pt
-% \the\linewidth      \\ % 347.12354pt
-% \the\hsize          \\ % 347.12354pt
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Implementation Details of \tool{ProCount}}
+\label{sec:procount:experiments:impl}
+
+\paragraph{Planning.} 
+\tool{ProCount} contains two implementations of the planning phase: \Lg{} (Line Graph) and \Htb{} (Heuristic Tree Builder).
+\Lg{} uses the tree decomposers \flowcutter{} \cite{strasser2017computing}, \htd{} \cite{AMW17}, and \tamaki{} \cite{Tamaki17}.
+While \Lg{} is an \emph{anytime} tool that produces several trees (of decreasing widths) for each benchmark, we use only the first tree produced on each benchmark.
+We find that this does not significantly affect the performance of \procount{}.
+
+\htb{} implements four heuristics for variable ordering: maximal-cardinality search (\mcs{}) \cite{tarjan1984simple}, lexicographic search for perfect/minimal orders (\lexp/\lexm{}) \cite{koster2001treewidth}, and min-fill (\minfill{}) \cite{dechter03}.
+\htb{} also implements two clause-ordering heuristics: bucket elimination (\be) \cite{dechter99} and Bouquet's Method (\bm) \cite{bouquet1999gestion}%
+% as well as two clause clustering heuristics \List{} and \tree{} \cite{DPV20}
+
+\paragraph{Execution.} 
+\tool{ProCount} contains a single implementation of the execution phase: \Dmc{} (Diagram Model Counter).
+\Dmc{} uses ADDs as the underlying data structure with \cudd{} \cite{somenzi2015cudd}.
+The variable order of an ADD strongly influences its compactness.
+\dmc{} implements four variable-ordering heuristics (see above): \mcs, \lexp, \lexm, and \minfill{}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -78,9 +88,6 @@ We present results in Figure \ref{figPlanning}.
 Each point $(x, y)$ on a plotted curve indicates that, within $x$ seconds on each of $y$ benchmarks, the first graded project-join tree produced by the corresponding planner has width at most \maxWidth{}.
 We choose \maxWidth{} because previous work shows that executors do not handle larger project-join trees well \cite{DDV19,dudek2020dpmc}. % JD: This is more true for tensors than for ADDs, let's just leave it out
 % Figure \ref{figPlanning} is qualitatively similar for other width cutoffs.
-
-While \Lg{} is an \emph{anytime} tool that produces several trees (of decreasing widths) for each benchmark, we use only the first tree produced on each benchmark.
-We find that this does not significantly affect the performance of \procount{}.
 
 The tree-decomposition-based planner \Lg{} outputs more low-width trees than the constraint-satisfaction-based planner \htb{}.
 Moreover, for \Lg{}, the tree decomposer \flowcutter{} is faster than \htd{} and \tamaki{}.

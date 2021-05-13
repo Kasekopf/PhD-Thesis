@@ -53,7 +53,8 @@ This gives us Algorithm \ref{alg:tn-sliced}, which performs the execution phase 
 
 \subsection{Contraction on a TPU}
 \label{sec:parallel:execution:tpu}
-A TPU (tensor processing unit) \cite{JYPPABBBBB17} is a specialized hardware designed for neural network training and inference. %TODO: more on how great TPUs are.
+A TPU (tensor processing unit) \cite{JYPPABBBBB17} is a specialized computing hardware designed for neural network training and inference.
+In particular, a TPU consists of multiple cores that each contain application-specific integrated circuits (ASICs) for matrix multiplication.
 Several tensor libraries (e.g. \tool{TensorFlow} \cite{ABCCDDDGII16} and \tool{jax} \cite{jax2018github}) support tensor contraction on a TPU.
 Thus tensor networks provide a natural framework to leverage TPUs for model counting.
 
@@ -77,6 +78,7 @@ It follows that the computations of $\func{Execute}(N[\eta], T[\eta])$ and $\fun
 This allows us to run Line \ref{line:tn-sliced:execute} of Algorithm \ref{alg:tn-sliced} in graph execution mode on a TPU.
 For a given tensor network $N$, contraction tree $T$ for $N$, and $I \subseteq \tnbound{N}$, consider the function $f_{N,T,I}$ that takes as input $\eta \in [I]$ and outputs $\func{Execute}(N[\eta], T[\eta])$.
 Our approach is to represent $f_{N,T,I}$ as an XLA graph program.
-We compile $f_{N,T,I}$ once, targeting a TPU (or another hardware environment), and then run the compiled program on each $\eta \in [I]$.
+We compile $f_{N,T,I}$ once, targeting a TPU, and then run the compiled program on each $\eta \in [I]$.
+Note that since a TPU contains multiple cores we run the compiled program multiple times in parallel, once for each core.
 We evaluate the performance of this approach in Section \ref{sec:parallel:exp:tpu}.
 

@@ -23,7 +23,7 @@ We use a standard set\footnote{\url{https://github.com/vardigroup/ADDMC/releases
 We evaluate the performance of each tool using the PAR-2 score, which is the sum of of the wall-clock times for each completed benchmark, plus twice the timeout for each uncompleted benchmark.
 
 %\paragraph{Experimental Setup.}
-All counters are run in Docker images (one for each counter) with Docker 19.03.5. All experiments are run on Google Cloud \tool{n1-standard-8} machines with 8 cores (Intel Haswell, 2.3 GHz) and 30 GB RAM. GPU-based counters are provided an \tool{NVIDIA Tesla V100} GPU (16 GB of onboard RAM) using NVIDIA driver 418.67 and CUDA 10.1.243. TPU-based counters are provided a v2-8 TPUs, which contains 8 TPU cores and 8 GB of onboard RAM per core.
+All counters are run in Docker images (one for each counter) with Docker 19.03.5. All experiments are run on Google Cloud \tool{n1-standard-8} machines with 8 cores (Intel Haswell, 2.3 GHz) and 30 GB RAM. GPU-based counters are provided an \tool{NVIDIA Tesla V100} GPU (16 GB of onboard RAM) using NVIDIA driver 418.67 and CUDA 10.1.243. TPU-based counters are provided a v2-8 TPU, which contains 8 TPU cores and 8 GB of onboard RAM per core.
 
 \subsection{Implementation Details of \tool{TensorOrder2}}
 \label{sec:experiments:impl}
@@ -40,7 +40,7 @@ We add to \tool{TensorOrder2} a way to contract tensors on a GPU with \pkg{Tenso
 
 We also add a way to contract tensors on a TPU with \pkg{jax} v0.2.13 \cite{jax2018github} in graph execution mode. 
 We execute each slice (i.e., each call to \func{Execute} on Line \ref{line:tn-sliced:execute} of Algorithm \ref{alg:tn-sliced}) on a separate TPU core. 
-Thus on v2-8 TPUs we execute 8 slices in parallel. 
+Thus on a v2-8 TPU we execute 8 slices in parallel. 
 For comparison, we also add support for contracting tensors on multiple-CPUs with \pkg{jax} in graph execution mode.
 
 Overall, \tool{TensorOrder2} runs the execution phase in three possible configurations in eager execution mode-- \pkg{CPU1} (restricted to a single CPU core), \pkg{CPU8} (allowed to use all 8 CPU cores), \pkg{GPU} (allowed to use all 8 CPU cores and use a GPU)-- and two possible configurations in graph execution mode-- \pkg{TPU-graph} (allowed to use all 8 CPU cores, and a TPU), and \pkg{CPU8-graph} (allowed to use all 8 CPU cores).
@@ -148,7 +148,7 @@ We observe that preprocessing significantly boosts \tool{TensorOrder2} relative 
 \input{figures/5/tpu.pgf}
 %\input{figures/comparison_pmc_eq.pgf}
 \vspace*{-0.9cm}
-\caption{\label{fig:parallel:tpu} The compilation and average execution time of contracting a single tensor-network slice with a contraction tree of max-rank $k$ on a TPU (\tool{TPU-graph}), on a CPU in graph-execution mode (\tool{CPU8-graph}), and on a CPU in eager execution mode (\tool{CPU8}). \tool{TPU-graph} took more than 1000 seconds in the compilation step when $k > 17$.}
+\caption{\label{fig:parallel:tpu} The XLA compilation and average execution time of contracting a single tensor-network slice with a contraction tree of max-rank $k$ on a TPU (\tool{TPU-graph}), on a CPU in graph-execution mode (\tool{CPU8-graph}), and on a CPU in eager execution mode (\tool{CPU8}). \tool{TPU-graph} took more than 1000 seconds in the compilation step when $k > 17$.}
 \end{center}
 \vspace*{-0.8cm}
 \end{figure}
@@ -162,16 +162,16 @@ Finally, we examine the feasibility of leveraging a TPU in the execution phase. 
 % Unfortunately, we observe that on all 32 benchmarks the compilation takes more than 1000 seconds and so the computation times out.
 
 To investigate this failure, we consider a tensor network $N$ whose contraction is the number of vertex covers of a randomly-generated cubic graph with 200 vertices \cite{KCMR18}. 
-Using the \pkg{FlowCutter} planner, we construct a contraction tree $T$ for $N$ of max-rank 27. 
-For each $k \in \{10, 11, \cdots, 20\}$, then, we slice $N$ greedily to get slice variables $I_k \subseteq \tnbound{N}$ so that $T[I_k]$ has max-rank $k$. 
+Using the \pkg{FlowCutter} planner, we construct a contraction tree $T$ for $N$ of max-rank 27 within 10 seconds. 
+For each $k \in \{10, 11, \cdots, 20\}$, then, we slice $N$ greedily to get slice variables $I_k \subseteq \tnbound{N}$ so that $T[\eta]$ has max-rank $k$ for each $\eta \in [I_k]$. 
 Using each of the execution configurations \pkg{CPU8}, \pkg{CPU8-graph}, and \pkg{TPU-graph}, we compute $\func{Execute}(N[\eta], T[\eta])$ for the first 80 slices $\eta \in [I_k]$. 
 We then compute the average time to contract each slice and (for configurations in graph execution mode) the XLA compilation time.
 
 Results are summarized in Figure \ref{fig:parallel:tpu}. 
-We observe that, as expected, the compilation time in graph execution mode (both \pkg{CPU8-graph} and \pkg{TPU-graph}) is significantly longer than the time for a single slice in eager execution mode (\pkg{CPU8}). 
+We observe that, as expected, the compilation time in graph execution mode (\pkg{CPU8-graph} and \pkg{TPU-graph}) is significantly longer than the time for a single slice in eager execution mode (\pkg{CPU8}). 
 Moreover, the execution time in graph execution mode is faster than the execution time in eager execution mode.
 
-We also observe that the compilation time of \pkg{TPU-graph} scales dramatically with sliced max-rank, which is the maximum number of indices of the tensors involved in the computation.
+We also observe that the compilation time of \pkg{TPU-graph} scales dramatically with the sliced max-rank $k$, which is the maximum number of indices (i.e., dimensions) of the tensors involved in the computation.
 On tensors with more than 17 indices the compilation time of \pkg{TPU-graph} is above 1000 seconds and so the compilation times out.
 For comparison, the max-rank of nontrivial benchmarks in Experiment 3 is always more than 25, even after significant slicing.
 On the other hand, \pkg{CPU8-graph} does not suffer from long XLA compilation times even on high-dimensional tensors and so is promising for future analysis.
@@ -180,7 +180,7 @@ Finally, we observe that the execution time of \pkg{CPU8-graph} is less than the
 We hypothesize that this is an artifact of the small tensors involved in these experiments. Since every index in the tensors we consider has size 2, tensors with no more than 17 indices are no larger than 1MB.
 Once the XLA compilation bottleneck is improved and tensor networks with larger tensors may be used, the execution time of \pkg{TPU-graph} may outperform \pkg{CPU8-graph}.
 
-We conclude that \pkg{TPU-graph} is currently unsuitable for nontrivial model counting benchmarks because of long XLA compilation times for high-dimensional tensors, i.e. tensors with more than 17 indices.
+We conclude that \pkg{TPU-graph} is currently unsuitable for nontrivial model counting benchmarks. The main problem is the long XLA compilation time for computations high-dimensional tensors, i.e. tensors with more than 17 indices.
 We hypothesize that XLA compilation times are long for high-dimensional tensors because of optimizations for neural network training and inference. 
 Unlike our setting, where tensors often have many indices (more than 25) but each index has a domain of size 2, tensors in neural network training and inference typically have relatively few indices (less than 5) but each index has a much larger domain (thousands). %TODO: cite?
 
@@ -188,4 +188,4 @@ We emphasize that these results should be taken only as initial observations.
 % We hope that future development of tensor libraries for TPUs, especially in the compilation of the XLA graph programs with high-dimensional tensors, will improve performance.
 Further analysis of XLA compilation with high-dimensional tensors may help to understand and improve the poor performance of tensor-network-based methods for model counting on a TPU.
 Unfortunately, the implementation of the XLA compiler for a TPU is proprietary and available for use only as a black-box tool. 
-We thus leave an in-depth analysis for future work.
+We thus leave an in-depth analysis for future work that has access to internals of the XLA compiler.

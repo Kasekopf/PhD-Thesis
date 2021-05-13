@@ -29,7 +29,7 @@ The techniques developed in this thesis are all based on dynamic programming.
 
 The key idea of this thesis is that dynamic-programming algorithms for discrete integration can be cleanly separated into two phases: a \emph{planning phase} of high-level reasoning to construct subproblems, followed by an \emph{execution phase} of low-level computation which solves subproblems.
 Existing dynamic-programming-based counters perform both high-level reasoning and low-level planning, but in an intermixed way that is tightly coupled to a single existing library.
-Explicitly separating planning and execution enables us to separately reason about, implement, and optimize each stage.
+Explicitly separating planning and execution enables us to separately reason about, implement, and optimize each phase.
 Instead of building tightly on any particular library, we target APIs that can be fulfilled by multiple planning or execution implementations.
 The resulting counters scale to large problem instances and run flexibly in a variety of hardware environments.
 

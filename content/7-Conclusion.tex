@@ -1,8 +1,43 @@
 \chapter{Conclusion and Future Directions}
 \label{ch:conclusion}
-Just a rough outline for now, gathered from the various papers.
+Discrete integration is a fundamental problem in artificial intelligence, with applications in probabilistic reasoning, planning, inexact computing, engineering reliability, and statistical physics \cite{Bacchus2003,DH07,GSS08,naveh2007constraint}. In discrete integration, the task is to count the total weight, subject to a given weight function, of the set of solutions of input constraints \cite{GSS08}. 
+Although discrete integration is theoretically difficult \cite{Valiant79}, the development of tools to compute the total weight on large industrial formulas is an area of active research.
+
+In this thesis, we presented a series of dynamic-programming algorithms and tools for discrete integration based on a single conceptual framework.
+Our framework consisted of two cleanly separated phases: a \emph{planning phase} of high-level reasoning, followed by an \emph{execution phase} of low-level computation.
+% This explicit separation allowed us to separately reason about, implement, and optimize each phase.
+We showed how to leverage existing graph decomposition tools for the planning phase.
+Similarly, we showed how to leverage existing computational libraries for the execution phase.
+The resulting tools scale to large instances of discrete integration problems and run flexibly in a variety of hardware environments.
+
+We introduced this framework in Chapter \ref{ch:tensors} with a new counter, \tool{TensorOrder}, which used graph decompositions for planning and tensor libraries for execution.
+To enable the use of tensor libraries, we presented a new reduction from weighted model counting to tensor network contraction. 
+We analyzed two planning techniques-- an existing approach \textbf{LG} and a new approach \textbf{FT}-- that use graph decompositions to find contraction trees of small max rank of tensor networks.
+\tool{TensorOrder}, when equipped with the \textbf{FT} planner, was the best tool on discrete integration benchmarks of small carving width.
+
+We then applied this framework in Chapter \ref{ch:dpmc} to an existing model counter, \tool{ADDMC} \cite{DPV20,phan2019weighted}.
+We unified a variety of discrete-integration approaches, including \tool{ADDMC}, into a single conceptual framework the uses project-join trees to separate planning and execution.
+We showed that replacing the existing constraint-satisfaction planner in \tool{ADDMC} with \textbf{LG} (a planner based on graph decompositions) led to a faster model counter. 
+Moreover, we compared (dense) tensors with (sparse) algebraic decision diagrams in the execution phase and found that algebraic decision diagrams outperform tensors on single CPU cores.
+The resulting tool \tool{DPMC} was the fastest solver on a significant number of benchmarks and thus is valuable as part of a portfolio of counters.
+
+Next, in Chapter \ref{ch:parallel} we exploited our framework to develop a parallel model counter by separately parallelizing the planning and execution phases in \tool{TensorOrder}.
+We showed that the planning phase may be parallelized by using an algorithmic portfolio \cite{XHHL08} of planners.
+Further, we showed that the execution phase may be parallelized through parallel tensor libraries.
+In order to handle limited-memory environments (e.g., on a GPU), we introduced index slicing to divide the computation of a single tensor network contraction.
+Although we showed that index slicing also allows for efficient tensor network contraction on a TPU theoretically, in practice we observed that current tensor libraries fail to compile tensor computations with high-dimensional tensors to a TPU.
+The resulting tool \tool{TensorOrder2} was the fastest parallel model counter on a significant number of benchmarks.
+
+Finally, in Chapter \ref{ch:procount} we applied our framework to projected model counting by extending the approach in Chapter \ref{ch:dpmc}.
+We presented a novel algorithm for performing projected model counting through a planning and execution phase using graded project-join trees.
+Our key theoretical contribution was a novel algorithm to construct graded project-join trees from standard project-join trees.
+The resulting tool \tool{ProCount} made a significant contribution to a portfolio of exact weighted projected model counters.
+
+Overall, we demonstrated that a clean separation of dynamic-programming algorithms for discrete integration into a planning phase of high-level reasoning, followed by an execution phase of low-level computation yielded algorithms and tools for discrete integration that scale to large instance and run flexibly in a variety of configurations and hardware environments.
 
 \section{Future Work}
+The framework introduced in this thesis is just the next step towards developing practical tools for automated reasoning.
+We end with a list of several open directions to improve our framework and to apply our framework in broader context.
 
 % \subsection{Understanding Performance and Limitations}
 % One direction for future work is to improve our understanding of the performance of our dynamic-programming-based methods.  

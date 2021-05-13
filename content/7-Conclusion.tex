@@ -4,35 +4,45 @@ Just a rough outline for now, gathered from the various papers.
 
 \section{Future Work}
 
-\subsection{Understanding Performance and Limitations}
-One direction for future work is to improve our understanding of the performance of our dynamic-programming-based methods.  
+% \subsection{Understanding Performance and Limitations}
+% One direction for future work is to improve our understanding of the performance of our dynamic-programming-based methods.  
 
-In this thesis, we focused on heuristic graph decomposition tools, which aim to find ``good-enough'' graph decompositions. It would be interesting in the future to analyze the types of benchmarks amenable to tensor-network methods, e.g. by computing lower bounds on carving width in addition to the upper bounds given by heuristic methods. 
+% In this thesis, we focused on heuristic graph decomposition tools, which aim to find ``good-enough'' graph decompositions. It would be interesting in the future to analyze the types of benchmarks amenable to tensor-network methods, e.g. by computing lower bounds on carving width in addition to the upper bounds given by heuristic methods. 
 
 \subsection{Improving Planning}
 In this thesis we primarily focused on planning using tree decompositions, branch decompositions, and carving decompositions. 
 Improvements to graph decomposition tools, itself an active area of research, may allow us to scale to larger benchmarks in the future.
-Planning may also benefit by integrating other graph decomposition tools, especially when integrated into a portfolio of tools as in Chapter \ref{ch:parallel}. 
+Although we focused in using graph decomposition tools in an unmodified, black box way, developing customized graph decomposition tools for planning in discrete integration is a promising avenue for future work.
+
+Planning may also benefit by integrating other graph decomposition tools, especially when new tools are integrated into a portfolio of planners as in Chapter \ref{ch:parallel}. 
 For example, there has been work on parallel branch decomposition tools \cite{hicks2000branch}.
 Moreover, it may be possible to exploit other types of graph decompositions (e.g. hypertree decompositions \cite{AGG07}) for planning in discrete integration.
 
 We developed a parallel portfolio of planners in Chapter \ref{ch:parallel}. 
-This portfolio approach was functional but simplistic; it may be possible to improve the portfolio through more advanced algorithm-selection techniques \cite{HHLKS09,XHHL12}. 
+This portfolio approach was functional but simplistic.
+It may be possible to improve the portfolio through more advanced algorithm-selection techniques \cite{HHLKS09,XHHL12}. 
 % One could also develop parallel heuristic decomposition solvers directly, e.g., by adapting the exact GPU-based tree-decomposition solver \cite{VB17} into a heuristic solver.
-If applied to the planning techniques in Chapter \ref{ch:procount}, this portfolio may also be useful in developing a parallel projected model counter.
+It may be useful to apply this portfolio planner to planning in other contexts, for example to projected model counting in Chapter \ref{ch:procount}.
+More broadly, this portfolio strategy could be useful in a variety of applications of graph decompositions.
+
 
 \subsection{Improving Execution}
 In this thesis we primarily focused on execution using existing tensor and ADD libraries.
-Our approach was explicitly designed in order to benefit from current and future work in the development of these computational libraries, an extremely active area of research.
-One could also consider implementing our execution algorithms using other computational libraries, e.g. using \sylvan{} \cite{van2015sylvan}, a parallel ADD library, or using databases as in \cite{fichte2020exploiting}.
+Our approach was explicitly designed in order to benefit from current and future work in the development of these computational libraries, which is itself an extremely active area of independent research in high-performance computing.
+Developing computational libraries that are specifically optimized for execution in discrete integration is a promising avenue for future work.
+A problem of particular interest is to re-engineer the XLA compiler when targeting a TPU in order to handle the high-dimensional tensors seen in model counting.
+One could also consider implementing our execution algorithms using other computational libraries, e.g. using the parallel ADD library \sylvan{} \cite{van2015sylvan}, using databases as in \cite{fichte2020exploiting}, or using other sparse data structures \cite{sanner2005affine,li2018hicoo}. %TODO: more citations?
 
-In Chapter \ref{ch:parallel}, we focused on parallelism within a single tensor contraction.
-There are opportunities in future work to exploit higher-level parallelism. 
-One promising approach is to run each slice computation in Algorithm \ref{alg:tn-sliced} on a separate CPU core, on a separate GPU, or even on entirely separate nodes in a cluster. %TODO: cite
-Integrating slicing with the ADD-based execution from Chapter \ref{ch:dpmc} or Chapter \ref{ch:procount} is an additional avenue for parallelization.
+In Chapter \ref{ch:parallel}, we evaluated index slicing in the context of tensor-based execution.
+One avenue for future development of parallel counters is to integrate slicing with the ADD-based execution from Chapter \ref{ch:dpmc} or Chapter \ref{ch:procount}.
+This may require more complicated techniques of choosing which indices (i.e., variables) to slice, since it is difficult to estimate the memory usage of sparse ADDs a priori.
 
-% Whether or not sparse ADDs outperform tensors for richer hardware architectures as well is a subject for future work. %TODO: expand. ADDs are hard to do on other hardwares
-% We will also consider adding to our framework an executor based on databases (\eg, \cite{fichte2020exploiting}).
+Moreover, we focused on contracting all tensor network slices in sequence on a single GPU.
+There are opportunities in future work to apply index slicing in more complex ways to leverage parallelism at a larger scale. 
+One potential approach is to run each slice computation in Algorithm \ref{alg:tn-sliced} in parallel on a separate CPU core, on a separate GPU, or even on entirely separate nodes in a computing cluster.
+For example, recent work in the tensor network community used index slicing to divide a single tensor network contraction across a computing cluster containing with over 100k CPU cores running in parallel \cite{CZHNS18}.
+Such techniques would allow our framework to scale to leverage huge computational resources for difficult discrete integration benchmarks.
+
 
 \subsection{Beyond CNF Formulas}
 While we focused on discrete integration over CNF formulas, many of the techniques in this thesis easily extend to more general classes of formulas.
@@ -44,19 +54,10 @@ Evaluating our techniques on a wider collection of benchmarks and applications i
 \subsection{Beyond Discrete Integration}
 The focus in this thesis is on processing a single discrete integration query. 
 In many applications, however, several discrete integration queries are made with an identical or similar set of constraints.
+Such repeated queries are handled well by counters based on knowledge compilation, where the same set of compiled constraints can be queried multiple times \cite{koriche2013knowledge,LM17,darwiche2004new,OD15}.
+Exploring how dynamic programming can be leveraged to handle several queries is another promising research direction.
 
-Finally, decision diagrams have been widely used in artificial intelligence in the context of \emph{knowledge compilation}, where formulas are compiled into a tractable form in an early phase to support efficient query processing \cite{koriche2013knowledge,LM17,darwiche2004new,OD15}.
-Our work opens up an investigation into the combination of knowledge compilation and dynamic programming.
-The focus here is on processing a single model-counting query.
-Exploring how dynamic programming can also be leveraged to handle several queries is another promising research direction.
-
-
-In future work, \procount{} can be generalized for maximum model counting \cite{fremont2017maximum} and even other types of functional aggregate queries (FAQs) \cite{KNR16}, including MAP.
-
-Our framework of planning and execution is of broader interest beyond discrete integration.
-For example, Tabajara and Vardi \cite{tabajara2017factored} described a dynamic-programming, binary-decision-diagram-based framework for functional Boolean synthesis.
-Refactoring the algorithm into a planning phase followed by an execution phase is also of interest in that context.
-
-
-% \pkg{TensorFlow} also supports performing tensor contractions on TPUs (tensor processing unit \cite{JYPPABBBBB17}), which are specialized hardware designed for neural network training and inference. Tensor networks therefore provide a natural framework to leverage TPUs for weighted model counting as well. There are additional challenges in the TPU setting: floating-point precision is limited, and there is a (100+ second) compilation stage from a contraction tree into XLA \cite{XLA}. We plan to explore these challenges further in future work.
-
+Our framework of planning and execution can be used as a guide for other problems beyond discrete integration.
+For example, Tabajara and Vardi \cite{tabajara2017factored} described a dynamic-programming, decision-diagram-based framework for functional Boolean synthesis.
+Refactoring the algorithm into a planning phase followed by an execution phase is also of interest in that context to produce more scalable and flexible tools.
+Our framework could also be generalized for maximum model counting \cite{fremont2017maximum} and other types of functional aggregate queries (FAQs) \cite{KNR16}, including MAP \cite{murphy2012machine,maua2015complexity,xue2016solving}.

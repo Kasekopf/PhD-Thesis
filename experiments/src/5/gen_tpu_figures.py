@@ -61,9 +61,9 @@ def gen(output):
     lines = [
         DisplayInfo("Compile (TPU8-graph)", jax_tpu.compilation_time(), "#ffb14e", "p"),
         DisplayInfo("Compile (CPU8-graph)", jax_cpu.compilation_time(), "#0000dd", "p"),
-        DisplayInfo("Execute (CPU8)", numpy.avg_time_per_slice_from_total(), "#dd0f0f", "o"),
         DisplayInfo("Execute (TPU8-graph)", jax_tpu.avg_time_per_slice(), "#ffb14e", "P"),
         DisplayInfo("Execute (CPU8-graph)", jax_cpu.avg_time_per_slice(), "#0000dd", "P"),
+        DisplayInfo("Execute (CPU8)", numpy.avg_time_per_slice_from_total(), "#dd0f0f", "o"),
     ]
 
     for exp_info in lines:
@@ -81,11 +81,11 @@ def gen(output):
         )
 
     ax.set_yscale("log", nonpositive="mask")
-    ax.set_ylim(bottom=0.0001, top=1000)
+    ax.set_ylim(bottom=0.00001, top=1000)
     ax.set_xlim(left=9, right=21)
     ax.set_ylabel("Time (s)")
     ax.set_xlabel("$k$: Sliced Max Rank")
-    util.set_legend(ax, loc="upper right")
+    util.set_legend(ax, loc="lower left", ncol=3, columnspacing=1.8)
 
     f.save("5/tpu")
 

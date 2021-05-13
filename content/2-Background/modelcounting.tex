@@ -14,7 +14,7 @@ This thesis primarily focuses on two subclasses of discrete integration: model c
 \subsection{Model Counting}
 In (weighted) model counting, the input constraints are given as a propositional formula, typically in CNF. Formally:
 \begin{definition}[Weighted Model Count]
-  Let $\varphi$ be a formula over Boolean variables $X$ and let $W: 2^X \rightarrow \mathbb{R}$ be a pseudo-Boolean function. We say that $(X, \phi, W)$ is an instance of \emph{weighted model counting}. The \emph{$W$-weighted model count} of $\varphi$ is
+  Let $\varphi$ be a Boolean formula over Boolean variables $X$ and let $W: 2^X \rightarrow \mathbb{R}$ be a pseudo-Boolean function. We say that $(X, \phi, W)$ is an instance of \emph{weighted model counting}. The \emph{$W$-weighted model count} of $\varphi$ is
   $$W(\varphi) \equiv \sum_{\tau \in 2^X} \varphi(\tau) \cdot W(\tau).$$
 \end{definition}
 
@@ -32,7 +32,7 @@ Formally:
 \begin{definition}[Weighted Projected Model Count]
 	Let $\phi$ be a Boolean formula, $\{X, Y\}$ be a partition of $\vars(\phi)$, and $W: 2^X \to \R$ be a pseudo-Boolean function. We say that $(X, Y, \phi, W)$ is an instance of \emph{weighted projected model counting}.
 	The \emph{$W$-weighted $Y$-projected model count} of $\phi$ is
-	$$\func{WPMC}(\phi, W, Y) \equiv \sum_{\tau \in 2^X} \pars{ W(\tau) \mult \max_{\sigma \in 2^Y} \phi(\tau \cup \sigma) }$$.
+	$$\func{WPMC}(\phi, W, Y) \equiv \sum_{\tau \in 2^X} \pars{ W(\tau) \mult \max_{\sigma \in 2^Y} \phi(\tau \cup \sigma) }.$$
 \end{definition}
 
 Variables in $X$ are called \emph{relevant} or \emph{additive}, and variables in $Y$ are called \emph{irrelevant} or \emph{disjunctive}. 

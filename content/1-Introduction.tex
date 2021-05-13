@@ -22,7 +22,7 @@ The key idea is to take an algorithm for exploring the entire solution space of 
 Modern solvers such as \tool{cachet} \cite{SBK05} and \tool{SharpSAT} \cite{Thurley2006} follow this approach.
 Another class of counters (e.g. \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) are based on knowledge compilation, where the idea is to compile the set of constraints into an alternative representation on which a discrete integration query may be answered in polynomial time.
 
-A third class of counters \cite{CW16,FHMW17,FHWZ18,FHZ19,DPV20,fichte2020exploiting} are based on dynamic programming. % \cite{BDP09,SS10,jegou2016improving} % TODO: should cite Algorithms \cite{FMR08,SS10}.
+A third class of counters \cite{CW16,FHMW17,FHWZ18,FHZ19,DPV20,phan2019weighted,fichte2020exploiting} are based on dynamic programming. % \cite{BDP09,SS10,jegou2016improving} % TODO: should cite Algorithms \cite{FMR08,SS10}.
 Dynamic programming is a powerful technique that has been applied across computer science \cite{bellman1966dynamic}, including to database-query optimization \cite{MPPV04}, satisfiability solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, and QBF evaluation \cite{charwat2016bdd}.
 The key idea is to solve a sequence of smaller subproblems, formed by partitioning the input constraints, and then incrementally combine these solutions into the final result.
 The techniques developed in this thesis are all based on dynamic programming.
@@ -85,7 +85,7 @@ In particular, we aim to use \emph{Algebraic Decision Diagrams (ADDs)} \cite{bah
 An ADD is a compact representation of a real-valued function as a directed acyclic graph. 
 % For functions with logical structure, an ADD representation can be exponentially smaller than the explicit representation. 
 Moreover, there are several high-performance libraries for efficiently manipulating ADDs \cite{somenzi2015cudd,van2015sylvan}.
-ADDs were used for weighted model counting in \addmc{} \cite{DPV20}, which tied for first place of the weighted track of the 2020 Model Counting Competition \cite{fichte2020model}.
+ADDs were used for weighted model counting in \addmc{} \cite{DPV20,phan2019weighted}, which tied for first place of the weighted track of the 2020 Model Counting Competition \cite{fichte2020model}.
 While \addmc{} also includes some high-level reasoning, it uses tightly-integrated custom-built heuristics \cite{dechter99,bouquet99,tarjan1984simple,koster2001treewidth} instead of leveraging existing high-level reasoning tools.
 
 

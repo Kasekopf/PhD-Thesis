@@ -146,7 +146,7 @@
  \fi\chapter*{Illustrations\@mkboth
  {ILLUSTRATIONS}{ILLUSTRATIONS}} \thispagestyle{empty}
  \addcontentsline{toc}{frontmatter}{\protect\numberline
- {\hfil}List of Illustrations}\@starttoc{lof}\if@restonecol
+ \texorpdfstring{{\hfil}List of Illustrations}{List of Illustrations}}\@starttoc{lof}\if@restonecol
  \twocolumn\fi}
 
 \def\l@figure{\@dottedtocline{1}{1.5em}{2.3em}}
@@ -155,7 +155,7 @@
  \fi\chapter*{Tables\@mkboth
  {TABLES}{TABLES}} \thispagestyle{empty}
  \addcontentsline{toc}{frontmatter}{\protect\numberline
- {\hfil}List of Tables}\@starttoc{lot}\if@restonecol
+ \texorpdfstring{{\hfil}List of Tables}{List of Tables}}\@starttoc{lot}\if@restonecol
  \twocolumn\fi}
 
 \let\l@table\l@figure
@@ -169,7 +169,7 @@
 
 \def\thebibliography#1{\chapter*{Bibliography\@mkboth
  {BIBLIOGRAPHY}{BIBLIOGRAPHY}}\addcontentsline
- {toc}{chapter}{\protect\numberline {\hfil}Bibliography}\list
+ {toc}{chapter}{\protect\numberline \texorpdfstring{{\hfil}Bibliography}{Bibliography}}\list
  {[\arabic{enumi}]}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
  \advance\leftmargin\labelsep
  \usecounter{enumi}}
@@ -278,7 +278,7 @@
 \@title \vskip .4in  by \vskip .4in \@author \vskip .4in \par
 \endgroup \setcounter
  {footnote}{0}\def\thefootnote{\fnsymbol{footnote}}\addcontentsline
- {toc}{frontmatter}{\protect\numberline {\hfil}Abstract}}
+ {toc}{frontmatter}{\protect\numberline \texorpdfstring{{\hfil}Abstract}{Abstract}}}
 
 \def\endabstract{\setcounter{footnote}{0}
   \pagestyle{plain}\thispagestyle{empty}}
@@ -286,7 +286,7 @@
 \def\acknowledge{\chapter*{Acknowledgments}\thispagestyle{empty}
  \setcounter{footnote}{0}
  \addcontentsline{toc}{frontmatter}{\protect\numberline
- {\hfil}Acknowledgments}}
+ \texorpdfstring{{\hfil}Acknowledgments}{Acknowledgments}}}
 
 \def\endacknowledge{\setcounter{footnote}{0}}
 

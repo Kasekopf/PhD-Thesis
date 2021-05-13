@@ -36,8 +36,8 @@ The resulting tool \tool{ProCount} made a significant contribution to a portfoli
 Overall, we demonstrated that a clean separation of dynamic-programming algorithms for discrete integration into a planning phase of high-level reasoning, followed by an execution phase of low-level computation yielded algorithms and tools for discrete integration that scale to large instance and run flexibly in a variety of configurations and hardware environments.
 
 \section{Future Work}
-The framework introduced in this thesis is just the next step towards developing practical tools for automated reasoning.
-We end with a list of several open directions to improve our framework and to apply our framework in broader context.
+The framework of planning and execution introduced in this thesis is just the next step towards developing practical tools for automated reasoning.
+We end with a list of several open directions to improve this framework and to apply this framework in broader context.
 
 % \subsection{Understanding Performance and Limitations}
 % One direction for future work is to improve our understanding of the performance of our dynamic-programming-based methods.  
@@ -46,13 +46,13 @@ We end with a list of several open directions to improve our framework and to ap
 
 \subsection{Improving Planning}
 The planning approaches in this thesis were explicitly designed to take advantage of existing graph decomposition tools in an unmodified, black-box way.
-Future improvements to graph decomposition tools, itself an active area of research, may allow us to scale to larger benchmarks in the future.
+Future improvements to graph decomposition tools, itself an active area of research, may allow us to scale to larger benchmarks.
 Moreover, developing customized graph decomposition tools for planning in discrete integration is a promising avenue for future work.
 
 While this thesis evaluated a subset of graph decomposition tools for planning, one easy avenue for improvement of our tools is to consider other graph decomposition tools.
 Integrating a diverse set of graph decomposition tools would especially benefit a portfolio of planners, as in Chapter \ref{ch:parallel}.
 For example, there has been work on parallel branch decomposition tools \cite{hicks2000branch}.
-It may also be possible to exploit other types of graph decompositions (e.g. hypertree decompositions \cite{AGG07}) for planning in discrete integration.
+It may also be possible to exploit other types of graph decompositions (e.g. hypertree decompositions \cite{AGG07}) for planning.
 
 The parallel portfolio of planners that we developed in Chapter \ref{ch:parallel} that was functional but simplistic.
 It may be possible to improve the portfolio through more advanced algorithm-selection techniques \cite{HHLKS09,XHHL12}. 
@@ -66,23 +66,23 @@ Similar to planning, the execution approaches in this thesis were explicitly des
 Future improvements to these computational libraries, which is itself an extremely active area of independent research in high-performance computing, may allow us to scale to larger benchmarks in the future.
 Moreover, developing computational libraries that are specifically optimized for execution in discrete integration is a promising avenue for future work.
 A problem of particular interest is to re-engineer the XLA compiler when targeting a TPU in order to handle the high-dimensional tensors seen in model counting.
-One could also consider implementing our execution algorithms using other computational libraries, e.g. using the parallel ADD library \sylvan{} \cite{van2015sylvan}, using databases as in \cite{fichte2020exploiting}, or using other sparse data structures \cite{sanner2005affine,li2018hicoo}. %TODO: more citations?
+One could also consider implementing our execution algorithms using other computational libraries, e.g. using databases as in \cite{fichte2020exploiting}, using the parallel ADD library \sylvan{} \cite{van2015sylvan}, or using other sparse data structures \cite{sanner2005affine,li2018hicoo}. %TODO: more citations?
 
 In Chapter \ref{ch:parallel}, we evaluated index slicing in the context of tensor-based execution.
 One avenue for future development of parallel counters is to integrate slicing with the ADD-based execution from Chapter \ref{ch:dpmc} or Chapter \ref{ch:procount}.
-This may require more complex techniques for choosing which indices (i.e., variables) to slice, since it is difficult to estimate the memory usage of sparse ADDs a priori.
+This may require more complex techniques for choosing which indices (i.e., variables) to slice, since it is difficult to estimate the memory usage of (sparse) ADDs a priori.
 
 Moreover, we focused on contracting all tensor network slices in sequence on a single GPU.
 There are opportunities in future work to apply index slicing in more complex ways to leverage parallelism at a larger scale. 
 One potential approach is to run each slice computation in Algorithm \ref{alg:tn-sliced} in parallel on a separate CPU core, on a separate GPU, or even on entirely separate nodes in a computing cluster.
-For example, recent work in the tensor network community used index slicing to divide a single tensor network contraction across a computing cluster containing with over 100k CPU cores running in parallel \cite{CZHNS18}.
+For example, recent work in the tensor network community used index slicing to divide a single tensor network contraction across a computing cluster containing over 100k CPU cores running in parallel \cite{CZHNS18}.
 Such techniques would allow our framework to scale to leverage huge computational resources for difficult discrete integration benchmarks.
 
 
 \subsection{Beyond CNF Formulas}
 While we focused on discrete integration over CNF formulas, many of the techniques in this thesis easily extend to discrete integration over more general classes of constraints.
 For example, all techniques we introduced in this work would have similar performance when applied to formulas that mix CNF clauses (i.e., OR clauses) with XOR clauses and Exactly-One clauses. % (as such clauses can also be represented as tree-factorable tensors).
-The techniques from Chapter \ref{ch:dpmc} and \ref{ch:procount} require only that the discrete integration query is presented as the conjunction of constraints, but with no restriction on the constraint type. 
+The techniques from Chapter \ref{ch:dpmc} and \ref{ch:procount} require only that the discrete integration query is presented as the conjunction of constraints, but need no restriction on the type of each constraint. 
 In contrast, techniques for discrete integration based on search or knowledge compilation often require different reasoning techniques for each type of constraint (or requires the constraints to be encoded as a CNF formula, which may dramatically increase the size of of the constraints).
 Evaluating our techniques on a wider collection of benchmarks is an exciting direction for future work that may enable new applications of discrete integration.
 
@@ -93,8 +93,9 @@ The focus in this thesis is on processing a single discrete integration query.
 In many applications, however, several discrete integration queries are made with an identical or similar set of constraints.
 Such repeated queries are handled well by counters based on knowledge compilation, where the same set of compiled constraints can be queried multiple times \cite{koriche2013knowledge,LM17,darwiche2004new,OD15}.
 Exploring how dynamic programming can be leveraged to handle several queries is another promising research direction.
+For example, in some contexts one could reuse the same execution plan from the planning stage across multiple discrete integration queries.
 
-Our framework of planning and execution can be used as a guide for other problems beyond discrete integration.
+Our framework of planning and execution can be used as a guide and applied to other problems beyond discrete integration.
 For example, Tabajara and Vardi \cite{tabajara2017factored} described a dynamic-programming, decision-diagram-based framework for functional Boolean synthesis.
 Refactoring the algorithm into a planning phase followed by an execution phase is also of interest in that context to produce more scalable and flexible tools.
 Our framework could also be generalized for maximum model counting \cite{fremont2017maximum} and other types of functional aggregate queries (FAQs) \cite{KNR16}, including MAP \cite{murphy2012machine,maua2015complexity,xue2016solving}.

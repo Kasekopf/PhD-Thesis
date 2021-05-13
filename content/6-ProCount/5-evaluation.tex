@@ -48,7 +48,7 @@ All code and data are available (\url{https://github.com/vardigroup/DPMC/tree/v2
 \paragraph{Planning.} 
 \tool{ProCount} contains two implementations of the planning phase: \Lg{} (Line Graph) and \Htb{} (Heuristic Tree Builder).
 \Lg{} uses the tree decomposers \flowcutter{} \cite{strasser2017computing}, \htd{} \cite{AMW17}, and \tamaki{} \cite{Tamaki17}.
-While \Lg{} is an \emph{anytime} tool that produces several trees (of decreasing widths) for each benchmark, we use only the first tree produced on each benchmark.
+While \Lg{} is an \emph{anytime} tool that produces several graded project-join trees (of decreasing widths) for each benchmark, we use only the first tree produced on each benchmark.
 We find that this does not significantly affect the performance of \procount{}.
 
 \htb{} implements four heuristics for variable ordering: maximal-cardinality search (\mcs{}) \cite{tarjan1984simple}, lexicographic search for perfect/minimal orders (\lexp/\lexm{}) \cite{koster2001treewidth}, and min-fill (\minfill{}) \cite{dechter03}.

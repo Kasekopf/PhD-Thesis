@@ -105,6 +105,7 @@ class ComparisonData:
         data.loc[data["Count"].isnull(), "Total Time"] = TIMEOUT
         data.loc[data["Total Time"].isnull(), "Total Time"] = TIMEOUT
         data.loc[data["Total Time"] > TIMEOUT, "Total Time"] = TIMEOUT
+        data.loc[data["Count"] == 'nan', "Total Time"] = TIMEOUT
 
         # ADDMC and DPMC easily underflow, which we could as failures
         if "ADDMC" in self.__instance._local_directory or 'DPMC' in self.__instance._local_directory:

@@ -118,16 +118,16 @@ Figure \ref{fig:performance-factor} indicates how varying the performance factor
   \begin{tabular}{l||r|r|r||r|r|r|}
   & \multicolumn{3}{c||}{Without preprocessing} & \multicolumn{3}{c|}{With \tool{pmc-eq} preprocessing} \\
   & \# Fastest & \# Solved & PAR-2 & \# Fastest & \# Solved & PAR-2\\ \hline 
-\pkg{T.}+\pkg{CPU1} & 0 & 1119 & 1704469. & 0 & 1453 & 811199.\\ \hline 
-\pkg{P4}+\pkg{CPU1} & 45 & 1136 & 1618314. & 82 & 1436 & 840334.\\ \hline 
-\pkg{P4}+\pkg{CPU8} & 48 & 1157 & 1556828. & 59 & 1452 & 806600.\\ \hline 
-\pkg{P4}+\pkg{GPU} & 70 & 1183 & 1490805. & 45 & 1460 & 778436.\\ \hline 
-\tool{miniC2D} & 47 & 1381 & 1131457. & 127 & 1582 & 562259.\\ \hline 
-\tool{d4} & 542 & 1508 & 883829. & 436 & 1514 & 723207.\\ \hline 
+\pkg{T.}+\pkg{CPU1} & 0 & 1119 & 1704469. & 0 & 1421 & 874869.\\ \hline 
+\pkg{P4}+\pkg{CPU1} & 47 & 1135 & 1620313. & 85 & 1436 & 840334.\\ \hline 
+\pkg{P4}+\pkg{CPU8} & 49 & 1157 & 1556828. & 60 & 1452 & 806600.\\ \hline 
+\pkg{P4}+\pkg{GPU} & 72 & 1182 & 1492803. & 47 & 1459 & 780434.\\ \hline 
+\tool{miniC2D} & 47 & 1357 & 1179412. & 127 & 1558 & 610212.\\ \hline 
+\tool{d4} & 542 & 1474 & 951718. & 436 & 1480 & 791105.\\ \hline 
 \tool{cachet} & 230 & 1363 & 1156309. & 207 & 1330 & 1075215.\\ \hline 
-\tool{ADDMC} & 184 & 1302 & 1245470. & 33 & 1290 & 1147473.\\ \hline 
-\tool{gpusat2} & 13 & 1152 & 1547898. & 11 & 1334 & 1030515.\\ \hline 
-\tool{DPMC} & 588 & 1279 & 1301363. & 654 & 1427 & 849168.\\ \hline 
+\tool{ADDMC} & 184 & 1270 & 1306260. & 33 & 1258 & 1207856.\\ \hline 
+\tool{gpusat2} & 8 & 1131 & 1589061. & 5 & 1313 & 1071441.\\ \hline 
+\tool{DPMC} & 588 & 1260 & 1339263. & 654 & 1395 & 912741.\\ \hline 
 \end{tabular}
 \end{table}
 
@@ -138,8 +138,8 @@ We run each counter once on each benchmark (both with and without \pkg{pmc-eq} p
 
 We observe that \tool{TensorOrder2} is improved by the portfolio planner and, on hard benchmarks, by executing on a multi-core CPU and on a GPU. The flat line at 3 seconds for $\pkg{P4}+\pkg{GPU}$ is caused by overhead from initializing the GPU.
 
-Comparing \tool{TensorOrder2} with the other counters, \tool{TensorOrder2} is competitive without preprocessing but solves fewer benchmarks than all other counters, although \tool{TensorOrder2} (with some configuration) is faster than all other counters on 163 benchmarks before preprocessing. 
-We observe that preprocessing significantly boosts \tool{TensorOrder2} relative to other counters, similar to prior observations with \tool{gpusat2} \cite{FHZ19}. \tool{TensorOrder2} solves the third-most preprocessed benchmarks of any solver and has the third-lowest PAR-2 score (notably, outperforming \tool{gpusat2} in both measures). \tool{TensorOrder2} (with some configuration) is faster than all other counters on 186 benchmarks with preprocessing. Since \tool{TensorOrder2} improves the virtual best solver on 186 benchmarks without preprocessing and on 176 benchmarks with preprocessing, we conclude that \tool{TensorOrder2} is useful as part of a portfolio of counters.
+Comparing \tool{TensorOrder2} with the other counters, \tool{TensorOrder2} is competitive without preprocessing but solves fewer benchmarks than all other counters, although \tool{TensorOrder2} (with some configuration) is faster than all other counters on 168 benchmarks before preprocessing. 
+We observe that preprocessing significantly boosts \tool{TensorOrder2} relative to other counters, similar to prior observations with \tool{gpusat2} \cite{FHZ19}. \tool{TensorOrder2} solves the third-most preprocessed benchmarks of any solver and has the second-lowest PAR-2 score (notably, outperforming \tool{gpusat2} in both measures). \tool{TensorOrder2} (with some configuration) is faster than all other counters on 192 benchmarks with preprocessing. Since \tool{TensorOrder2} improves the virtual best solver on 168 benchmarks without preprocessing and on 192 benchmarks with preprocessing, we conclude that \tool{TensorOrder2} is useful as part of a portfolio of counters.
 
 \subsection{Experiment 4: Executing on a TPU (RQ5)}
 \label{sec:parallel:exp:tpu}

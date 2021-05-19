@@ -5,8 +5,6 @@ import sys
 sys.path.append("../../")
 # noinspection PyUnresolvedReferences
 import benchmarks  # See ../../benchmarks
-import gen_planning_figures as planning
-import gen_execution_figures as executing
 import util
 
 TIMEOUT = 1000
@@ -29,12 +27,27 @@ preprocessing_time = {b.name: b.creation_time(TIMEOUT) for b in pmc_eq_benchmark
 
 
 # Configuration info
+Planner = collections.namedtuple("Planner", ["name", "label", "color", "linestyle"])
+Executor = collections.namedtuple("executor", ["name", "label", "linestyle", "args"])
 tensor_configs = [
     # Planner, hardware, optimal performance factor
-    (planning.planners[0], executing.executors[0], 3.7926901907322575e-11),
-    (planning.planners[5], executing.executors[0], 1.623776739188719e-11),
-    (planning.planners[5], executing.executors[1], 6.1584821106602706e-12),
-    (planning.planners[5], executing.executors[2], 3.792690190732259e-12),
+    (Planner("factor-Tamaki", "T.", "#e0e0d0", "-"),
+     Executor("CPU1", "CPU1", "-", {"tensor_library": "numpy", "thread_limit": 1}),
+     3.7926901907322575e-11),
+    (Planner("factor-portfolio4", "P4", "#9090ff", "-"),
+     Executor("CPU1", "CPU1", "-", {"tensor_library": "numpy", "thread_limit": 1}),
+     1.623776739188719e-11),
+    (Planner("factor-portfolio4", "P4", "#9090ff", "-"),
+     Executor("CPU8", "CPU8", ":", {"tensor_library": "numpy"}),
+     6.1584821106602706e-12),
+    (Planner("factor-portfolio4", "P4", "#9090ff", "-"),
+     Executor(
+        "GPU",
+        "GPU",
+        "--",
+        {"tensor_library": "tensorflow-gpu20", "mem_limit": 15676243968.0},
+     ),
+     3.792690190732259e-12),
 ]
 
 ModelCounter = collections.namedtuple(

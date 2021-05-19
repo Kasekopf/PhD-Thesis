@@ -5,7 +5,7 @@ import slurmqueen
 import gen_planning_figures as planning
 import util
 
-Executor = collections.namedtuple("executor", ["name", "label", "linestyle", "args"])
+Executor = collections.namedtuple("Executor", ["name", "label", "linestyle", "args"])
 
 
 executors = [

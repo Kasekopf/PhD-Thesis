@@ -20,7 +20,10 @@ class CachetData:
         )
         # Set the total time to TIMEOUT for all experiments that did not return a count (includes timeout, memout, etc.)
         data.loc[data["Count"].isnull(), "Total Time"] = TIMEOUT
+        data.loc[data["Total Time"].isnull(), "Total Time"] = TIMEOUT
         data.loc[data["Total Time"] > TIMEOUT, "Total Time"] = TIMEOUT
+        data.loc[data["Count"] == 'nan', "Total Time"] = TIMEOUT
+        data.loc[data["Count"] == 'inf', "Total Time"] = TIMEOUT
 
         if len(data) != 1091:
             print(

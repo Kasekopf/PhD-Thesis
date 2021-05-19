@@ -5,7 +5,7 @@ import sys
 sys.path.append("../")
 gen_comparison_figures = importlib.import_module('5.gen_comparison_figures')
 import util
-
+import matplotlib.patheffects
 
 # noinspection PyUnresolvedReferences
 def plot_comparison_exp(ax, pmc_eq, which):
@@ -25,13 +25,13 @@ def plot_comparison_exp(ax, pmc_eq, which):
     )
 
     lines = [
-        Line({"color": "#ffffff", "linestyle": "-", "linewidth": 1, "label": "ADDMC"}, counter_exps["ADDMC"]),
-        Line({"color": "#cf2020", "linestyle": "-", "linewidth": 1, "label": "gpusat2"}, counter_exps["gpusat2"]),
-        Line({"color": "#ffc000", "linestyle": "-", "linewidth": 1, "label": "d4"}, counter_exps["d4"]),
-        Line({"color": "#9090ff", "linestyle": "-", "linewidth": 1, "label": "miniC2D"}, counter_exps["miniC2D"]),
-        Line({"color": "#000000", "linestyle": "--", "linewidth": 1.5, "label": "TensorOrder1 (CPU)"}, tensor_exps["CPU1/factor-Tamaki"]),
-        Line({"color": "#000000", "linestyle": "-", "linewidth": 1, "label": "TensorOrder2 (GPU)"}, tensor_exps["GPU/factor-portfolio4"]),
-        Line({"color": "#888888", "linestyle": "-", "linewidth": 1, "label": "DPMC"}, counter_exps["DPMC"]),
+        Line({"color": "#ffffff", "linestyle": "-", "label": "ADDMC"}, counter_exps["ADDMC"]),
+        Line({"color": "#cf2020", "linestyle": "-", "label": "gpusat2"}, counter_exps["gpusat2"]),
+        Line({"color": "#ffc000", "linestyle": "-", "label": "d4"}, counter_exps["d4"]),
+        Line({"color": "#9090ff", "linestyle": "-", "label": "miniC2D"}, counter_exps["miniC2D"]),
+        Line({"color": "#000000", "linestyle": "--", "label": "TensorOrder1 (CPU)"}, tensor_exps["CPU1/factor-Tamaki"]),
+        Line({"color": "#000000", "linestyle": "-", "label": "TensorOrder2 (GPU)"}, tensor_exps["GPU/factor-portfolio4"]),
+        Line({"color": "#888888", "linestyle": "-", "label": "DPMC"}, counter_exps["DPMC"]),
     ]
 
     if which == 0:
@@ -44,12 +44,11 @@ def plot_comparison_exp(ax, pmc_eq, which):
 
     for line in lines:
         data = line.exp.load_count_data(expected_number_dp)
-        if line.display["linestyle"] == "-":
-            ax.plot(
-                *util.cactus(data, endpoint=timeout), color="black", linewidth=1.5,
-            )
         ax.plot(
             *util.cactus(data, endpoint=timeout),
+            linewidth=1,
+            path_effects=[matplotlib.patheffects.Stroke(linewidth=1.5, foreground='#000000'),
+                          matplotlib.patheffects.Normal()],
             **line.display
         )
 

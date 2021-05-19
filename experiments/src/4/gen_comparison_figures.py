@@ -31,9 +31,14 @@ class BaseModelCounter:
         data.loc[data["Count"].isnull(), "Total Time"] = timeout
         data.loc[data["Total Time"].isnull(), "Total Time"] = timeout
         data.loc[data["Total Time"] > timeout, "Total Time"] = timeout
+        data.loc[data["Count"] == 'nan', "Total Time"] = timeout
+        data.loc[data["Count"] == 'inf', "Total Time"] = timeout
 
         if "DMC" in self.name:
-            data.loc[data["Count"] == 0, "Total Time"] = timeout  # underflow
+            # underflow
+            data.loc[data["Count"] == 0, "Total Time"] = timeout
+            data.loc[data["Count"] == '0', "Total Time"] = timeout
+            data.loc[data["Count"] == '0.0', "Total Time"] = timeout
 
         if len(data) != 1976:
             print(

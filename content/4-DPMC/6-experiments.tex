@@ -39,6 +39,7 @@ Each variable $x$ is randomly assigned literal weights: either $W_x(\set{x}) = 0
 %   So we use weights 0.25 and 0.75 for \cachet{} and multiply the model count produced by \cachet{} on a formula $\phi$ by $2^{\size{\vars(\phi)}}$ as a postprocessing step.
 % }
 Generating weights in this particular fashion results in a reasonably low amount of floating-point underflow and overflow for all model counters.
+Note that we count overflows as errors for all counters, and underflows as errors for \Dmc{}.
 
 We ran all experiments on single CPU cores of a Linux cluster with Xeon E5-2650v2 processors (2.60-GHz) and 30 GB of memory\footnote{
 Vu H. N. Phan implemented \Htb{} and \Dmc{}, and ran experiments for the counter \tool{c2d}.}.
@@ -159,5 +160,5 @@ We present results from this experiment in Figure \ref{fig:comparison}.
 For each benchmark, the solving time of \tool{VBS*} is the shortest solving time among all pre-existing model counters (\cachet, \ctd, \df, and \minictd).
 Similarly, the time of \tool{VBS} is the shortest time among all model counters, including those based on project-join trees.
 We observe that \tool{VBS} performs significantly better than \tool{VBS*}.
-In fact, \Dmc{}+\Lg{} is the fastest model counter on 471 of \benchmarkCountAltogether{} benchmarks.
+In fact, \Dmc{}+\Lg{} is the fastest model counter on 584 of \benchmarkCountAltogether{} benchmarks.
 Thus project-join-tree-based tools are valuable for portfolios of weighted model counters.

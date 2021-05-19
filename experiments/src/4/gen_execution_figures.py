@@ -42,12 +42,18 @@ class ExecutionData:
         contraction_times = {}
         if self.__full_config.executor.name == "tensor":
             data = self.__instance.query(
-                "SELECT [<] as [Join Tree], [Total Time] FROM data WHERE Count > 0"
+                "SELECT [<] as [Join Tree], [Total Time], [Count] FROM data WHERE Count > 0"
             )
         else:  # dmc
             data = self.__instance.query(
-                "SELECT [jf] as [Join Tree], [Total time] AS [Total Time] FROM data WHERE Count > 0"
+                "SELECT [jf] as [Join Tree], [Total time] AS [Total Time], [Count] FROM data WHERE Count > 0"
             )
+
+        data.loc[data["Count"].isnull(), "Total Time"] = timeout
+        data.loc[data["Total Time"].isnull(), "Total Time"] = timeout
+        data.loc[data["Total Time"] > timeout, "Total Time"] = timeout
+        data.loc[data["Count"] == 'nan', "Total Time"] = timeout
+        data.loc[data["Count"] == 'inf', "Total Time"] = timeout
 
         for record, time in zip(data["Join Tree"], data["Total Time"]):
             contraction_times[record.lstrip("/")] = time

@@ -22,8 +22,8 @@ class CachetData:
         data.loc[data["Count"].isnull(), "Total Time"] = TIMEOUT
         data.loc[data["Total Time"].isnull(), "Total Time"] = TIMEOUT
         data.loc[data["Total Time"] > TIMEOUT, "Total Time"] = TIMEOUT
-        data.loc[data["Count"] == 'nan', "Total Time"] = TIMEOUT
-        data.loc[data["Count"] == 'inf', "Total Time"] = TIMEOUT
+        data.loc[data["Count"] == "nan", "Total Time"] = TIMEOUT
+        data.loc[data["Count"] == "inf", "Total Time"] = TIMEOUT
 
         if len(data) != 1091:
             print(

@@ -31,28 +31,32 @@ class BaseModelCounter:
         data.loc[data["Count"].isnull(), "Total Time"] = timeout
         data.loc[data["Total Time"].isnull(), "Total Time"] = timeout
         data.loc[data["Total Time"] > timeout, "Total Time"] = timeout
-        data.loc[data["Count"] == 'nan', "Total Time"] = timeout
-        data.loc[data["Count"] == 'inf', "Total Time"] = timeout
+        data.loc[data["Count"] == "nan", "Total Time"] = timeout
+        data.loc[data["Count"] == "inf", "Total Time"] = timeout
 
         if "DMC" in self.name:
             # underflow
             data.loc[data["Count"] == 0, "Total Time"] = timeout
-            data.loc[data["Count"] == '0', "Total Time"] = timeout
-            data.loc[data["Count"] == '0.0', "Total Time"] = timeout
+            data.loc[data["Count"] == "0", "Total Time"] = timeout
+            data.loc[data["Count"] == "0.0", "Total Time"] = timeout
 
         if len(data) != 1976:
             # Determine the benchmarks that are missing, and assume timeout
-            res = set(self.get_experiment().query("SELECT file FROM data")['file'])
+            res = set(self.get_experiment().query("SELECT file FROM data")["file"])
             needed = set(range(1976))
             for r in res:
                 needed.discard(r)
             for missing_id in needed:
                 # Get the benchmark name using d4
-                id_lookup = weighted_counters[0].get_experiment().query(
-                    "SELECT [<] FROM data WHERE file=" + str(missing_id)
+                id_lookup = (
+                    weighted_counters[0]
+                    .get_experiment()
+                    .query("SELECT [<] FROM data WHERE file=" + str(missing_id))
                 )
                 benchmark_name = list(id_lookup["<"])[0]
-                data = data.append({"<": benchmark_name, "Total Time": timeout}, ignore_index=True)
+                data = data.append(
+                    {"<": benchmark_name, "Total Time": timeout}, ignore_index=True
+                )
 
         data["<"] = (
             data["<"].str.replace("/bayes/", "/").replace("/pseudoweighted/", "/")

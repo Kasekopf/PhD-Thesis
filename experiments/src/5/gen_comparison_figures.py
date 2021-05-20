@@ -31,23 +31,31 @@ Planner = collections.namedtuple("Planner", ["name", "label", "color", "linestyl
 Executor = collections.namedtuple("executor", ["name", "label", "linestyle", "args"])
 tensor_configs = [
     # Planner, hardware, optimal performance factor
-    (Planner("factor-Tamaki", "T.", "#e0e0d0", "-"),
-     Executor("CPU1", "CPU1", "-", {"tensor_library": "numpy", "thread_limit": 1}),
-     3.7926901907322575e-11),
-    (Planner("factor-portfolio4", "P4", "#9090ff", "-"),
-     Executor("CPU1", "CPU1", "-", {"tensor_library": "numpy", "thread_limit": 1}),
-     1.623776739188719e-11),
-    (Planner("factor-portfolio4", "P4", "#9090ff", "-"),
-     Executor("CPU8", "CPU8", ":", {"tensor_library": "numpy"}),
-     6.1584821106602706e-12),
-    (Planner("factor-portfolio4", "P4", "#9090ff", "-"),
-     Executor(
-        "GPU",
-        "GPU",
-        "--",
-        {"tensor_library": "tensorflow-gpu20", "mem_limit": 15676243968.0},
-     ),
-     3.792690190732259e-12),
+    (
+        Planner("factor-Tamaki", "T.", "#e0e0d0", "-"),
+        Executor("CPU1", "CPU1", "-", {"tensor_library": "numpy", "thread_limit": 1}),
+        3.7926901907322575e-11,
+    ),
+    (
+        Planner("factor-portfolio4", "P4", "#9090ff", "-"),
+        Executor("CPU1", "CPU1", "-", {"tensor_library": "numpy", "thread_limit": 1}),
+        1.623776739188719e-11,
+    ),
+    (
+        Planner("factor-portfolio4", "P4", "#9090ff", "-"),
+        Executor("CPU8", "CPU8", ":", {"tensor_library": "numpy"}),
+        6.1584821106602706e-12,
+    ),
+    (
+        Planner("factor-portfolio4", "P4", "#9090ff", "-"),
+        Executor(
+            "GPU",
+            "GPU",
+            "--",
+            {"tensor_library": "tensorflow-gpu20", "mem_limit": 15676243968.0},
+        ),
+        3.792690190732259e-12,
+    ),
 ]
 
 ModelCounter = collections.namedtuple(
@@ -100,21 +108,26 @@ class ComparisonData:
         self.__instance = slurmqueen.Experiment("", []).instance(data_dir)
 
     def load_count_data(self, expected=None):
-        data = self.__instance.query("SELECT [Count], [Total Time], [<], [file] FROM data")
+        data = self.__instance.query(
+            "SELECT [Count], [Total Time], [<], [file] FROM data"
+        )
         # Set the total time to TIMEOUT for all experiments that did not return a count (includes timeout, memout, etc.)
         data.loc[data["Count"].isnull(), "Total Time"] = TIMEOUT
         data.loc[data["Total Time"].isnull(), "Total Time"] = TIMEOUT
         data.loc[data["Total Time"] > TIMEOUT, "Total Time"] = TIMEOUT
-        data.loc[data["Count"] == 'nan', "Total Time"] = TIMEOUT
-        data.loc[data["Count"] == 'inf', "Total Time"] = TIMEOUT
+        data.loc[data["Count"] == "nan", "Total Time"] = TIMEOUT
+        data.loc[data["Count"] == "inf", "Total Time"] = TIMEOUT
 
         # print(self.__instance._local_directory)
         # print(data.loc[data["Count"] == 'nan', "file"])
 
         # ADDMC and DPMC easily underflow, which we could as failures
-        if "ADDMC" in self.__instance._local_directory or 'DPMC' in self.__instance._local_directory:
-            data.loc[data["Count"] == '0', "Total Time"] = TIMEOUT
-            data.loc[data["Count"] == '0.0', "Total Time"] = TIMEOUT
+        if (
+            "ADDMC" in self.__instance._local_directory
+            or "DPMC" in self.__instance._local_directory
+        ):
+            data.loc[data["Count"] == "0", "Total Time"] = TIMEOUT
+            data.loc[data["Count"] == "0.0", "Total Time"] = TIMEOUT
 
         if expected is not None and len(data) != expected:
             print(
@@ -295,13 +308,15 @@ def gen(output):
     )[: -len(pmc_eq_benchmarks_trivial)]
     f.save("5/comparison_all")
 
-
     print(gen_fastest_table(vbs_nopmc, vbs_pmc))
 
     # Record all benchmarks that were solved by no competing solver within 100sec
-    with open('../../benchmarks/hard_100.txt', 'w') as hard_file:
-        hard_file.write("# Benchmarks that take more than 100s for gpusat2, d4, cachet, ADDMC, DPMC, and miniC2D.\n")
-        hard_file.writelines(b + '\n' for b in find_hard_benchmarks(100))
+    with open("../../benchmarks/hard_100.txt", "w") as hard_file:
+        hard_file.write(
+            "# Benchmarks that take more than 100s for gpusat2, d4, cachet, ADDMC, DPMC, and miniC2D.\n"
+        )
+        hard_file.writelines(b + "\n" for b in find_hard_benchmarks(100))
+
 
 if __name__ == "__main__":
     gen(util.output_pdf())

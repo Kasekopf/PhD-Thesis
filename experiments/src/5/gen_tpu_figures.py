@@ -43,7 +43,8 @@ class SliceData:
         slice_round_times = self.slice_round_times()
         time_per_slice = self.avg_time_per_slice()
         return {
-            rank: slice_round_times[rank][0] - time_per_slice[rank] * self.__num_cores for rank in slice_round_times
+            rank: slice_round_times[rank][0] - time_per_slice[rank] * self.__num_cores
+            for rank in slice_round_times
         }
 
 
@@ -61,9 +62,15 @@ def gen(output):
     lines = [
         DisplayInfo("Compile (TPU8-graph)", jax_tpu.compilation_time(), "#ffb14e", "p"),
         DisplayInfo("Compile (CPU8-graph)", jax_cpu.compilation_time(), "#0000dd", "p"),
-        DisplayInfo("Execute (TPU8-graph)", jax_tpu.avg_time_per_slice(), "#ffb14e", "P"),
-        DisplayInfo("Execute (CPU8-graph)", jax_cpu.avg_time_per_slice(), "#0000dd", "P"),
-        DisplayInfo("Execute (CPU8)", numpy.avg_time_per_slice_from_total(), "#dd0f0f", "o"),
+        DisplayInfo(
+            "Execute (TPU8-graph)", jax_tpu.avg_time_per_slice(), "#ffb14e", "P"
+        ),
+        DisplayInfo(
+            "Execute (CPU8-graph)", jax_cpu.avg_time_per_slice(), "#0000dd", "P"
+        ),
+        DisplayInfo(
+            "Execute (CPU8)", numpy.avg_time_per_slice_from_total(), "#dd0f0f", "o"
+        ),
     ]
 
     for exp_info in lines:

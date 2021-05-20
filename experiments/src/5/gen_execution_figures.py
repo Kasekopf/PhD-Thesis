@@ -43,8 +43,8 @@ class ExecutorData:
         data.loc[data["Count"].isnull(), "Contraction Time"] = TIMEOUT
         data.loc[data["Contraction Time"].isnull(), "Contraction Time"] = TIMEOUT
         data.loc[data["Contraction Time"] > TIMEOUT, "Contraction Time"] = TIMEOUT
-        data.loc[data["Count"] == 'nan', "Contraction Time"] = TIMEOUT
-        data.loc[data["Count"] == 'inf', "Contraction Time"] = TIMEOUT
+        data.loc[data["Count"] == "nan", "Contraction Time"] = TIMEOUT
+        data.loc[data["Count"] == "inf", "Contraction Time"] = TIMEOUT
         for record, time in zip(data["<"], data["Contraction Time"]):
             result[record] = time
         return result

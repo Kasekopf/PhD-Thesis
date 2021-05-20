@@ -52,8 +52,8 @@ class ExecutionData:
         data.loc[data["Count"].isnull(), "Total Time"] = timeout
         data.loc[data["Total Time"].isnull(), "Total Time"] = timeout
         data.loc[data["Total Time"] > timeout, "Total Time"] = timeout
-        data.loc[data["Count"] == 'nan', "Total Time"] = timeout
-        data.loc[data["Count"] == 'inf', "Total Time"] = timeout
+        data.loc[data["Count"] == "nan", "Total Time"] = timeout
+        data.loc[data["Count"] == "inf", "Total Time"] = timeout
 
         for record, time in zip(data["Join Tree"], data["Total Time"]):
             contraction_times[record.lstrip("/")] = time

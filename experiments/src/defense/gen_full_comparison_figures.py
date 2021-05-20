@@ -3,7 +3,7 @@ import importlib
 import sys
 
 sys.path.append("../")
-gen_comparison_figures = importlib.import_module('5.gen_comparison_figures')
+gen_comparison_figures = importlib.import_module("5.gen_comparison_figures")
 import util
 import matplotlib.patheffects
 
@@ -20,18 +20,34 @@ def plot_comparison_exp(ax, pmc_eq, which):
         expected_number_dp = len(gen_comparison_figures.raw_benchmarks)
     timeout = gen_comparison_figures.TIMEOUT
 
-    Line = collections.namedtuple(
-        "Line", ["display", "exp"]
-    )
+    Line = collections.namedtuple("Line", ["display", "exp"])
 
     lines = [
-        Line({"color": "#ffffff", "linestyle": "-", "label": "ADDMC"}, counter_exps["ADDMC"]),
-        Line({"color": "#cf2020", "linestyle": "-", "label": "gpusat2"}, counter_exps["gpusat2"]),
+        Line(
+            {"color": "#ffffff", "linestyle": "-", "label": "ADDMC"},
+            counter_exps["ADDMC"],
+        ),
+        Line(
+            {"color": "#cf2020", "linestyle": "-", "label": "gpusat2"},
+            counter_exps["gpusat2"],
+        ),
         Line({"color": "#ffc000", "linestyle": "-", "label": "d4"}, counter_exps["d4"]),
-        Line({"color": "#9090ff", "linestyle": "-", "label": "miniC2D"}, counter_exps["miniC2D"]),
-        Line({"color": "#000000", "linestyle": "--", "label": "TensorOrder1 (CPU)"}, tensor_exps["CPU1/factor-Tamaki"]),
-        Line({"color": "#000000", "linestyle": "-", "label": "TensorOrder2 (GPU)"}, tensor_exps["GPU/factor-portfolio4"]),
-        Line({"color": "#888888", "linestyle": "-", "label": "DPMC"}, counter_exps["DPMC"]),
+        Line(
+            {"color": "#9090ff", "linestyle": "-", "label": "miniC2D"},
+            counter_exps["miniC2D"],
+        ),
+        Line(
+            {"color": "#000000", "linestyle": "--", "label": "TensorOrder1 (CPU)"},
+            tensor_exps["CPU1/factor-Tamaki"],
+        ),
+        Line(
+            {"color": "#000000", "linestyle": "-", "label": "TensorOrder2 (GPU)"},
+            tensor_exps["GPU/factor-portfolio4"],
+        ),
+        Line(
+            {"color": "#888888", "linestyle": "-", "label": "DPMC"},
+            counter_exps["DPMC"],
+        ),
     ]
 
     if which == 0:
@@ -47,19 +63,23 @@ def plot_comparison_exp(ax, pmc_eq, which):
         ax.plot(
             *util.cactus(data, endpoint=timeout),
             linewidth=1,
-            path_effects=[matplotlib.patheffects.Stroke(linewidth=1.5, foreground='#000000'),
-                          matplotlib.patheffects.Normal()],
+            path_effects=[
+                matplotlib.patheffects.Stroke(linewidth=1.5, foreground="#000000"),
+                matplotlib.patheffects.Normal(),
+            ],
             **line.display
         )
 
     # Plot dummy lines if needed to align legend entries
     if which == 0:
-        ax.plot([0], [0], color='w', alpha=0, label=' ')
-        ax.plot([0], [0], color='w', alpha=0, label=' ')
+        ax.plot([0], [0], color="w", alpha=0, label=" ")
+        ax.plot([0], [0], color="w", alpha=0, label=" ")
     if which == 1:
-        ax.plot([0], [0], color='w', alpha=0, label=' ')
+        ax.plot([0], [0], color="w", alpha=0, label=" ")
 
-    util.set_cactus_axes(ax, 2000, timeout, legend_args={"ncol": 2, "loc": "upper left"})
+    util.set_cactus_axes(
+        ax, 2000, timeout, legend_args={"ncol": 2, "loc": "upper left"}
+    )
 
 
 def gen(output):

@@ -11,7 +11,7 @@ Although tensor networks constructed from weighted model counting instances do n
 
 If $N$ has no free indices, the free vertex has no incident edges and the remaining graph is exactly the graph analyzed in prior work. Intuitively, the structure graph of a tensor network $N$ captures how indices are shared by the tensors of $N$. For example, on a CNF formula $\varphi$ Theorem \ref{thm:wmc-reduction} produces a tensor network $N_\varphi$ whose structure graph is exactly the \emph{incidence graph} of $\varphi$. The structure graph of $N$ contains all information needed to compute the max-rank of a contraction-tree of $N$, as formalized in the following lemma.
 \begin{lemma} \label{lemma:tcn-equiv-structure}
-	Let $N$ be a tensor network with structure graph $G$. If $N' \subseteq N$ is nonempty, then $N'$ is a tensor network and $\tnfree{N'} = \vinc{G}{N'} \cap \vinc{G}{\V{G} \setminus N'}$.
+	Let $N$ be a tensor network with structure graph $G$. If $N' \subseteq N$ is nonempty, then $N'$ is a tensor network and $\tnfree{N'} = \vinc{G}{N'} \cap \vinc{G}{\V{G} \setminus N'}$. %TODO: Should use \vincs{G}{V}
 \end{lemma}
 \begin{proof}
 	$N'$ is a tensor network since $N$ is. Let $\fv$ be the free vertex of $G$.

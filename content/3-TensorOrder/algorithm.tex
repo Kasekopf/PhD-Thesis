@@ -28,6 +28,7 @@ This order takes the form of a \emph{contraction tree} \cite{EP14}:
 In our database analogy from Section \ref{sec:tensors:tensors}, a contraction tree for a tensor network representing a project-join query is a join tree of that query (with projections done as early as possible). 
 In our factor-graph analogy from Section \ref{sec:tensors:tensors}, a contraction tree corresponds to a \emph{dtree} \cite{darwiche01}, to an elimination order \cite{darwiche01b}, and to a binary join tree \cite{shenoy97} where factors are assigned to leaf nodes.
 
+%TODO: Explicitly type M and T here. Though it is typed later in Thm 3.2
 There are two subtleties in the planning process. 
 Firstly, the planning phase is allowed to modify the input tensor network $N$ as long as the new tensor network $M$ has the same contraction as $N$. 
 This allows the planning phase to tweak the tensor network to enable better contraction trees.

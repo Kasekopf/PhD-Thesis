@@ -49,7 +49,7 @@ The planning approaches in this thesis were explicitly designed to take advantag
 Future improvements to graph decomposition tools, itself an active area of research, may allow us to scale to larger benchmarks.
 Moreover, developing customized graph decomposition tools for planning in discrete integration is a promising avenue for future work.
 
-While this thesis evaluated a subset of graph decomposition tools for planning, one easy avenue for improvement of our tools is to consider other graph decomposition tools.
+While this thesis evaluated a subset of graph decomposition tools for planning, one avenue for improvement of our tools is to consider other graph decomposition tools.
 Integrating a diverse set of graph decomposition tools would especially benefit a portfolio of planners as in Chapter \ref{ch:parallel}.
 For example, there has been work on parallel branch decomposition tools that would be possible to integrate with our approach \cite{hicks2000branch}.
 It may also be possible to exploit other types of graph decompositions (e.g. hypertree decompositions \cite{AGG07}) for planning.
@@ -85,6 +85,7 @@ For example, all techniques we introduced in this work would have similar perfor
 The techniques from Chapter \ref{ch:dpmc} and \ref{ch:procount} require only that the discrete integration query is presented as the conjunction of constraints, but need no restriction on the type of each constraint. 
 In contrast, techniques for discrete integration based on search or knowledge compilation often require different reasoning techniques for each type of constraint (or requires the constraints to be encoded as a CNF formula, which may dramatically increase the size of of the constraints).
 Evaluating our techniques on a wider collection of constraints is an exciting direction for future work that may enable new applications of discrete integration.
+%TODO: Complex weights?
 
 %  More generally, our algorithms for tensor-network contraction can be used to improve many other applications of tensor networks, e.g. quantum circuit simulation \cite{MS08}.
 

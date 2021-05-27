@@ -16,7 +16,7 @@ In Chapter \ref{ch:tensors}, this problem was solved using a reduction from weig
 After the reduction, all indices appear exactly twice, so one never needs to perform a product without also projecting all shared indices.
 Moreover, the additional overhead incurred by this reduction was lessened through the \textbf{FT} planner (see Section \ref{sec:tensors:preprocessing}).
 
-In order to incorporate tensors in our project-join-tree-based framework, we take a different strategy that uses copy tensors.
+In order to incorporate tensors in our project-join-tree-based framework, we take a different strategy that uses copy tensors. %TODO: Copy tensors were defined in Ch 2 with COPY instead of \blacksquare
 The \emph{copy tensor} for a set $X$ represents the pseudo-Boolean function $\blacksquare_X: 2^X \to \mathbb{R}$ \st{} $\blacksquare_X(\tau)$ is $1$ if $\tau \in \{ \emptyset, X \}$ and $0$ otherwise.
 We can simulate product using contraction by including additional copy tensors.
 In detail, for each $z \in X \cap Y$ make two fresh variables $z'$ and $z''$.

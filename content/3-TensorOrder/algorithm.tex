@@ -2,7 +2,6 @@
 \label{sec:tensors:algorithm}
 In this section, we discuss the algorithm for literal-weighted model counting using tensor networks. This algorithm is presented as Algorithm \ref{alg:wmc} and has three phases.
 
-% TODO: References in TensorOrder2 assume that \alpha is incorporated
 \begin{algorithm*}[t]
     \caption{Computing the weighted model count with a TN}
     \label{alg:wmc}
@@ -19,8 +18,8 @@ In this section, we discuss the algorithm for literal-weighted model counting us
 
 First, in the \emph{reduction} phase the input formula $\varphi$ and weight function $W$ is transformed into a tensor network $N$. The goal of the reduction phase is that the contraction of $N$, $\tntensor{N}$, should be equal to the $W$-weighted model count of $\varphi$. We discuss in more detail in Section \ref{sec:tensors:wmc}.
 
-Second, in the \emph{planning} phase an order to contract tensors in the network is determined.
-This order takes the form of a \emph{contraction tree} \cite{EP14}:
+Second, in the \emph{planning} phase an order $T$ to contract tensors in the network is determined.
+$T$ is a \emph{contraction tree} \cite{EP14}:
 \begin{definition}[Contraction Tree] \label{def:contraction-tree}
 	Let $N$ be a tensor network. A \emph{contraction tree} for $N$ is a rooted binary tree $T$ whose leaves are the tensors of $N$. %, i.e. $\Lv{T} = N$.
 \end{definition}
@@ -28,16 +27,15 @@ This order takes the form of a \emph{contraction tree} \cite{EP14}:
 In our database analogy from Section \ref{sec:tensors:tensors}, a contraction tree for a tensor network representing a project-join query is a join tree of that query (with projections done as early as possible). 
 In our factor-graph analogy from Section \ref{sec:tensors:tensors}, a contraction tree corresponds to a \emph{dtree} \cite{darwiche01}, to an elimination order \cite{darwiche01b}, and to a binary join tree \cite{shenoy97} where factors are assigned to leaf nodes.
 
-%TODO: Explicitly type M and T here. Though it is typed later in Thm 3.2
 There are two subtleties in the planning process. 
 Firstly, the planning phase is allowed to modify the input tensor network $N$ as long as the new tensor network $M$ has the same contraction as $N$. 
 This allows the planning phase to tweak the tensor network to enable better contraction trees.
-Secondly, planning in Algorithm \ref{alg:wmc} is an anytime process: we heuristically generate better contraction trees until one is ``good enough'' to use (governed by a parameter $\alpha \in \mathbb{R}$). 
+Secondly, planning in Algorithm \ref{alg:wmc} is an anytime process: we heuristically generate better contraction trees $T$ until one is ``good enough'' to use (governed by a parameter $\alpha \in \mathbb{R}$). 
 This allows us to incorporate heuristic, anytime high-level reasoning tools into a planning algorithm. 
 % For this chapter, we choose $\alpha$ so that we expect to have spent about half of the running time in planning (see Section \ref{sec:tensors:experiments:implementation}), but note that we determine $\alpha$ empirically in Chapter \ref{ch:parallel}.
 In this work we discuss two planning techniques: the \textbf{Line-Graph} planner (see Section \ref{sec:tensors:contraction-theory}) and the \textbf{Factor-Tree} planner (see Section \ref{sec:tensors:preprocessing}).
 
-Third, in the \emph{execution} phase the chosen contraction tree is used to contract the tensor network.
+Third, in the \emph{execution} phase the chosen contraction tree $T$ is used to contract the tensor network $M$.
 The goal of the execution phase is to compute the contraction of $M$ and thus compute the $W$-weighted model count of $\varphi$. The computation cost of the execution phase is heavily determined by the chosen contraction tree. We discuss this phase in more detail in Section \ref{sec:tensors:execution}.
 
 We assert the correctness of Algorithm \ref{alg:wmc} in the following theorem.
@@ -59,6 +57,3 @@ By Assumption 2, this is equal to $\tntensor{N}(\emptyset)$, which by Assumption
 
 Organizationally, note that we discuss the execution phase in Section \ref{sec:tensors:execution} before we discuss the planning phase in Section \ref{sec:tensors:planning}. 
 This is because we must understand how plans are used before we can evaluate various planning algorithms.
-
-% TODO: Work in?
-% Theorem \ref{thm:wmc-reduction} suggests that the weighted model count of $\varphi$ can be computed by constructing and contracting $N_\varphi$. We present this framework as Algorithm \ref{alg:wmc}. Algorithm \ref{alg:wmc} is a fixed-parameter algorithm for model counting, parameterized by carving-width of the incidence graph. The existence of such algorithms is easily implied by fixed-parameter algorithms for model counting parameterized by treewidth \cite{FMR08,SS10} since treewidth is bounded by thrice the carving width \cite{sasak10}. A variety of planners can be used in Step 2 to find a contraction tree to contract $N_\varphi$, including the planners \textbf{LG} and \textbf{FT} that we discuss in the following sections.

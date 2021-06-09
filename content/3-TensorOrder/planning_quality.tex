@@ -3,7 +3,7 @@
 There are a variety of existing planning techniques that each aim to minimize different notions of computational cost of Algorithm \ref{alg:network-contraction}.
 
 Firstly, there are several \emph{cost-based} approaches aim for minimizing the total number of floating point operations (specifically, in Line \ref{line:network-contraction:subcontraction} of Algorithm \ref{alg:network-contraction}).
-Examples include \cite{PHV14}, the \pkg{einsum} package in \pkg{numpy} \cite{numpy}, and the Tensor Contraction Engine \cite{Hirata03}, which performs additional optimizations of Algorithm \ref{alg:network-contraction} at the compiler level. %TODO: Lookup PHV14 %TODO: better einsum citation?
+Examples include the \pkg{Netcon} algorithm \cite{PHV14}, the \pkg{einsum} package in \pkg{numpy} \cite{numpy}, and the Tensor Contraction Engine \cite{Hirata03}, which performs additional optimizations of Algorithm \ref{alg:network-contraction} at the compiler level.
 % Unfortunately, cost-based approaches often rely on a brute-force analysis of all possible contraction trees, or on heuristic perturbations of an existing contraction tree.
 Such approaches typically focus on tensor networks with relatively few tensors (tens) but large indices (hundreds of thousands of elements in each domain).
 Most cost-based approaches are therefore unsuitable for weighted model counting, where we encounter tensor networks with many tensors (thousands) but where each index has a domain of size 2.

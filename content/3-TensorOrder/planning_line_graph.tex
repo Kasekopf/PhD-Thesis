@@ -11,14 +11,14 @@ Although tensor networks constructed from weighted model counting instances do n
 
 If $N$ has no free indices, the free vertex has no incident edges and the remaining graph is exactly the graph analyzed in prior work. Intuitively, the structure graph of a tensor network $N$ captures how indices are shared by the tensors of $N$. For example, on a CNF formula $\varphi$ Theorem \ref{thm:wmc-reduction} produces a tensor network $N_\varphi$ whose structure graph is exactly the \emph{incidence graph} of $\varphi$. The structure graph of $N$ contains all information needed to compute the max-rank of a contraction-tree of $N$, as formalized in the following lemma.
 \begin{lemma} \label{lemma:tcn-equiv-structure}
-	Let $N$ be a tensor network with structure graph $G$. If $N' \subseteq N$ is nonempty, then $N'$ is a tensor network and $\tnfree{N'} = \vinc{G}{N'} \cap \vinc{G}{\V{G} \setminus N'}$. %TODO: Should use \vincs{G}{V}
+	Let $N$ be a tensor network with structure graph $G$. If $N' \subseteq N$ is nonempty, then $N'$ is a tensor network and $\tnfree{N'} = \vincs{G}{V} \cap \vincs{G}{\V{G} \setminus N'}$.
 \end{lemma}
 \begin{proof}
 	$N'$ is a tensor network since $N$ is. Let $\fv$ be the free vertex of $G$.
 	An index $i$ is free in $N'$ if and only if $i$ appears in $N'$ and either $i$ is free in $N$ or $i$ also appears in $N \setminus N'$. Thus
     $$\tnfree{N'} = \bigcup_{A \in N'} \tdim{A} \cap \left( \tnfree{N} \cup \bigcup_{B \in N \setminus N'} \tdim{B} \right).$$
 	Since $\tdim{A} = \vinc{G}{A}$ for all $A \in N$ and $\tnfree{N} = \vinc{G}{z}$, we conclude that
-	$$\tnfree{N'} = \vinc{G}{N'} \cap (\vinc{G}{\fv} \cup \vinc{G}{N \setminus N'}) =  \vinc{G}{N'} \cap \vinc{G}{\V{G} \setminus N'}.$$
+	$$\tnfree{N'} = \vincs{G}{N'} \cap (\vinc{G}{\fv} \cup \vincs{G}{N \setminus N'}) =  \vincs{G}{N'} \cap \vincs{G}{\V{G} \setminus N'}.$$
 \end{proof}
 
 
@@ -42,7 +42,7 @@ For each $a \in \E{T'}$, removing $a$ from $T'$ produces two connected component
 
 This gives us a bijection between $\E{T'}$ and the set of recursive calls of Algorithm \ref{alg:network-contraction}, where each $a \in \E{T'}$ corresponds to the recursive call where $T_a$ is the input contraction tree and $\tntensor{\Lv{T_a}}$ is the output tensor. Thus
 \begin{align*}
-&width_c(T') = \max_{a \in \E{T'}} \left| \vinc{G}{\Lv{T_a}} \cap \vinc{G}{\V{G} \setminus \Lv{T_a}} \right| = \max_{a \in \E{T'}} \left| \tnfree{\Lv{T_a}} \right| = w
+&width_c(T') = \max_{a \in \E{T'}} \left| \vincs{G}{\Lv{T_a}} \cap \vincs{G}{\V{G} \setminus \Lv{T_a}} \right| = \max_{a \in \E{T'}} \left| \tnfree{\Lv{T_a}} \right| = w
 \end{align*}
 where the middle equality is given by applying Lemma \ref{lemma:tcn-equiv-structure} with $N' = \Lv{T_a}$.
 
@@ -94,9 +94,9 @@ First, observe that the image of $\vincf{G}: \V{G} \rightarrow \E{G}$ is an edge
 
 Construct $T'$ from $S$ by replacing every leaf $\ell \in \Lv{S}$ with $g^{-1}(\ell)$. Since $g$ is a bijection, $\Lv{T'} = \V{G}$ and so $T'$ is a carving decomposition. In order to compute the carving width of $T'$, consider an arbitrary arc $a \in \E{T'}$ and let $C_a$ be an element of the partition of $\V{G}$ defined by removing $a$. 
 
-For every edge $e \in \vinc{G}{C_a} \cap \vinc{G}{\Lv{T'} \setminus C_a}$, there must be vertices $v \in C_a$ and $w \in \Lv{T'} \setminus C_a$ that are both incident to $e$ and so $e \in \vinc{G}{v} \cap \vinc{G}{w}$. Since $\chi \circ g = \vincf{G}$, it follows that $e \in \chi(g(v)) \cap \chi(g(w))$.  Property 3 of tree decompositions implies that $e$ must also be in the label of every node in the path from $g(v)$ to $g(w)$ in $T$; in particular, $e$ must be in the label of both endpoints of $a$.
+For every edge $e \in \vincs{G}{C_a} \cap \vincs{G}{\Lv{T'} \setminus C_a}$, there must be vertices $v \in C_a$ and $w \in \Lv{T'} \setminus C_a$ that are both incident to $e$ and so $e \in \vinc{G}{v} \cap \vinc{G}{w}$. Since $\chi \circ g = \vincf{G}$, it follows that $e \in \chi(g(v)) \cap \chi(g(w))$.  Property 3 of tree decompositions implies that $e$ must also be in the label of every node in the path from $g(v)$ to $g(w)$ in $T$; in particular, $e$ must be in the label of both endpoints of $a$.
 
-Thus every element of $\vinc{G}{C_a} \cap \vinc{G}{\Lv{T'} \setminus C_a}$ must be in the label of both endpoints of $a$. It follows that $|\vinc{G}{C_a} \cap \vinc{G}{\Lv{T'} \setminus C_a}| \leq width_t(T, \chi)+1$. Hence $width_c(T') \leq width_t(T, \chi)+1$ as desired.
+Thus every element of $\vincs{G}{C_a} \cap \vincs{G}{\Lv{T'} \setminus C_a}$ must be in the label of both endpoints of $a$. It follows that $|\vincs{G}{C_a} \cap \vincs{G}{\Lv{T'} \setminus C_a}| \leq width_t(T, \chi)+1$. Hence $width_c(T') \leq width_t(T, \chi)+1$ as desired.
 \end{proof}
 
 An alternative proof of Theorem \ref{thm:carving-equiv-tree} uses Theorem 2.4 of \cite{HW18} to construct a carving decomposition $T'$ of $G$ from $T$ whose vertex congestion is $w+1$. By Lemma 2 of \cite{ACDJPS07}, it follows that the carving width of $T'$ is no more than $w+1$.

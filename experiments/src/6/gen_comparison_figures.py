@@ -1,7 +1,6 @@
 import collections
 import slurmqueen
 
-import gen_planning_figures as planning
 import util
 
 ProjectedModelCounter = collections.namedtuple(
@@ -140,6 +139,8 @@ def plot_procount_comparison_exp(ax):
 
 
 def plot_comparison_by_width(ax):
+    import gen_planning_figures as planning
+
     widths = planning.planning_data["flow"].benchmarks_by_width()
 
     for counter in counters:

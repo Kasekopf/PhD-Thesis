@@ -1,28 +1,7 @@
 \subsection{Planning with Anytime Tree-Decomposition Tools}
 \label{sec_td}
 
-In join-query optimization, \emph{tree decompositions} can be used to compute join trees \cite{DKV02,MPPV04}.
-Tree decompositions \cite{RS91} decompose graphs into tree structures.
-% A central technique in join-query optimization uses \emph{tree decompositions} to compute join trees \cite{DKV02,MPPV04}.
-% Tree decompositions \cite{RS91} offer a way to decompose a graph into a tree structure.
-% Formally:
-\begin{definition}[Tree Decomposition]
-	A \emph{tree decomposition} $(S, \chi)$ of a graph $G$ is a tree $S$ with a labeling function $\chi : \V{S} \to 2^{\V{G}}$ where:
-	% (1) $\bigcup_{n \in \V{S}} \chi(n) = \V{G}$,
-	% (2) for all $e \in \E{G}$, there exists $n \in \V{S}$ \st{} $\einc{G}{e} \subseteq \chi(n)$, and
-	% (3) for all $n, o, p \in \V{S}$, if $p$ is on the path from $n$ to $o$ then $\chi(n) \cap \chi(o) \subseteq \chi(p)$.
-	\begin{enumerate}[ref=\arabic*]
-		\item for all $v \in \V{G}$, there exists $n \in \V{S}$ \st{} $v \in \chi(n)$,
-		\item for all $e \in \E{G}$, there exists $n \in \V{S}$ \st{} $\einc{G}{e} \subseteq \chi(n)$, and
-		\item for all $n, o, p \in \V{S}$, if $o$ is on the path from $n$ to $p$, then $\chi(n) \cap \chi(p) \subseteq \chi(o)$. \label{prop_running_intersection}
-	\end{enumerate}
-	The \emph{treewidth}, or simply \emph{width}, of $(S, \chi)$ is $\func{tw}(S, \chi) \equiv \max_{n \in \V{S}} \size{\chi(n)} - 1.$
-	% , denoted $width_t(S, \chi)$, is the maximum size (minus 1) of the label of every vertex, \ie,
-	% $$width_t(S, \chi) = \max_{n \in \V{S}} | \chi(n) | - 1.$$
-\end{definition}
-%TODO: Tree decompositions don't need to be defined again...
-
-In particular, join-query optimization uses tree decompositions of the \emph{join graph} to find optimal join trees \cite{DKV02,MPPV04}.
+In join-query optimization, tree decompositions \cite{RS91} of the \emph{join graph} are used to find optimal join trees \cite{DKV02,MPPV04}.
 The \emph{join graph} of a project-join query consists of all attributes of a database as vertices and all tables as cliques.
 In this approach, tree decompositions of the join graph of a query are used to find optimal project-join trees; see Algorithm 3 of \cite{MPPV04}.
 Similarly, tree decompositions of the \emph{primal graph} of a factor graph, which consists of all variables as vertices and all factors as cliques, can be used to find variable elimination orders \cite{KDLD05}.
@@ -90,13 +69,13 @@ We first observe that $T$ is indeed a tree with root $r$. To prove that $\mathca
     Then $x \in \vars(c)$ for some $c \in \phi$. 
     Let $n_0 = O(\gamma^{-1}(c)) \in \V{S}$ and observe that $x \in \chi(n_0)$.
     Consider the sequence of nodes $n_0, n_1, n_2, \cdots, n_k = s \in \V{S}$ on the unique shortest path from $n_0$ to $s$ in $S$.
-    Observe that, by Property \ref{prop_running_intersection} of tree decompositions, there is some $0 \leq k' \leq k$ s.t. $x \in \chi(n_i)$ for all $0 \leq i \leq k'$ and $x \not \in \chi(n_i)$ for all $k' < i \leq k$.
+    Observe that, by Property 3 of tree decompositions in Definition \ref{def:treedecomposition}, there is some $0 \leq k' \leq k$ s.t. $x \in \chi(n_i)$ for all $0 \leq i \leq k'$ and $x \not \in \chi(n_i)$ for all $k' < i \leq k$.
     If $k' = k$, then $x \in \chi(s)$ and so $x \in \pi(r)$.
     Otherwise,  $x \in \chi(n_{k'})$ but $x \not\in \chi(n_{k'+1})$.
     Consider the call on Line \ref{line_recur} to $\func{Process}(o, \chi(n))$ when $o = n_{k'}$ and $n = n_{k'+1}$.
     Within this call, $\chi(n_{k'} \not\subseteq \ell = \chi(n_{k'+1}))$ and so Line \ref{line_return_singleton} will return an internal node $a \in \V{T}$ with $O(a) = n_{k'}$ and $x \in \pi(a)$.
 
-    On the other hand, consider distinct $a, b \in \V{T}$. Since $S$ is a tree, there is some node $p \in \V{S}$ on the path between $O(a)$ and $O(b)$ \st{} $p$ is the parent of either $O(a)$ or $O(b)$. By Line \ref{line_recur} and Line \ref{line_return_singleton}, this means that $\chi(p)$ is disjoint from either $\pi(a)$ or $\pi(b)$. In either case, $\chi(p)$ is disjoint from $\pi(a) \cap \pi(b)$. By Line \ref{line_return_singleton} of Algorithm \ref{alg_td_to_join}, we also know that $\pi(a) \cap \pi(b) \subseteq \chi(O(a)) \cap \chi(O(b))$. By Property \ref{prop_running_intersection} of tree decompositions, $\chi(O(a)) \cap \chi(O(b))$ (and thus $\pi(a) \cap \pi(b)$) must be contained in $\chi(p)$. It follows that $\pi(a) \cap \pi(b) = \emptyset$.
+    On the other hand, consider distinct $a, b \in \V{T}$. Since $S$ is a tree, there is some node $p \in \V{S}$ on the path between $O(a)$ and $O(b)$ \st{} $p$ is the parent of either $O(a)$ or $O(b)$. By Line \ref{line_recur} and Line \ref{line_return_singleton}, this means that $\chi(p)$ is disjoint from either $\pi(a)$ or $\pi(b)$. In either case, $\chi(p)$ is disjoint from $\pi(a) \cap \pi(b)$. By Line \ref{line_return_singleton} of Algorithm \ref{alg_td_to_join}, we also know that $\pi(a) \cap \pi(b) \subseteq \chi(O(a)) \cap \chi(O(b))$. By Property 3 of tree decompositions in Definition \ref{def:treedecomposition}, $\chi(O(a)) \cap \chi(O(b))$ (and thus $\pi(a) \cap \pi(b)$) must be contained in $\chi(p)$. It follows that $\pi(a) \cap \pi(b) = \emptyset$.
 
 \paragraph{Part 3: Property 2 of Definition \ref{def_jointree}.}
     That is, we must verify that, for each internal node $a \in \V{T} \setminus \Lv{T}$, variable $x \in \pi(a)$, and clause $c \in \phi$ \st{} $x$ appears in $c$, the leaf node $\gamma^{-1}(c)$ is a descendant of $a$ in $T$.
@@ -104,7 +83,7 @@ We first observe that $T$ is indeed a tree with root $r$. To prove that $\mathca
     Otherwise, assume for the sake of contradiction that $\gamma^{-1}(c)$ is not a descendant of $a$ in $T$.
     Then $O(\gamma^{-1}(c))$ is not a descendant of $O(a)$ in $S$.
     This means that the parent $p \in \V{S}$ of $O(a)$ is on the path between $O(a)$ and $O(\gamma^{-1}(c))$. 
-    By Property \ref{prop_running_intersection} of tree decompositions, $x \in \chi(p)$.
+    By Property 3 of tree decompositions in Definition \ref{def:treedecomposition}, $x \in \chi(p)$.
     But Line \ref{line_recur} and Line \ref{line_return_singleton} then implies that $x \not\in \pi(a)$, a contradiction.
     Thus $\gamma^{-1}(c)$ is a descendant of $a$ in $T$.
     

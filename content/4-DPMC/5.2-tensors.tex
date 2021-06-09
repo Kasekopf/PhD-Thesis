@@ -16,12 +16,12 @@ In Chapter \ref{ch:tensors}, this problem was solved using a reduction from weig
 After the reduction, all indices appear exactly twice, so one never needs to perform a product without also projecting all shared indices.
 Moreover, the additional overhead incurred by this reduction was lessened through the \textbf{FT} planner (see Section \ref{sec:tensors:preprocessing}).
 
-In order to incorporate tensors in our project-join-tree-based framework, we take a different strategy that uses copy tensors. %TODO: Copy tensors were defined in Ch 2 with COPY instead of \blacksquare
-The \emph{copy tensor} for a set $X$ represents the pseudo-Boolean function $\blacksquare_X: 2^X \to \mathbb{R}$ \st{} $\blacksquare_X(\tau)$ is $1$ if $\tau \in \{ \emptyset, X \}$ and $0$ otherwise.
+In order to incorporate tensors in our project-join-tree-based framework, we take a different strategy that uses copy tensors.
+Recall that the \emph{copy tensor} for a set $X$ represents the pseudo-Boolean function $\copyt_X: 2^X \to \mathbb{R}$ \st{} $\copyt_X(\tau)$ is $1$ if $\tau \in \{ \emptyset, X \}$ and $0$ otherwise.
 We can simulate product using contraction by including additional copy tensors.
 In detail, for each $z \in X \cap Y$ make two fresh variables $z'$ and $z''$.
 Replace each $z$ in $f$ with $z'$ to produce $f'$, and replace each $z$ in $g$ with $z''$ to produce $g'$.
-Then one can check that $f \cdot g = f' \contract g' \contract \bigcontract_{z \in X \cap Y} \blacksquare_{\{z, z', z''\}}$.
+Then one can check that $f \cdot g = f' \contract g' \contract \bigcontract_{z \in X \cap Y} \copyt_{\{z, z', z''\}}$.
 
 When a product is immediately followed by the projection of shared variables (\ie, we are computing $\proj_Z f \cdot g$ for some $Z \subseteq X \cap Y$), we can optimize this procedure.
 In particular, we skip creating copy tensors for the variables in $Z$ and instead eliminate them directly as we perform $f' \contract g'$.

@@ -5,8 +5,6 @@ If the input constraints are given as a propositional formula, the problem is ca
 If existential variables are also allowed in the input constraints, the problem is called \emph{projected model counting}. This thesis primarily focuses on exact techniques for model counting and projected model counting, but other works have considered other classes of discrete integration problems (e.g., allowing constraints with alternating quantifiers \cite{stearns2002exploiting,KNR16}, or allowing continuous variables \cite{BPV15}) or approximate techniques \cite{CMV21}.
 
 As is common, we restrict our attention to discrete integration problems where the weight function is log-linear (i.e., literal-weighted), which captures a wide variety of probabilistic distributions~\cite{KF09}.
-% For example, in the context of probabilistic reasoning this corresponds to assuming that all variables are independent.
-% Log-linear models can be employed to capture a wide variety of probabilistic distributions that arise from graphical models, conditional random fields, skip-gram models, and the like~\cite{KF09}. %TODO: Check sentence from WMC-reduction paper.
 We call a discrete integration problem \emph{weighted} if the weight function is log-linear and \emph{unweighted} if the weight function is a constant function (and thus the task is simply to count the number of solutions to the input constraints).
 Note that unweighted discrete integration is a special case of weighted discrete integration.
 Unweighted model counting is also called \#SAT, while unweighted projected model counting is also called $\#\exists$SAT.
@@ -22,7 +20,7 @@ The key idea is to take an algorithm for exploring the entire solution space of 
 Modern solvers such as \tool{cachet} \cite{SBK05} and \tool{SharpSAT} \cite{Thurley2006} follow this approach.
 Another class of counters (e.g. \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) are based on knowledge compilation, where the idea is to compile the set of constraints into an alternative representation on which a discrete integration query may be answered in polynomial time.
 
-A third class of counters \cite{CW16,FHMW17,FHWZ18,FHZ19,DPV20,phan2019weighted,fichte2020exploiting} are based on dynamic programming. % \cite{BDP09,SS10,jegou2016improving} % TODO: should cite Algorithms \cite{FMR08,SS10}.
+A third class of counters \cite{CW16,FHMW17,FHWZ18,FHZ19,DPV20,phan2019weighted,fichte2020exploiting} are based on dynamic programming.
 Dynamic programming is a powerful technique that has been applied across computer science \cite{bellman1966dynamic}, including to database-query optimization \cite{MPPV04}, satisfiability solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, and QBF evaluation \cite{charwat2016bdd}.
 The key idea is to solve a sequence of smaller subproblems, formed by partitioning the input constraints, and then incrementally combine these solutions into the final result.
 The techniques developed in this thesis are all based on dynamic programming.

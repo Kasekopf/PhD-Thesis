@@ -208,7 +208,7 @@ def plot_inference_cactus(ax):
         linewidth=2,
     )
 
-    util.set_cactus_axes(ax, 1091, TIMEOUT, legend_args={"loc": "upper left"})
+    util.set_cactus_axes(ax, 1091, TIMEOUT, legend_args={"loc": "lower right"})
 
 
 def plot_by_widths(ax):
@@ -285,7 +285,7 @@ def plot_by_widths(ax):
     ax.set_ylabel("Number of solved benchmarks")
     ax.set_xlim(left=9, right=50)
     ax.set_ylim(bottom=0, top=1100)
-    util.set_legend(ax, loc="upper left")
+    util.set_legend(ax, loc="lower right")
 
 
 def gen(output):

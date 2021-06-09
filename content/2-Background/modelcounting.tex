@@ -20,9 +20,6 @@ In (weighted) model counting, the input constraints are given as a propositional
 
 The \emph{unweighted model count} of a Boolean formula $\varphi$ is the number of solutions of $\varphi$, i.e. the $W$-weighted model count of $\varphi$ where $W(\tau) = 1$ for all $\tau \in 2^X$.
 
-
-% We focus in this work on weighted model counting, as opposed to \emph{unweighted model counting} where the weight function $W$ is constant. There are a variety of counters \cite{CW16,FHMW17,Thurley2006} that can perform only unweighted model counting and so we do not compare against them. Of particular note here is \tool{countAntom} \cite{BSB15}, a multi-core unweighted model counter. An interesting direction for future work is to explore the integration of weights into \tool{countAntom} and compare with tensor-network-based approaches to weighted model counting. %TODO: put back in Ch 5
-
 Existing approaches to weighted model counting can be split broadly into three categories: \emph{search}, \emph{knowledge compilation}, and \emph{dynamic programming}. In counters based on search (e.g., \tool{cachet}  \cite{SBK05} and \tool{SharpSAT} \cite{Thurley2006}), the idea is to take an algorithm for exploring the entire solution space of $\varphi$ (e.g. DPLL \cite{davis1960computing,davis1962machine}, and later CDCL \cite{biere2009conflict}) and augment it to enumerate the number of partial solutions encountered. In counters based on knowledge compilation (e.g. \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}), the idea is to compile $\varphi$ into an alternative representation on which counting is easy. In counters based on dynamic programming (e.g. \tool{ADDMC} \cite{DPV20} and \tool{gpuSAT2} \cite{FHWZ18,FHZ19}), the idea is to traverse the constraint structure of $\varphi$ and reason about subsets of constraints. 
 The techniques developed in this thesis are all based on dynamic programming.
 

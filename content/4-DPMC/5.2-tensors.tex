@@ -26,7 +26,7 @@ Then one can check that $f \cdot g = f' \contract g' \contract \bigcontract_{z \
 When a product is immediately followed by the projection of shared variables (\ie, we are computing $\proj_Z f \cdot g$ for some $Z \subseteq X \cap Y$), we can optimize this procedure.
 In particular, we skip creating copy tensors for the variables in $Z$ and instead eliminate them directly as we perform $f' \contract g'$.
 In this case, we do not ever fully compute $f \cdot g$, so the maximum number of variables needed in each intermediate tensor may be lower than the width of the project-join tree.
-In the context of tensor networks and contraction trees, the maximum number of variables needed after accounting for this optimization is exactly the \emph{max-rank} of the contraction tree \cite{KCMR18}.
-The max-rank is often lower than the width of the corresponding project-joint tree.
+In the context of tensor networks and contraction trees, the maximum number of variables needed after accounting for this optimization is exactly the \emph{max rank} of the contraction tree \cite{KCMR18}.
+The max rank is often lower than the width of the corresponding project-joint tree.
 On the other hand, the intermediate terms in the computation of $f \cdot g$ with contractions may have more variables than either $f$, $g$, or $f \cdot g$.
 Thus the number of variables in each intermediate tensor may be higher than the width of the project-join tree (by at most a factor of 1.5).

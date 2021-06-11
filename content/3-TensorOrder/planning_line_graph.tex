@@ -9,7 +9,7 @@ Although tensor networks constructed from weighted model counting instances do n
     That is, $\V{G} = N \sqcup \{ \fv \}$, $\E{G} = \tnbound{N} \cup \tnfree{N}$, $\vinc{G}{A} = \tdim{A}$ for all $A \in N$, and $\vinc{G}{\fv} = \tnfree{N}$.
 \end{definition}
 
-If $N$ has no free indices, the free vertex has no incident edges and the remaining graph is exactly the graph analyzed in prior work. Intuitively, the structure graph of a tensor network $N$ captures how indices are shared by the tensors of $N$. For example, on a CNF formula $\varphi$ Theorem \ref{thm:wmc-reduction} produces a tensor network $N_\varphi$ whose structure graph is exactly the \emph{incidence graph} of $\varphi$. The structure graph of $N$ contains all information needed to compute the max-rank of a contraction-tree of $N$, as formalized in the following lemma.
+If $N$ has no free indices, the free vertex has no incident edges and the remaining graph is exactly the graph analyzed in prior work. Intuitively, the structure graph of a tensor network $N$ captures how indices are shared by the tensors of $N$. For example, on a CNF formula $\varphi$ Theorem \ref{thm:wmc-reduction} produces a tensor network $N_\varphi$ whose structure graph is exactly the \emph{incidence graph} of $\varphi$. The structure graph of $N$ contains all information needed to compute the max rank of a contraction-tree of $N$, as formalized in the following lemma.
 \begin{lemma} \label{lemma:tcn-equiv-structure}
 	Let $N$ be a tensor network with structure graph $G$. If $N' \subseteq N$ is nonempty, then $N'$ is a tensor network and $\tnfree{N'} = \vincs{G}{V} \cap \vincs{G}{\V{G} \setminus N'}$.
 \end{lemma}
@@ -35,7 +35,7 @@ Contraction trees are closely connected to decompositions of the structure graph
 %	Let $N$ be a tensor network with structure graph $G$. Let $T$ be a contraction tree of $N$ of max-width $w$. Construct $T'$ from $T$ by adding the free vertex $\fv \in \V{G}$ as a leaf and adding an arc from $\fv$ to the root of $T$. Then $T'$ is a carving decomposition of $G$ and $width_c(T) = w$.
 %\end{lemma}
 \begin{proof}
-Let $\fv$ be the free vertex of $G$. First, let $T$ be a contraction tree of $N$ of max-rank $w$. Construct $T'$ from $T$ by adding $\fv$ as a leaf to the root of $T$. 
+Let $\fv$ be the free vertex of $G$. First, let $T$ be a contraction tree of $N$ of max rank $w$. Construct $T'$ from $T$ by adding $\fv$ as a leaf to the root of $T$. 
 
 $T'$ is a carving decomposition of $G$, since $T'$ is an unrooted binary tree with $\Lv{T'} = \Lv{T} \sqcup \{\fv\} = \V{G}$. 
 For each $a \in \E{T'}$, removing $a$ from $T'$ produces two connected components, both trees. Let $T_a$ be the connected component that does not contain $\fv$ and note that $T_a$ is a contraction tree for $\Lv{T_a} \subseteq N$. 

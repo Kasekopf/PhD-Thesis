@@ -57,7 +57,7 @@ Finally, note that \tool{TensorOrder2} supports 64-bit floats for all execution 
 \subsection{Experiment 1: The Planning Phase (RQ1 and RQ2)}
 We run each planning implementation (\pkg{FlowCutter}, \pkg{htd}, \pkg{Tamaki}, \pkg{Hicks}, \pkg{P3}, and \pkg{P4}) once on each of our 1914 benchmarks and save all contraction trees found within 1000 seconds (without executing the contractions). Results are summarized in Figure \ref{fig:parallel:planning}. 
 
-% In this figure, we consider a benchmark to be solved by a planning implementation when the planner is able to find contraction tree whose max-rank is 30 or smaller.
+% In this figure, we consider a benchmark to be solved by a planning implementation when the planner is able to find contraction tree whose max rank is 30 or smaller.
 
 %\begin{figure}[t]
 %\begin{center}
@@ -70,11 +70,11 @@ We run each planning implementation (\pkg{FlowCutter}, \pkg{htd}, \pkg{Tamaki}, 
 
 We observe that the parallel portfolio planners outperform all four single-core planners after 5 seconds. In fact, after 20 seconds both portfolios perform almost as well as the virtual best solver. We conclude that portfolio solvers significantly speed up the planning phase.
 
-We also observe that \pkg{P3} and \pkg{P4} perform almost identically in Figure \ref{fig:parallel:planning}. Although after 1000 seconds \pkg{P4} has found better contraction trees than \pkg{P3} on 407 benchmarks, most improvements are small (reducing the max-rank by 1 or 2) or still do not result in good-enough contraction trees. We conclude that adding \pkg{Hicks} improves the portfolio slightly, but not significantly.
+We also observe that \pkg{P3} and \pkg{P4} perform almost identically in Figure \ref{fig:parallel:planning}. Although after 1000 seconds \pkg{P4} has found better contraction trees than \pkg{P3} on 407 benchmarks, most improvements are small (reducing the max rank by 1 or 2) or still do not result in good-enough contraction trees. We conclude that adding \pkg{Hicks} improves the portfolio slightly, but not significantly.
  
 \subsection{Experiment 2: Determining the Performance Factor (RQ3)}
 \label{sec:experiments:pf}
-We take each contraction tree discovered in Experiment 1 (with max-rank below 36) and use \tool{TensorOrder2} to execute the tree with a timeout of 1000 seconds on each of the three hardware configurations in eager execution mode (\pkg{CPU1}, \pkg{CPU8}, and \pkg{GPU}). We observe that the max-rank of almost all solved contraction trees is 30 or smaller.
+We take each contraction tree discovered in Experiment 1 (with max rank below 36) and use \tool{TensorOrder2} to execute the tree with a timeout of 1000 seconds on each of the three hardware configurations in eager execution mode (\pkg{CPU1}, \pkg{CPU8}, and \pkg{GPU}). We observe that the max rank of almost all solved contraction trees is 30 or smaller.
 
 Given a performance factor, a benchmark, and a planner, we use the planning times from Experiment 1 to determine which contraction tree would have been chosen in step 4 of Algorithm \ref{alg:wmc}. We then add the execution time of the relevant contraction tree on each hardware. In this way, we simulate Algorithm \ref{alg:wmc} for a given planner and hardware with many performance factors. 
 
@@ -148,7 +148,7 @@ We observe that preprocessing significantly boosts \tool{TensorOrder2} relative 
 \input{figures/5/tpu.pgf}
 %\input{figures/comparison_pmc_eq.pgf}
 \vspace*{-0.9cm}
-\caption{\label{fig:parallel:tpu} The XLA compilation and average execution time of contracting a single tensor-network slice with a contraction tree of max-rank $k$ on a TPU (\tool{TPU-graph}), on a CPU in graph-execution mode (\tool{CPU8-graph}), and on a CPU in eager execution mode (\tool{CPU8}). \tool{TPU-graph} took more than 1000 seconds in the compilation step when $k > 17$.}
+\caption{\label{fig:parallel:tpu} The XLA compilation and average execution time of contracting a single tensor-network slice with a contraction tree of max rank $k$ on a TPU (\tool{TPU-graph}), on a CPU in graph-execution mode (\tool{CPU8-graph}), and on a CPU in eager execution mode (\tool{CPU8}). \tool{TPU-graph} took more than 1000 seconds in the compilation step when $k > 17$.}
 \end{center}
 \vspace*{-0.8cm}
 \end{figure}
@@ -162,8 +162,8 @@ Finally, we examine the feasibility of leveraging a TPU in the execution phase. 
 % Unfortunately, we observe that on all 32 benchmarks the compilation takes more than 1000 seconds and so the computation times out.
 
 To investigate this failure, we consider a tensor network $N$ whose contraction is the number of vertex covers of a randomly-generated cubic graph with 200 vertices \cite{KCMR18}. 
-Using the \pkg{FlowCutter} planner, we construct a contraction tree $T$ for $N$ of max-rank 27 within 10 seconds. 
-For each $k \in \{10, 11, \cdots, 20\}$, then, we slice $N$ greedily to get slice variables $I_k \subseteq \tnbound{N}$ so that $T[\eta]$ has max-rank $k$ for each $\eta \in [I_k]$. 
+Using the \pkg{FlowCutter} planner, we construct a contraction tree $T$ for $N$ of max rank 27 within 10 seconds. 
+For each $k \in \{10, 11, \cdots, 20\}$, then, we slice $N$ greedily to get slice variables $I_k \subseteq \tnbound{N}$ so that $T[\eta]$ has max rank $k$ for each $\eta \in [I_k]$. 
 Using each of the execution configurations \pkg{CPU8}, \pkg{CPU8-graph}, and \pkg{TPU-graph}, we compute $\func{Execute}(N[\eta], T[\eta])$ for the first 80 slices $\eta \in [I_k]$. 
 We then compute the average time to contract each slice and (for configurations in graph execution mode) the XLA compilation time.
 
@@ -171,9 +171,9 @@ Results are summarized in Figure \ref{fig:parallel:tpu}.
 We observe that, as expected, the compilation time in graph execution mode (\pkg{CPU8-graph} and \pkg{TPU-graph}) is significantly longer than the time for a single slice in eager execution mode (\pkg{CPU8}). 
 Moreover, the execution time in graph execution mode is faster than the execution time in eager execution mode.
 
-We also observe that the compilation time of \pkg{TPU-graph} scales dramatically with the sliced max-rank $k$, which is the maximum number of indices (i.e., dimensions) of the tensors involved in the computation.
+We also observe that the compilation time of \pkg{TPU-graph} scales dramatically with the sliced max rank $k$, which is the maximum number of indices (i.e., dimensions) of the tensors involved in the computation.
 On tensors with more than 17 indices the compilation time of \pkg{TPU-graph} is above 1000 seconds and so the compilation times out.
-For comparison, the max-rank of nontrivial benchmarks in Experiment 3 is always more than 25, even after significant slicing.
+For comparison, the max rank of nontrivial benchmarks in Experiment 3 is always more than 25, even after significant slicing.
 On the other hand, \pkg{CPU8-graph} does not suffer from long XLA compilation times even on high-dimensional tensors and so is promising for future analysis.
 
 Finally, we observe that the execution time of \pkg{CPU8-graph} is less than the execution time of \pkg{TPU-graph}.

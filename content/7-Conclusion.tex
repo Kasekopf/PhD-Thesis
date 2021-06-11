@@ -66,7 +66,7 @@ Similar to planning, the execution approaches in this thesis were explicitly des
 Future improvements to these computational libraries, which is itself an extremely active area of independent research in high-performance computing, may allow us to scale to larger benchmarks in the future.
 Moreover, developing computational libraries that are specifically optimized for execution in discrete integration is a promising avenue for future work.
 A problem of particular interest is to re-engineer the XLA compiler when targeting a TPU in order to handle the high-dimensional tensors seen in model counting.
-One could also consider implementing our execution algorithms using other computational libraries, e.g. using databases as in \cite{fichte2020exploiting}, using the parallel ADD library \sylvan{} \cite{van2015sylvan}, or using other sparse data structures \cite{sanner2005affine,li2018hicoo}. %TODO: more citations?
+One could also consider implementing our execution algorithms using other computational libraries, e.g. using databases as in \cite{fichte2020exploiting}, using the parallel ADD library \sylvan{} \cite{van2015sylvan}, or using other sparse data structures \cite{sanner2005affine,baskaran2012efficient,li2018hicoo}.
 
 In Chapter \ref{ch:parallel}, we evaluated index slicing in the context of tensor-based execution.
 One avenue for future development of parallel counters is to integrate slicing with the ADD-based execution from Chapter \ref{ch:dpmc} or Chapter \ref{ch:procount}.
@@ -85,7 +85,6 @@ For example, all techniques we introduced in this work would have similar perfor
 The techniques from Chapter \ref{ch:dpmc} and \ref{ch:procount} require only that the discrete integration query is presented as the conjunction of constraints, but need no restriction on the type of each constraint. 
 In contrast, techniques for discrete integration based on search or knowledge compilation often require different reasoning techniques for each type of constraint (or requires the constraints to be encoded as a CNF formula, which may dramatically increase the size of of the constraints).
 Evaluating our techniques on a wider collection of constraints is an exciting direction for future work that may enable new applications of discrete integration.
-%TODO: Complex weights?
 
 %  More generally, our algorithms for tensor-network contraction can be used to improve many other applications of tensor networks, e.g. quantum circuit simulation \cite{MS08}.
 

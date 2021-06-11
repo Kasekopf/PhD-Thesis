@@ -4,7 +4,7 @@ We use $\vars(\varphi)$ to indicate the set of variables of $\varphi$. An \emph{
 
 % We are often interested in Boolean formulas in \emph{conjunctive normal form} (CNF).
 A \emph{literal} is a variable (e.g., $x$) or the negation of a variable (e.g., $\neg x$).
-A Boolean formula is a \emph{(CNF) clause} if it is the disjunction of literals (e.g., $x \lor y \lor \neg z$).
+A Boolean formula is a \emph{(CNF) clause} if it is the disjunction of literals (e.g., $x \lor y \lor \neg z$). % Note that we do not need to define support, since \support = \vars
 A Boolean formula is a \emph{CNF formula} (also called \emph{in CNF}) if it is the conjunction of CNF clauses.
 For example $(x \lor y) \land (z \lor \neg x)$ is a CNF formula with 2 clauses and 4 solutions ($\{y\}$, $\{y, z\}$, $\{x, z\}$, and $\{x, y, z\}$).
 If $\varphi$ is a CNF formula, we often treat $\varphi$ as the set of its clauses and so write $C \in \varphi$ to mean that $C$ is one of the CNF clauses of $\varphi$. Thus $\varphi = \bigwedge_{C \in \varphi} C$.

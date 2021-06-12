@@ -12,7 +12,7 @@ Similar to our framework, \nest{} includes a planning phase (using the tree-deco
 We predict that \nest{} may benefit from switching the projected-counting component to \procount{}, which was often faster than \projmc{} in Experiment 3.
 While we were unable to run a full experimental comparison%
 \footnote{\nest{} is an unweighted tool, but the benchmarks in Section \ref{sec:procount:experiments} are weighted.
-Moreover, the cluster used in Section \ref{sec:experiments} does not support database management systems.}
+Moreover, the cluster used in Section \ref{sec:procount:experiments} does not support database management systems.}
 with \nest{}, we evaluated \nest{} against \procount{} on \wapsBenchmarks{} benchmarks \cite{gupta2019waps} (with weights removed) using a single CPU core of an Intel i7-7700HQ processor (2.80-GHz) with 30 GB of RAM.
 \procount{} and \nest{} respectively solved 69 and 59 benchmarks, with a 100-second timeout.
 The mean PAR-2 scores for \procount{} and \nest{} were 47 and 87.

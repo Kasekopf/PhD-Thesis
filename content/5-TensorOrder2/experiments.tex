@@ -182,7 +182,7 @@ Once the XLA compilation bottleneck is improved and tensor networks with larger 
 
 We conclude that \pkg{TPU-graph} is currently unsuitable for nontrivial model counting benchmarks. The main problem is the long XLA compilation time for computations high-dimensional tensors, i.e. tensors with more than 17 indices.
 We hypothesize that XLA compilation times are long for high-dimensional tensors because of optimizations for neural network training and inference. 
-Unlike our setting, where tensors often have many indices (more than 25) but each index has a domain of size 2, tensors in neural network training and inference typically have relatively few indices (less than 5) but each index has a much larger domain (thousands). %TODO: cite?
+Unlike our setting, where tensors often have many indices (more than 25) but each index has a domain of size 2, tensors in neural network training and inference typically have relatively few indices (less than 5) but each index has a much larger domain (thousands) \cite{kang2012gigatensor,JYPPABBBBB17}.
 
 We emphasize that these results should be taken only as initial observations.
 % We hope that future development of tensor libraries for TPUs, especially in the compilation of the XLA graph programs with high-dimensional tensors, will improve performance.

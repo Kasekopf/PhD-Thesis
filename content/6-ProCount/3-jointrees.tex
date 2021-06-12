@@ -20,23 +20,23 @@ The challenge is that not all projections commute: $\Sigma$-projections do not c
     \end{enumerate}
 \end{definition}
 
-Intuitively, a project-join tree is $(X,Y)$-graded if all $X$ variables are projected (with $\pi$) above all $Y$ variables in the tree. Figure \ref{tree_ex} illustrates an exemplary graded project-join tree.
+Intuitively, a project-join tree is $(X,Y)$-graded if all $X$ variables are projected (according to $\pi$) closer to the root than all $Y$ variables in the tree. Figure \ref{tree_ex} illustrates an exemplary graded project-join tree.
 \begin{figure}[t]
     \centering
     \begin{tikzpicture}[grow = right]
-        \tikzset{level distance = 90pt, sibling distance = -5pt}
+	    \tikzset{level distance = 90pt, sibling distance = -5pt}
         \tikzset{every tree node/.style = {anchor = base west}}
-        \Tree [ .$n_{10}\gammaMap\emptyset$
-            [ .$n_{9}\gammaMap\set{z_3, z_5}$ 
+        \Tree [ .$n_{10}\piMap\emptyset$
+            [ .$n_{9}\piMap\set{z_3, z_5}$
                 [ .$n_5\gammaMap{\neg z_3 \vee \neg z_5}$ ]
                 [ .$n_4\gammaMap{z_3 \vee z_5}$ ]
             ]
-            [ .$n_{8}\gammaMap\set{z_1}$
+            [ .$n_{8}\piMap\set{z_1}$
                 [ .$n_3\gammaMap{z_1}$ ]
-                [ .$n_7\gammaMap\set{z_6}$ 
+                [ .$n_7\piMap\set{z_6}$
                     [ .$n_2\gammaMap{z_1 \vee z_6}$ ]
                 ]
-                [ .$n_6\gammaMap\set{z_2, z_4}$ 
+                [ .$n_6\piMap\set{z_2, z_4}$
                     [ .$n_1\gammaMap{z_2 \vee \neg z_4}$ ]
                 ]
             ]
@@ -51,7 +51,7 @@ Intuitively, a project-join tree is $(X,Y)$-graded if all $X$ variables are proj
     \label{tree_ex}
 \end{figure}
 
-We then define a new valuation on graded project-join trees, which uses $\Sigma$-projections at nodes in $\mathcal{I}_X$ and $\exists$-projections at nodes in $\mathcal{I}_Y$:
+We now define a new valuation on graded project-join trees, which performs $\Sigma$-projections at nodes in $\mathcal{I}_X$ and $\exists$-projections at nodes in $\mathcal{I}_Y$:
 \begin{definition}[Projected Valuation]
     \label{def:graded_valuation}
     Let $(X, Y, \phi, W)$ be a weighted projected model counting instance, and let $\T = (T, r, \gamma, \pi)$ be an $(X,Y)$-graded project-join tree of $\phi$ with grades $\mathcal{I}_X$ and $\mathcal{I}_Y$.
@@ -64,7 +64,7 @@ We then define a new valuation on graded project-join trees, which uses $\Sigma$
             \displaystyle\exist_{\pi(n)} \pars{ \prod_{o \in \C T r n} g^W_o } & \text{if } n \in \mathcal{I}_Y
         \end{cases}
     \end{align*}
-    where $[\gamma(n)]$ is the pseudo-Boolean function corresponding to the clause $\gamma(n)$.
+    where $[\gamma(n)]$ is the pseudo-Boolean function corresponding to the clause $\gamma(n) \in \phi$.
 \end{definition}
 
 If the project-join tree is graded, then the projected valuation of the root node is the weighted projected model count.

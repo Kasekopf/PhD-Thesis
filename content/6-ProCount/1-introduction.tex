@@ -14,7 +14,7 @@
 % Dynamic programming is a natural framework to solve a variety of problems defined on sets of constraints, as subproblems can be formed by partitioning the constraints.
 % This framework has been instantiated into algorithms for database-query optimization \cite{MPPV04}, SAT solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, QBF evaluation \cite{charwat2016bdd}, model counting \cite{BDP09,SS10,jegou2016improving,dudek2020dpmc,fichte2020exploiting}, and projected model counting \cite{fichte2020counting}.
 
-Chapter \ref{ch:dpmc} proposed a unifying framework for dynamic-programming algorithms based on \emph{project-join trees}. 
+Chapter \ref{ch:dpmc} proposed a unifying framework  based on \emph{project-join trees} for dynamic-programming algorithms. 
 The key idea is to consider project-join trees as \emph{execution plans} and decompose dynamic-programming algorithms into two phases: a \emph{planning phase}, where a project-join tree is constructed from an input problem instance, and an \emph{execution phase}, where the project-join tree is used to compute the result. 
 % The resulting project-join-tree-based model counter \dpmc{} was found to be competitive with state-of-the-art exact weighted model counters \cite{
 %     % DPV20, % ADDMC
@@ -31,17 +31,18 @@ We adapt this framework for weighted projected model counting. The central chall
 For example, in Boolean functional synthesis \cite{tabajara2017factored}, some variables are \emph{free} and must not be projected out. 
 Our solution is to model multiple types of variables by requiring the project-join tree to be \emph{graded}, meaning that irrelevant variables must be projected before relevant variables. The main theoretical contribution of this chapter is a novel algorithm to construct graded project-join trees from standard project-join trees. This has two primary advantages. 
 
-The first advantage is that the construction of graded project-join trees can be done by using existing tools for standard project-join trees (see Chapter \ref{ch:dpmc}) in a black-box way. Tools exist to construct standard project-join trees with tree decompositions \cite{RS91} or with constraint-satisfaction heuristics \cite{tarjan1984simple,koster2001treewidth,dechter03,dechter99,bouquet1999gestion}.
+The first advantage is that graded project-join trees can be constructed by using existing tools for standard project-join trees (see Chapter \ref{ch:dpmc}) in a black-box way. Tools exist to construct standard project-join trees with tree decompositions \cite{RS91} or with constraint-satisfaction heuristics \cite{tarjan1984simple,koster2001treewidth,dechter03,dechter99,bouquet1999gestion}.
 We can thus easily leverage all current and future work in tree-decomposition solvers \cite{strasser2017computing,AMW17,Tamaki17} and constraint-satisfaction heuristics to produce graded project-join trees. This is crucial for the practical success of our tool.
 
 The second advantage to our approach is in the simplicity of the algorithm. Given a project-join tree, its gradedness can be easily verified before starting the execution stage. 
-Moreover, the execution algorithm that computes the projected model count from a graded project-join tree is straightforward. This gives us confidence in the correctness of our implementation.
-During our experimental evaluation, we found correctness errors in \dfp{} \cite{lagniez2019recursive}, \projmc{} \cite{lagniez2019recursive}, and \ssat{} \cite{lee2017solving} that we reported to the authors, who then fixed the tools. 
+Moreover, the execution algorithm to compute the projected model count from a graded project-join tree is straightforward. This gives us confidence in the correctness of our implementation.
+During our experimental evaluation, we found correctness errors in \dfp{} \cite{lagniez2019recursive}, \projmc{} \cite{lagniez2019recursive}, and \ssat{} \cite{lee2017solving}.
+We reported these issues to the authors, who then fixed the tools.
 We believe that this work is a step towards a certificate for the verification of projected model counters, similar to SAT solver certificates \cite{wetzler2014drat}.
 
 The primary contribution of this work is a dynamic-programming framework for weighted projected model counting based on project-join trees. In particular:
 \begin{enumerate}
-    \item We show that project-join trees can be used to compute weighted projected model counts, provided that the project-join trees are graded.
+    \item We show that graded project-join trees can be used to compute weighted projected model counts.
     \item We prove that building graded project-join trees and project-join trees with free variables can be reduced to building standard project-join trees.
     \item We find that project-join-tree-based algorithms make a significant contribution to the portfolio of exact weighted projected model counters (\dfp{}, \projmc{}, and \ssat{}).
     Our tool, \procount{}, achieves the shortest solving time on \dpmcFastestBenchmarks{} benchmarks of \solvedBenchmarks{} benchmarks solved by at least one tool, from \benchmarks{} benchmarks in total.

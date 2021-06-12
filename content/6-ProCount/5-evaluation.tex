@@ -13,10 +13,10 @@ We aim to answer the following experimental research questions:
 \begin{enumerate}
     \item[(RQ1)] In the planning phase, how do tree-decomposition techniques compare with constraint-satisfaction heuristics?
     \item[(RQ2)] In the execution phase, how do different ADD variable orders compare?
-    \item[(RQ3)] How does \procount{} compare to other exact weighted projected tools?
+    \item[(RQ3)] How does \procount{} compare with other exact weighted projected counters?
 \end{enumerate}
 
-To answer RQ1, in Experiment 1 we compare the planner \Lg{} (which uses tree decompositions) to \htb{} (which uses constraint-satisfaction heuristics). To answer RQ2, in Experiment 2 we compare variable-ordering heuristics for the ADD-based executor \dmc.
+To answer RQ1, in Experiment 1 we compare the planner \Lg{} (which uses tree decompositions) and the planner \htb{} (which uses constraint-satisfaction heuristics). To answer RQ2, in Experiment 2 we compare variable-ordering heuristics for the ADD-based executor \dmc.
 % An ADD \cite{bahar1997algebraic} is a directed acyclic graph that compactly represents a pseudo-Boolean function.
 % Each internal node of an ADD corresponds to an input variable of the function.
 % The variable order of an ADD strongly influences its compactness.
@@ -33,7 +33,7 @@ The first family contains \wapsBenchmarks{} formulas and was used for weighted p
 For each benchmark in this family, a positive literal $x$ has weight $0 < W_x(\set{x}) < 1$, and a negative literal $\neg x$ has weight $W(\emptyset) = 1 - W_x(\set{x})$.
 The second family contains \birdBenchmarks{} formulas and was used for unweighted projected model counting \cite{soos2019bird}.
 We add weights to this family by randomly assigning $W_x(\set{x}) = 0.4$ and $W_x(\emptyset) = 0.6$ or vice versa to each variable $x$.
-All \benchmarks{} benchmarks are satisfiable according to the SAT solver \sat{} \cite{soos2009extending}.
+All \benchmarks{} benchmarks are satisfiable, as verified by the SAT solver \sat{} \cite{soos2009extending}.
 
 We run all experiments on single CPU cores of a Linux cluster with Intel Xeon E5-2650v2 processors (2.60-GHz) and 30 GB of RAM\footnote{
 Vu H. N. Phan implemented the modifications in \Htb{} and \Dmc{}, and ran the experiments.}.
@@ -58,6 +58,7 @@ We find that this does not significantly affect the performance of \procount{}.
 \paragraph{Execution.} 
 \tool{ProCount} contains a single implementation of the execution phase: \Dmc{} (Diagram Model Counter).
 \Dmc{} uses ADDs as the underlying data structure with \cudd{} \cite{somenzi2015cudd}.
+Note that we use ADDs throughout the entire execution for consistency, although binary decision diagrams \cite{bryant1986graph} or SAT solvers would suffice to valuate existential nodes.
 The variable order of an ADD strongly influences its compactness.
 \dmc{} implements four variable-ordering heuristics (see above): \mcs, \lexp, \lexm, and \minfill{}.
 
@@ -86,8 +87,8 @@ The variable order of an ADD strongly influences its compactness.
 In this experiment, we run all configurations of the planners \Lg{} and \htb{} once on each CNF benchmark with a timeout of 100 seconds.
 We present results in Figure \ref{figPlanning}.
 Each point $(x, y)$ on a plotted curve indicates that, within $x$ seconds on each of $y$ benchmarks, the first graded project-join tree produced by the corresponding planner has width at most \maxWidth{}.
-We choose \maxWidth{} because previous work shows that executors do not handle larger project-join trees well \cite{DDV19,dudek2020dpmc}. % JD: This is more true for tensors than for ADDs, let's just leave it out
-% Figure \ref{figPlanning} is qualitatively similar for other width cutoffs.
+We choose \maxWidth{} because previous work shows that executors do not handle larger project-join trees well \cite{DDV19,dudek2020dpmc}.
+
 
 The tree-decomposition-based planner \Lg{} outputs more low-width trees than the constraint-satisfaction-based planner \htb{}.
 Moreover, for \Lg{}, the tree decomposer \flowcutter{} is faster than \htd{} and \tamaki{}.
@@ -108,7 +109,7 @@ Thus we use \Lg{} with \flowcutter{} in \procount{} for later experiments.
     \label{figExecution}
 \end{figure}
 
-In this experiment, we take the 346 graded project-join trees produced by \Lg{} with \flowcutter{} in Experiment 1 % (107 trees of widths 1-30 and 239 trees of widths 31-99)
+In this experiment, we take all 346 graded project-join trees produced by \Lg{} with \flowcutter{} in Experiment 1 % (107 trees of widths 1-30 and 239 trees of widths 31-99)
 and run \dmc{} once for 100 seconds with each of four ADD variable-ordering heuristics. 
 We present the execution time of each heuristic (excluding planning time) in Figure \ref{figExecution}. 
 We observe that \mcs{} and \lexp{} outperform \lexm{} and \minfill{}.
@@ -183,7 +184,7 @@ Figure \ref{time_vs_width} shows how these widths relate to PAR-2 scores of proj
     \vspace*{-0.9cm}
     \caption{
         A plot of mean PAR-2 scores (in seconds) against mean project-join tree widths.
-        On this plot, each projected model counter (\procount{}, \dfp{}, \projmc, or \ssat) is represented by a curve, on which a point $(x, y)$ indicates that $x$ is the central moving average of 10 consecutive project-join tree widths ($1 \le w_1 < w_2 < \ldots < w_{10} \le 99$) and $y$ is the average PAR-2 score of the benchmarks whose project-join trees have widths $w$ where $w_1 \le w \le w_{10}$.
+        On this plot, each projected model counter (\procount{}, \dfp{}, \projmc, or \ssat) is represented by a curve, on which a point $(x, y)$ indicates that $x$ is the central moving average of 10 consecutive project-join tree widths ($1 \le w_1 < w_2 < \ldots < w_{10} \le 99$) and $y$ is the average PAR-2 score of the benchmarks whose project-join trees have widths $w$ s.t. $w_1 \le w \le w_{10}$.
         We observe that the performance of \procount{} degrades as the project-join tree width increases.
         However, \procount{} tends to be the fastest solver on benchmarks whose graded project-join trees have widths roughly between 50 and 100.
     }

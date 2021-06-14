@@ -4,12 +4,16 @@ The \textbf{Line-Graph} planner for finding contraction trees for a tensor netwo
 
 Although tensor networks constructed from weighted model counting instances do not have free indices, we utilize tensor networks with free indices as part of the preprocessing in Section \ref{sec:tensors:preprocessing} and so we need a more general graph construction that can handle free indices. Other works, e.g. \cite{Ying17}, extend the graph construction of \cite{MS08} to tensor networks with free indices by treating free indices as ``half-edges'' (i.e., edges incident to one vertex), but decompositions of such graphs are not well-studied. In order to cleanly extend our decomposition-based analysis to tensor networks with free indices, in this work we instead add an extra vertex incident to all free indices, which we call the \emph{free vertex}. We call the resulting graph the \emph{structure graph} of a tensor network:
 \begin{definition}[Structure Graph]\label{def:structure}
-	Let $N$ be a tensor network. The \emph{structure graph} of $N$ is the graph $G$ whose 
+	Let $N$ be a tensor network. The \emph{structure graph} of $N$ is the graph denoted $\struct{N}$ whose 
     vertices are the tensors of $N$ and a fresh vertex $\fv$ (called the \emph{free vertex}) and whose edges are the indices of $N$. Each tensor is incident to its indices, and $\fv$ is incident to all free indices.
-    That is, $\V{G} = N \sqcup \{ \fv \}$, $\E{G} = \tnbound{N} \cup \tnfree{N}$, $\vinc{G}{A} = \tdim{A}$ for all $A \in N$, and $\vinc{G}{\fv} = \tnfree{N}$.
+    That is, with $G = \struct{N}$ we have $\V{G} = N \sqcup \{ \fv \}$, $\E{G} = \tnbound{N} \cup \tnfree{N}$, $\vinc{G}{A} = \tdim{A}$ for all $A \in N$, and $\vinc{G}{\fv} = \tnfree{N}$.
 \end{definition}
 
-If $N$ has no free indices, the free vertex has no incident edges and the remaining graph is exactly the graph analyzed in prior work. Intuitively, the structure graph of a tensor network $N$ captures how indices are shared by the tensors of $N$. For example, on a CNF formula $\varphi$ Theorem \ref{thm:wmc-reduction} produces a tensor network $N_\varphi$ whose structure graph is exactly the \emph{incidence graph} of $\varphi$. The structure graph of $N$ contains all information needed to compute the max rank of a contraction-tree of $N$, as formalized in the following lemma.
+If $N$ has no free indices, the free vertex has no incident edges and the remaining graph is exactly the graph analyzed in prior work. Intuitively, the structure graph of a tensor network $N$ captures how indices are shared by the tensors of $N$. For example, on a CNF formula $\varphi$ Theorem \ref{thm:wmc-reduction} produces a tensor network $N_\varphi$ whose structure graph is exactly the \emph{incidence graph} of $\varphi$. 
+
+It is also convenient to define the \emph{internal structure graph} of a tensor network $N$, denoted $\istruct{N}$, to be $\struct{N}$ with the free vertex (and all incident edges) removed.
+
+The structure graph of $N$ contains all information needed to compute the max rank of a contraction-tree of $N$, as formalized in the following lemma.
 \begin{lemma} \label{lemma:tcn-equiv-structure}
 	Let $N$ be a tensor network with structure graph $G$. If $N' \subseteq N$ is nonempty, then $N'$ is a tensor network and $\tnfree{N'} = \vincs{G}{V} \cap \vincs{G}{\V{G} \setminus N'}$.
 \end{lemma}

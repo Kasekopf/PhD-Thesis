@@ -1,12 +1,30 @@
 \subsection{The Factor-Tree Planner}
 \label{sec:tensors:preprocessing}
-Approaches to tensor-network contraction that do not modify the input tensor network (e.g., \textbf{LG}) are inherently limited by the ranks of the input tensors. If a tensor network has a rank $r$ tensor, then all contraction trees have max rank of at least $r$. This is a problem for tensor networks with high-rank tensors. 
+Approaches to tensor-network contraction planning that do not modify the input tensor network (e.g., \textbf{LG}) are inherently limited by the ranks of the input tensors.
+If a tensor network $N$ has a rank $r$ tensor, then all contraction trees for $N$ will have max rank of at least $r$.
+% ;{ \color{blue} for example, within the planning method \textbf{LG} the graph $\Line{\struct{N}}$ will contain a clique of $r$ vertices and so will have treewidth at least $r-1$. } % diff
+This is a problem for tensor networks with high-rank tensors. 
 
 One example of tensor networks that may contain high-rank tensors are the networks obtained by the reduction from model counting. The tensor network produced from a formula $\varphi$ contains a tensor representing each variable $x$, where the rank of this tensor is the number of appearances of $x$ in $\varphi$ (e.g., the rank $4$ tensor for $y$ in Figure \ref{fig:wmc-example}). For many benchmarks, where a single variable might appear tens or even hundreds of times, this reduction will therefore produce tensor networks containing tensors of infeasibly-high rank. Reductions exist from model counting on arbitrary formulas to model counting on formulas where the number of appearances of each variables is small. However, existing reductions do not consider the carving width of the resulting incidence graph and so often do not significantly improve the max rank of available contraction trees. 
 
-We introduce here a novel planning method \textbf{Factor-Tree} that avoids this barrier by preprocessing the input tensor network. Our insight is that a tree decomposition for the incidence graph of $\varphi$ can be used as a guide to introduce new variables in a principled way, so that the resulting tensor network has good contraction trees. In the language of tensors, introducing new variables corresponds to \emph{factoring}: replacing each high-rank tensor $A$ with a tensor network $N_A$ of low-rank tensors that contracts to $A$. The key idea of \textbf{FT}, then, is to use a tree decomposition for the structure graph to factor high-rank tensors.
+We introduce here a novel planning method \textbf{Factor-Tree} that avoids this barrier by preprocessing the input tensor network. Our insight is that a tree decomposition for the incidence graph of $\varphi$ can be used as a guide to introduce new variables in a principled way, so that the resulting tensor network has good contraction trees. 
+In the language of tensors, introducing new variables corresponds to \emph{factoring}: replacing each high-rank tensor $A$ with a tensor network $N_A$ of low-rank tensors that contracts to $A$.
 
-We state this new result as Theorem \ref{thm:factorable-tree}. Since not all tensors can be factored in the ways that we require for this theorem and for \textbf{FT}, we first characterize the required property: that every tensor is factorable as an arbitrary tree of tensors:
+{ \color{blue}
+One way to see intuitively the impact of factoring is to consider running \textbf{LG} before and after factoring a rank $r$ tensor $A$ in a tensor network $N$.
+Before factoring, $\tdim{A}$ is a clique of $r$ vertices in $\Line{\struct{N}}$ and thus $\Line{\struct{N}}$ will have treewidth at least $r-1$.
+After factoring and replacing $A$ by $N_A$, this clique is replaced with $\Line{\istruct{N_A}}$.
+This new graph has a significantly sparser set of edges and so may have a lower treewidth.
+} % diff
+
+The key idea of \textbf{FT}, then, is to use a tree decomposition for the structure graph to factor high-rank tensors.
+We state this new result as Theorem \ref{thm:factorable-tree}.
+{ \color{blue}
+Note that there is no need to run \textbf{LG} independently after using \textbf{FT} to factor high-rank tensors.
+Instead, in Theorem \ref{thm:factorable-tree} we directly exactly a low-rank contraction tree for the factored network as part of the factoring process of \textbf{FT}.
+} % diff
+
+Since not all tensors can be factored in the ways that we require for this theorem and for \textbf{FT}, we first characterize the required property: that every tensor is factorable as an arbitrary tree of tensors:
 
 % In fact, we can generalize this result to a wider class of tensor networks. To use a tree decomposition as a guide to simplify a tensor network we ultimately require that we can identify each tensor with a tensor network whose structure graph (excluding the free vertex) is an arbitrary tree. We call this property \emph{tree factorable}:
 
@@ -17,11 +35,12 @@ We state this new result as Theorem \ref{thm:factorable-tree}. Since not all ten
 A tensor $A$ is \emph{tree factorable} if, for every tree $T$ whose leaves are $\tdim{A}$ (called a \emph{dimension tree} of $A$), there is a tensor network $N_A$ and a bijection $g_A: \V{T} \rightarrow N_A$ s.t.
 \begin{enumerate}
 \item $A$ is the contraction of $N_A$,
-\item $g_A$ is an isomorphism between $T$ and the structure graph of $N_A$ with the free vertex (and incident edges) removed,
+\item $g_A$ is an isomorphism between $T$ and $\istruct{N_A}$,
 \item for every index $i$ of $A$, $i$ is an index of $g_A(i)$, and
 \item for some index $i$ of $A$, the bond dimension of $N_A$ is no bigger than $|\domain{i}|$. % $\max_{i \in \tnbound{N}} |\domain{i}| \leq \max_{i \in \tdim{A}} |\domain{i}|$.
 \end{enumerate}
 \end{definition}
+Recall that $\istruct{N_A}$ is the internal structure graph of $N_A$, i.e. the structure graph of $N_A$ with the free vertex (and incident edges) removed.
 All tensors in the reduction of Theorem \ref{thm:wmc-reduction} from weighted model counting to tensor networks are tree factorable. A tensor network $N_A$ that satisfies properties 1, 2, and 3 of Definition \ref{def:tree-factorable} for some tree is called a \emph{Hierarchical Tucker representation} of $A$ \cite{Grasedyck10}. Property 4 ensures the result of Theorem \ref{thm:factorable-tree} has small bond dimension.
 
 % In \cite{Grasedyck10}, a tree $T$ as in Definition \ref{def:tree-factorable} is called a \emph{dimension tree} of the tensor $A$, and a tensor network $N$ that satisfies properties 1, 2, and 3 for a given dimension tree of $A$ is called a \emph{Hierarchical Tucker representation} of $A$. For every tensor $A$ and dimension tree, a hierarchical Tucker representation of $A$ trivially exists with bond dimension $|\domain{A}|$, but a representation may not exist with smaller bond dimension. Limiting the bond dimension in property 4 ensures that the tensor networks we produce in Theorem \ref{thm:factorable-tree} also have small bond dimension.

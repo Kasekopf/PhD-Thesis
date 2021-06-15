@@ -1,7 +1,13 @@
 \section{Chapter Summary}
-In this work, we explored the impact of multiple-core, GPU, and TPU use on tensor network contraction for weighted model counting. We implemented our techniques in \tool{TensorOrder2}, a new parallel counter, and showed that \tool{TensorOrder2} is useful as part of a portfolio of counters.
+In this work, we explored the impact of multiple-core, GPU, and TPU use on tensor network contraction for weighted model counting. We implemented our techniques in \tool{TensorOrder2}, a new parallel counter.
 
-In the planning phase, we showed that a parallel portfolio of graph-decomposition solvers is significantly faster than single-core approaches. We proved that branch decomposition solvers can also be included in this portfolio, but concluded that a state-of-the-art branch decomposition solver only slightly improves the portfolio. 
+{ \color{blue}
+The primary finding of this chapter is that tensor networks enable parallel model counting in a variety of hardware contexts.
 
-In the execution phase, we showed that tensor contractions can be performed on a GPU or a TPU. When combined with index slicing, we concluded that a GPU speeds up the execution phase for many hard benchmarks. For easier benchmarks, the overhead of a GPU may outweigh any contraction speedups. 
-Moreover, we observed that current tensor libraries fail to compile tensor computations with high-dimensional tensors to a TPU and so our approach does not scale well on a TPU.
+In the planning phase, we found that a parallel portfolio of graph-decomposition solvers is significantly faster than single-core approaches. We proved that branch decomposition solvers can also be included in this portfolio, but found that a state-of-the-art branch decomposition solver only slightly improves the portfolio. 
+
+In the execution phase, we proved that tensor contractions can be performed on a GPU or a TPU. When combined with index slicing, we found that a GPU speeds up the execution phase for many hard benchmarks. For easier benchmarks, the overhead of a GPU may outweigh any contraction speedups. 
+Moreover, we found that current tensor libraries fail to compile tensor computations with high-dimensional tensors to a TPU and so our approach does not scale well on a TPU.
+
+Overall, we found that \tool{TensorOrder2} was the fastest counter on a significant number of benchmarks in comparison to other state-of-the-art counters, especially after preprocessing. Tensor-network techniques are thus useful as part of a portfolio of counters.
+}  % diff

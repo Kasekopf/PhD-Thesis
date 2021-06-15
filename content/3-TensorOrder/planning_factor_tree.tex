@@ -130,7 +130,18 @@ The general idea of using a tree decomposition of a graph to split high-degree n
 %Then for each $A \in N$ there is a tensor network $N_A$ whose contraction is $A$ that consists only of rank 3 or smaller tensors. Moreover, the disjoint union of these networks, $N' = \cup_{A \in N} N_A$, is a tensor network that contracts to $\tntensor{N}$, has the same bond dimension as $N$, and has a structure graph with a tree decomposition of width $w$.
 %\end{theorem}
 
-
 The construction of Theorem \ref{thm:factorable-tree} gives us the \textbf{Factor-Tree} planner, which uses tree decompositions of the structure graph to preprocess the tensor network and factor high-rank tensors. See Figure \ref{fig:factor-example} for an example of the preprocessing. 
 Since $M$ contracts to $\tntensor{N}$ in Theorem \ref{thm:factorable-tree}, the \textbf{Factor-Tree} planner satisfies Assumption 2 in Theorem \ref{thm:alg-correctness}.
-We show in Section \ref{sec:tensors:experiments:cachet} that \textbf{FT} can significantly improve the quality of the contraction tree on benchmarks with high-rank tensors.
+
+{ \color{blue}
+We emphasize that the \textbf{Factor-Tree} planner (and Theorem \ref{thm:factorable-tree}) takes as input a tree decomposition of the structure graph $G$ directly, while the \textbf{Line-Graph} planner (and Theorem \ref{thm:carving-equiv-tree}) takes as input a tree decomposition of the line graph of $G$.
+For many tensor networks the treewidth of the structure graph $G$ is much less than the treewidth of $\Line{G}$.
+
+For example, let $\psi = \left(\lor_{i=1}^n x_i\right) \land \left(\lor_{i=1}^n \neg x_i\right)$ and let $N_\psi$ be the tensor network obtained from applying Theorem \ref{thm:wmc-reduction} with a constant weight function.
+Then $\struct{N_\psi}$ has treewidth $2$ and $\Line{\struct{N_\psi}}$ has treewidth $n-1$.
+Intuitively, this is because $N_\varphi$ has a rank $n$ tensor corresponding to each clause of $\psi$.
+Each rank $n$ tensor induces a clique of $n$ vertices in $\Line{\struct{N_\psi}}$ but only a degree $n$ vertex in $\struct{N_\psi}$.
+}  % diff
+
+We show in Section \ref{sec:tensors:experiments:cachet} that this difference also holds for real-world benchmarks. 
+That is, \textbf{FT} can significantly improve the quality of the contraction tree on real-world benchmarks with high-rank tensors.

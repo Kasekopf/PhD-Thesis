@@ -87,7 +87,7 @@ We first compare on benchmarks that count the number of vertex covers of randoml
 
 Results on the runtime performance for these benchmarks are summarized in Figure \ref{fig:cubic-time}. For ease of presentation, we display only the best-performing of the \textbf{LG} and \textbf{FT} implementations: \textbf{LG+Flow}. We observe that tensor-based methods are fastest when $n \geq 110$. On large graphs ($n \geq 170$) our contribution \textbf{LG+Flow} is fastest and able to find the lowest max rank contraction trees. \textbf{LG+Flow} is the only implementation able to solve at least 50 benchmarks within 1000 seconds when $n$ is $220$. We conclude that tensor-network-based approaches outperform state-of-the-art unweighted model counters on these benchmarks.
 
-Results on the structural properties of these benchmarks are summarized in Figure \ref{fig:vertex-cover-width}. 
+Results on the structural properties of these benchmarks are summarized in Figure \ref{fig:vertex-cover-width}.
 % Note that both \textbf{LG} and \textbf{FT} can be used to find carving decompositions on these benchmarks; although \textbf{FT} requires preprocessing to factor all tensors of order 4 or higher, each vertex in each cubic graph has exactly three incident edges and so there is no factoring required. 
 For most large graphs $G$, we observe that the carving width of $G$ is smaller than the treewidth of $G$ which is smaller that the treewidth of $\Line{G}$. 
 % Note that the carving width of $G$ is indeed smaller than the upper bound guaranteed by Theorem \ref{thm:carving-equiv-tree} of $width_t(\Line{G})+1$. In fact, the carving width of $G$ is smaller than the treewidth of $G$.

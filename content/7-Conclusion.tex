@@ -25,7 +25,7 @@ Next, in Chapter \ref{ch:parallel} we exploited our framework to develop a paral
 We showed that the planning phase may be parallelized by using an algorithmic portfolio \cite{XHHL08} of planners.
 Further, we showed that the execution phase may be parallelized through parallel tensor libraries.
 In order to handle limited-memory environments (e.g., on a GPU), we introduced index slicing to divide the computation of a single tensor network contraction.
-Although we showed that index slicing also allows for efficient tensor network contraction on a TPU theoretically, in practice we observed that current tensor libraries fail to compile tensor computations with high-dimensional tensors to a TPU.
+Although we showed that index slicing also allows for efficient tensor network contraction on a TPU theoretically, in practice we found that current tensor libraries fail to compile tensor computations with high-dimensional tensors to a TPU.
 The resulting tool \tool{TensorOrder2} was the fastest parallel model counter on a significant number of benchmarks.
 
 Finally, in Chapter \ref{ch:procount} we applied our framework to projected model counting by extending the approach in Chapter \ref{ch:dpmc}.

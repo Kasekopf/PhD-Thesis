@@ -1577,15 +1577,15 @@
 \definecolor{currentstroke}{rgb}{0.121569,0.466667,0.705882}%
 \pgfsetstrokecolor{currentstroke}%
 \pgfsetdash{}{0pt}%
-\pgfpathmoveto{\pgfqpoint{4.479690in}{1.327410in}}%
-\pgfpathlineto{\pgfqpoint{4.729690in}{1.327410in}}%
+\pgfpathmoveto{\pgfqpoint{4.479690in}{1.360693in}}%
+\pgfpathlineto{\pgfqpoint{4.729690in}{1.360693in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=4.754690in,y=1.283660in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont FlowCutter}%
+\pgftext[x=4.754690in,y=1.316943in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont LG(FlowCutter)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetrectcap%
@@ -1594,15 +1594,15 @@
 \definecolor{currentstroke}{rgb}{1.000000,0.498039,0.054902}%
 \pgfsetstrokecolor{currentstroke}%
 \pgfsetdash{}{0pt}%
-\pgfpathmoveto{\pgfqpoint{4.479690in}{1.165611in}}%
-\pgfpathlineto{\pgfqpoint{4.729690in}{1.165611in}}%
+\pgfpathmoveto{\pgfqpoint{4.479690in}{1.185723in}}%
+\pgfpathlineto{\pgfqpoint{4.729690in}{1.185723in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=4.754690in,y=1.121861in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont htd}%
+\pgftext[x=4.754690in,y=1.141973in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont LG(htd)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetrectcap%
@@ -1611,15 +1611,15 @@
 \definecolor{currentstroke}{rgb}{0.172549,0.627451,0.172549}%
 \pgfsetstrokecolor{currentstroke}%
 \pgfsetdash{}{0pt}%
-\pgfpathmoveto{\pgfqpoint{4.479690in}{1.003811in}}%
-\pgfpathlineto{\pgfqpoint{4.729690in}{1.003811in}}%
+\pgfpathmoveto{\pgfqpoint{4.479690in}{1.010754in}}%
+\pgfpathlineto{\pgfqpoint{4.729690in}{1.010754in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=4.754690in,y=0.960061in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont Tamaki}%
+\pgftext[x=4.754690in,y=0.967004in,left,base]{\color{textcolor}\rmfamily\fontsize{9.000000}{10.800000}\selectfont LG(Tamaki)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%

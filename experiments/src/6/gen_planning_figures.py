@@ -78,19 +78,19 @@ planning_data = {
 def plot_planning_exp(ax):
     ax.plot(
         *util.cactus(planning_data["flow"].lg_times(), endpoint=TIMEOUT),
-        label="FlowCutter",
+        label="LG(FlowCutter)",
         linestyle="-",
         linewidth=1,
     )
     ax.plot(
         *util.cactus(planning_data["htd"].lg_times(), endpoint=TIMEOUT),
-        label="htd",
+        label="LG(htd)",
         linestyle="-",
         linewidth=1,
     )
     ax.plot(
         *util.cactus(planning_data["tamaki"].lg_times(), endpoint=TIMEOUT),
-        label="Tamaki",
+        label="LG(Tamaki)",
         linestyle="-",
         linewidth=1,
     )

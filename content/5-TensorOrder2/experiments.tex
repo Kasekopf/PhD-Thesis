@@ -172,7 +172,7 @@ Results are summarized in Figure \ref{fig:parallel:tpu}.
 We observe that, as expected, the compilation time in graph execution mode (\pkg{CPU8-graph} and \pkg{TPU-graph}) is significantly longer than the time for a single slice in eager execution mode (\pkg{CPU8}). 
 Moreover, the execution time in graph execution mode is faster than the execution time in eager execution mode.
 
-We also observe that the compilation time of \pkg{TPU-graph} scales dramatically with the sliced max rank $k$, which is the maximum number of indices (i.e., dimensions) of the tensors involved in the computation.
+We also observe that the compilation time of \pkg{TPU-graph} scales dramatically with the sliced max rank $k$, which is the maximum number of indices (i.e., dimensions) of the tensors produced as intermediate results throughout the computation.
 On tensors with more than 17 indices the compilation time of \pkg{TPU-graph} is above 1000 seconds and so the compilation times out.
 For comparison, the max rank of nontrivial benchmarks in Experiment 3 is always more than 25, even after significant slicing.
 On the other hand, \pkg{CPU8-graph} does not suffer from long XLA compilation times even on high-dimensional tensors and so is promising for future analysis.

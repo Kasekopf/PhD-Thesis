@@ -58,7 +58,7 @@ The parallel portfolio of planners that we developed in Chapter \ref{ch:parallel
 It may be possible to improve the portfolio through more advanced algorithm-selection techniques \cite{HHLKS09,XHHL12}. 
 % One could also develop parallel heuristic decomposition solvers directly, e.g., by adapting the exact GPU-based tree-decomposition solver \cite{VB17} into a heuristic solver.
 This portfolio planner may be useful to apply in other planning contexts, for example to projected model counting in Chapter \ref{ch:procount}.
-More broadly, this portfolio strategy could be useful to parallelize a variety of applications that use graph decomposition tools.
+More broadly, this portfolio strategy could be useful to parallelize a variety of applications that use graph decomposition tools \cite{MPPV04,applegate2011traveling,cygan2015parameterized,GLST17}.
 
 
 \subsection{Improving Execution}
@@ -83,13 +83,13 @@ Such techniques would allow our framework to scale to leverage huge computationa
 While we focused on discrete integration over CNF formulas, many of the techniques in this thesis easily extend to discrete integration over more general classes of constraints.
 For example, all techniques we introduced in this work would have similar performance when applied to formulas that mix CNF clauses (i.e., OR clauses) with XOR clauses and Exactly-One clauses. % (as such clauses can also be represented as tree-factorable tensors).
 The techniques from Chapter \ref{ch:dpmc} and \ref{ch:procount} require only that the discrete integration query is presented as the conjunction of constraints, but need no restriction on the type of each constraint. 
-In contrast, techniques for discrete integration based on search or knowledge compilation often require different reasoning techniques for each type of constraint (or requires the constraints to be encoded as a CNF formula, which may dramatically increase the size of of the constraints).
+In contrast, techniques for discrete integration based on search or knowledge compilation would require different reasoning techniques for each type of constraint (or requires the constraints to be encoded as a CNF formula, which may dramatically increase the size of of the constraints).
 Evaluating our techniques on a wider collection of constraints is an exciting direction for future work that may enable new applications of discrete integration.
 
 %  More generally, our algorithms for tensor-network contraction can be used to improve many other applications of tensor networks, e.g. quantum circuit simulation \cite{MS08}.
 
 \subsection{Beyond Discrete Integration}
-We focused in this thesis on processing a single discrete integration query is isolation. 
+We focused in this thesis on processing a single discrete integration query in isolation. 
 In many applications, however, several discrete integration queries are made with an identical or similar set of constraints.
 Such repeated queries are handled well by counters based on knowledge compilation, where the same set of compiled constraints can be queried multiple times \cite{darwiche2002knowledge,koriche2013knowledge,LM17,darwiche2004new,OD15}.
 Exploring how our framework can be optimized to handle several queries is another promising research direction.

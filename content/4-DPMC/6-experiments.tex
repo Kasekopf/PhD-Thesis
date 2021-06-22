@@ -134,7 +134,7 @@ Moreover, we observe significant differences based on the strategy used to stop 
 The executor \Tensor{} performs significantly better when cost estimation is used than when only the first project-join tree of \Lg{} is used.
 In fact, the performance of \Tensor{} is almost as good as the hypothetical performance if \Tensor{} is able to predict the planning and valuation times of all trees produced by \Lg{}.
 On the other hand, \Dmc{} is not significantly improved by the cost estimation we considered.
-It would be interesting in the future to find better cost estimators for \Dmc{}.
+It would be interesting in the future to find better cost estimators for \Dmc{}, possibly by estimating the sparsity of the ADDs that occur through the execution phase.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

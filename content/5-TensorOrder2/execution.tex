@@ -1,6 +1,6 @@
 \section{Execution Phase: Parallelizing with Index Slicing}
 \label{sec:parallel:execution}
-As discussed in Chapter \ref{ch:background}, each contraction in Algorithm \ref{alg:network-contraction} can be implemented as a matrix multiplication.
+As discussed in Section \ref{sec:tensors:tensors}, each contraction in Algorithm \ref{alg:network-contraction} can be implemented as a matrix multiplication.
 This was done in Chapter \ref{ch:tensors} using \tool{numpy} \cite{numpy}, and it is straightforward to adjust the implementation to leverage multiple cores with \tool{numpy} or leverage a GPU with \tool{TensorFlow} \cite{ABCCDDDGII16}. 
 In Section \ref{sec:parallel:execution:gpu}, we discuss challenges in dealing with GPU on-board memory and our solution of index slicing. In Section \ref{sec:parallel:execution:tpu}, we then discuss how index slicing allows us to efficiently run the execution phase on a TPU using \tool{jax} \cite{jax2018github}.
 

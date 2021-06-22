@@ -71,6 +71,7 @@ We run each planning implementation (\pkg{FlowCutter}, \pkg{htd}, \pkg{Tamaki}, 
 We observe that the parallel portfolio planners outperform all four single-core planners after 5 seconds. In fact, after 20 seconds both portfolios perform almost as well as the virtual best solver. We conclude that portfolio solvers significantly speed up the planning phase.
 
 We also observe that \pkg{P3} and \pkg{P4} perform almost identically in Figure \ref{fig:parallel:planning}. Although after 1000 seconds \pkg{P4} has found better contraction trees than \pkg{P3} on 407 benchmarks, most improvements are small (reducing the max rank by 1 or 2) or still do not result in good-enough contraction trees. We conclude that adding \pkg{Hicks} improves the portfolio slightly, but not significantly.
+There is opportunity here to evaluate adding other graph decomposition tools to the portfolio in future work.
  
 \subsection{Experiment 2: Determining the Performance Factor (RQ3)}
 \label{sec:experiments:pf}
@@ -139,7 +140,7 @@ We run each counter once on each benchmark (both with and without \pkg{pmc-eq} p
 We observe that \tool{TensorOrder2} is improved by the portfolio planner and, on hard benchmarks, by executing on a multi-core CPU and on a GPU. The flat line at 3 seconds for $\pkg{P4}+\pkg{GPU}$ is caused by overhead from initializing the GPU.
 
 Comparing \tool{TensorOrder2} with the other counters, \tool{TensorOrder2} is competitive without preprocessing but solves fewer benchmarks than all other counters, although \tool{TensorOrder2} (with some configuration) is faster than all other counters on 168 benchmarks before preprocessing. 
-We observe that preprocessing significantly boosts \tool{TensorOrder2} relative to other counters, similar to prior observations with \tool{gpusat2} \cite{FHZ19}. \tool{TensorOrder2} solves the third-most preprocessed benchmarks of any solver and has the second-lowest PAR-2 score (notably, outperforming \tool{gpusat2} in both measures). \tool{TensorOrder2} (with some configuration) is faster than all other counters on 192 benchmarks with preprocessing. Since \tool{TensorOrder2} improves the virtual best solver on 168 benchmarks without preprocessing and on 192 benchmarks with preprocessing, we conclude that \tool{TensorOrder2} is useful as part of a portfolio of counters.
+We observe that preprocessing significantly boosts \tool{TensorOrder2} relative to other counters, similar to prior observations with \tool{gpusat2} \cite{FHZ19}. \tool{TensorOrder2} solves the third-most preprocessed benchmarks of any solver and has the second-lowest PAR-2 score (notably, outperforming \tool{gpusat2} in both measures). \tool{TensorOrder2} (with some configuration) is faster than all other counters on 192 benchmarks with preprocessing. Since \tool{TensorOrder2} is the fastest solver on 168 benchmarks without preprocessing and on 192 benchmarks with preprocessing, we conclude that \tool{TensorOrder2} is useful as part of a portfolio of counters.
 
 \subsection{Experiment 4: Executing on a TPU (RQ5)}
 \label{sec:parallel:exp:tpu}
@@ -180,7 +181,7 @@ Finally, we observe that the execution time of \pkg{CPU8-graph} is less than the
 We hypothesize that this is an artifact of the small tensors involved in these experiments. Since every index in the tensors we consider has size 2, tensors with no more than 17 indices are no larger than 1MB.
 Once the XLA compilation bottleneck is improved and tensor networks with larger tensors may be used, the execution time of \pkg{TPU-graph} may outperform \pkg{CPU8-graph}.
 
-We conclude that \pkg{TPU-graph} is currently unsuitable for nontrivial model counting benchmarks. The main problem is the long XLA compilation time for computations high-dimensional tensors, i.e. tensors with more than 17 indices.
+We conclude that \pkg{TPU-graph} is currently unsuitable for nontrivial model counting benchmarks. The main problem is the long XLA compilation time for computations that involve high-dimensional tensors, i.e. tensors with more than 17 indices.
 We hypothesize that XLA compilation times are long for high-dimensional tensors because of optimizations for neural network training and inference. 
 Unlike our setting, where tensors often have many indices (more than 25) but each index has a domain of size 2, tensors in neural network training and inference typically have relatively few indices (less than 5) but each index has a much larger domain (thousands) \cite{kang2012gigatensor,JYPPABBBBB17}.
 

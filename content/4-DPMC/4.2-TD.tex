@@ -7,10 +7,9 @@ In this approach, tree decompositions of the join graph of a query are used to f
 Similarly, tree decompositions of the \emph{primal graph} of a factor graph, which consists of all variables as vertices and all factors as cliques, can be used to find variable elimination orders \cite{KDLD05}.
 Section \ref{sec:tensors:contraction-theory} discussed this technique in the context of tensor networks.
 
-Translated to our project-join-tree framework, this technique allows us to use tree decompositions of the \textdef{Gaifman graph} of a CNF formula to compute project-join trees.
+Translated to our project-join-tree framework, these techniques allows us to use tree decompositions of the \textdef{Gaifman graph} of a CNF formula to compute project-join trees.
 The Gaifman graph of a CNF formula $\phi$, denoted $\gaifman(\phi)$, has a vertex for each variable of $\phi$, and two vertices are adjacent if the corresponding variables appear together in some clause of $\phi$.
-We present this tree-decomposition-based technique as Algorithm \ref{alg_td_to_join}.
-The key idea is that each clause $c$ of $\phi$ forms a clique in $\gaifman(\phi)$ between the variables of $c$.
+The key idea of the technique is that each clause $c$ of $\phi$ forms a clique in $\gaifman(\phi)$ between the variables of $c$.
 Thus all variables of $c$ must appear together in the label of some node of the tree decomposition.
 We identify that node with $c$ in the resulting project-join tree.
 \begin{algorithm*}
@@ -45,6 +44,7 @@ We identify that node with $c$ in the resulting project-join tree.
     \Return{$(T, r, \gamma, \pi)$}
 \end{algorithm*}
 
+We present this tree-decomposition-based technique as Algorithm \ref{alg_td_to_join}.
 We first prove in the following theorem that Algorithm \ref{alg_td_to_join} is correct, i.e. that it indeed returns a project-join tree. 
 \begin{theorem}
 \label{thm_td_to_join_correct}
@@ -52,7 +52,8 @@ We first prove in the following theorem that Algorithm \ref{alg_td_to_join} is c
     Then Algorithm \ref{alg_td_to_join} returns a project-join tree of $\phi$.
 \end{theorem}
 \begin{proof}
-Let $\mathcal{T} = (T, r, \gamma, \pi)$ be the object returned by Algorithm \ref{alg_td_to_join}. For each node $a \in \V{T}$, let $O(a) \in \V{S}$ denote the node in $\V{S}$ \st{} $a$ was created in the $\func{Process}(O(a), \ell)$ call for some $\ell \subseteq X$. Moreover, let $s$ denote the value obtained on Line \ref{line_arbitrary_node} of Algorithm \ref{alg_td_to_join}.
+Let $\mathcal{T} = (T, r, \gamma, \pi)$ be the object returned by Algorithm \ref{alg_td_to_join}. For each node $a \in \V{T}$, $a$ was created in some $\func{Process}$ call during the execution of Algorithm \ref{alg_td_to_join}; let $O(a)$ denote the node in $\V{S}$ so that $\func{Process}(O(a), \ell)$ was the call that created $a$ (for some $\ell \subseteq X$).
+Moreover, let $s$ denote the value obtained on Line \ref{line_arbitrary_node} of Algorithm \ref{alg_td_to_join}.
 
 We first observe that $T$ is indeed a tree with root $r$. To prove that $\mathcal{T}$ is a project-join tree we must additionally verify that $\gamma$ is a bijection and that both properties from Definition \ref{def_jointree} hold.  
 

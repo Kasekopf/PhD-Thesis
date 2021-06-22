@@ -1,6 +1,6 @@
 \section{An Introduction to Tensors and Tensor Networks}
 \label{sec:tensors:tensors}
-In this section, we introduce tensors, tensor networks, and the problem of tensor-network contraction. To aid in exposition, along the way we build an analogy between the language of databases \cite{SG88}, the language of factor graphs \cite{KFL01,dechter99,darwiche01b}, and the language of tensors: see Table \ref{table:db-tensor-analogy}.
+In this section, we introduce tensors, tensor networks, and the problem of tensor-network contraction. To aid in exposition, along the way we build an analogy between the language of databases \cite{SG88}, the language of factor graphs \cite{KFL01,dechter99,darwiche01b}, and the language of tensors in Table \ref{table:db-tensor-analogy}.
 
 \begin{table}[t]
 \centering
@@ -20,7 +20,7 @@ Width & Largest Cluster Size & Contraction Complexity \\
 \subsection{Tensors}
 \emph{Tensors} are a generalization of vectors and matrices to higher dimensions-- a tensor with $r$ dimensions is a table of values each labeled by $r$ indices. An index is analogous to a variable in constraint satisfaction or an attribute in database theory. 
 
-Fix a set $\Ind$ and define an \emph{index} to be an element of $\Ind$. For each index $i$ fix a finite set $\domain{i}$ called the \emph{domain} of $i$. An index index is analogous to a variable in constraint satisfaction. %For the algorithms in this work it is sufficient for every index to have domain $\{0, 1\}$.
+Fix a set $\Ind$ and define an \emph{index} to be an element of $\Ind$. For each index $i$ fix a finite set $\domain{i}$ called the \emph{domain} of $i$. An index is analogous to a variable in constraint satisfaction. %For the algorithms in this work it is sufficient for every index to have domain $\{0, 1\}$.
 
 An \emph{assignment} to a set of indices $I \subseteq \Ind$ is a function $\tau$ that maps each index $i \in I$ to an element of $\domain{i}$. Let $\domain{I}$ denote the set of assignments to $I$, i.e., $$\domain{I} = \{\tau: I \rightarrow \bigcup_{i \in I} \domain{i}~\text{s.t.}~\tau(i) \in \domain{i}~\text{for all}~i \in I\}.$$
 
@@ -66,6 +66,9 @@ The \emph{contraction} of a tensor network $N$ is a tensor $\tntensor{N}$ with i
         \tntensor{N}(\tau) \equiv \sum_{\rho \in \domain{\tnbound{N}}} \prod_{A \in N} A((\rho \cup \tau)\restrict{\tdim{A}}).
         \end{equation}
 \end{definition}
+
+In Definition \ref{def:contraction}, $\rho$ is an assignment to the bond indices of $N$, while $\tau$ is an assignment to the free indices of $N$.
+Thus $\rho \cup \tau$ is an assignment to all indices of $N$.
 
 For example, the contraction of the tensor network $\{\copyt_I, \copyt_J\}$ with $I \cap J \neq \emptyset$ is the tensor $\copyt_{I \oplus J}$ (where $I \oplus J$ is the symmetric difference of $I$ and $J$). Notice that if a tensor network has no free indices then its contraction is a rank 0 tensor. 
 

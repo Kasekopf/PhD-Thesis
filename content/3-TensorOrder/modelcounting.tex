@@ -34,5 +34,6 @@ Theorem \ref{thm:wmc-reduction} proves that $\func{Reduce}(\varphi,W) = N_{\varp
 This reduction is closely related to the formulation of model counting as the marginalization of a factor graph representing the constraints. 
 Unlike the reduction to factor-graph marginalization, which only assigns factors to clauses, we must also assign a tensor to each variable $x$. 
 For example, if $x$ has weights $W(x, 0) = W(x,1) = 1$ then the tensor assigned to $x$ is a copy tensor.
-This reduction can also be extended beyond OR clauses to other types of constraints, e.g. parity or cardinality constraints.
 
+While we focus in this work on weighted model counting with CNF formulas, note that the proof of Theorem \ref{thm:wmc-reduction} made no use of the fact that each clause is a CNF clause.
+This reduction can thus be easily extended beyond CNF formulas to apply to to conjunctions of other types of constraints, e.g. parity or cardinality constraints.

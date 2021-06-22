@@ -11,7 +11,7 @@ In this section, we discuss the algorithm for literal-weighted model counting us
     \KwOut{$W(\varphi)$, the weighted model count of $\varphi$ w.r.t. $W$}
     $N \gets \func{Reduce}(\varphi, W)$\;
     \Repeat{$\alpha \cdot \func{TimeCost}(M, T) < \text{elapsed time in seconds}$}{
-      $M, T \gets \func{Plan}(N)$ \tcc*{e.g., \textbf{LG} or \textbf{FG}}
+      $M, T \gets \func{Plan}(N)$ \tcc*{e.g., \textbf{LG} or \textbf{FT}}
     }
     \Return{$\func{Execute}(M,T)$}
 \end{algorithm*}
@@ -54,6 +54,7 @@ Then Algorithm \ref{alg:wmc} returns $W(\varphi)$.
 By Assumption 3, Algorithm \ref{alg:wmc} returns $\tntensor{M}(\emptyset)$. 
 By Assumption 2, this is equal to $\tntensor{N}(\emptyset)$, which by Assumption 1 is exactly $W(\varphi)$.
 \end{proof}
+Theorem \ref{thm:alg-correctness} proves that Algorithm \ref{alg:wmc} indeed computes the weighted model count of $\varphi$, as long the reduction, planning, and execution phases all satisfy the stated assumptions. We verify Assumption 1 in Section \ref{sec:tensors:wmc}, Assumption 2 in Section \ref{sec:tensors:planning}, and Assumption 3 in Section \ref{sec:tensors:execution}.
 
 Organizationally, note that we discuss the execution phase in Section \ref{sec:tensors:execution} before we discuss the planning phase in Section \ref{sec:tensors:planning}. 
 This is because we must understand how plans are used before we can evaluate various planning algorithms.

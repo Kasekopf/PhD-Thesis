@@ -24,7 +24,7 @@ It was shown in \cite{DPV20} that the computational cost of Equation \ref{eq_fac
     For all functions $f: 2^X \to \R$ and $g: 2^Y \to \R$, if $x \in X \setminus Y$, then $\proj_x (f \mult g) = \pars{\proj_x f} \mult g.$
 \end{theorem}
 \begin{proof}
-    By Definition \ref{def_mult} and Definition \ref{def_sum}. See \textbf{Theorem 2} of \cite{DPV20} for details.
+    Expand Definition \ref{def_mult} and Definition \ref{def_sum}. See \textbf{Theorem 2} of \cite{DPV20} for details.
 \end{proof}
 
 Early projection is a key technique in symbolic computation in a variety of settings, including database-query optimization \cite{KV00}, symbolic model checking \cite{burch1991symbolic}, satisfiability solving \cite{pan2005symbolic}, and model counting \cite{DPV20}.
@@ -72,7 +72,7 @@ See Figure \ref{fig_join_tree} for a graphical example of a project-join tree.
         ]
     \end{tikzpicture}
 \caption{
-    A project-join tree $(T, n_{8}, \gamma, \pi)$ of a CNF formula $\phi$.
+    A project-join tree $(T, n_{8}, \gamma, \pi)$ of a CNF formula $\phi = \neg x_2 \land (x_3 \vee x_4) \land (\neg x_1 \vee \neg x_3) \land (x_1 \vee x_3 \vee \neg x_4)$.
     Each leaf node is labeled by $\gamma$ with a clause of $\phi$.
     Each internal node is labeled by $\pi$ with a set of variables of $\phi$.
 }

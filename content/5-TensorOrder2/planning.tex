@@ -2,7 +2,7 @@
 \label{sec:parallel:planning}
 As discussed in Section \ref{sec:tensors:preprocessing}, $\func{FactorTree}(N)$ first computes a tree decomposition of $\struct{N}$ and then applies Theorem \ref{thm:factorable-tree}. In \cite{DDV19}, most time in the planning phase was spent finding low-width tree decompositions with a choice of single-core heuristic tree-decomposition solvers \cite{AMW17,HS18,Tamaki17}. Finding low-width tree decompositions is thus a valuable target for parallelization.
 
-We were unable to find state-of-the-art parallel heuristic tools for tree decompositions. There are several classic algorithms for parallel tree-decomposition construction \cite{Lagergren90,SWG13}, but no recent implementations. There is also an exact tree-decomposition solver that leverages a GPU \cite{VB17}, but exact tools are not able to scale to handle our benchmarks. Existing single-core heuristic tree-decomposition solvers are highly optimized and so parallelizing them is nontrivial.
+We were unable to find state-of-the-art parallel heuristic tools for tree decompositions. There are several classic algorithms for parallel tree-decomposition construction \cite{Lagergren90,SWG13}, but no implementations that are competitive with state-of-the-art single-core tools. There is also an exact tree-decomposition solver that leverages a GPU \cite{VB17}, but exact tools are not able to scale to handle our benchmarks. Existing single-core heuristic tree-decomposition solvers are highly optimized and so parallelizing them is nontrivial.
 
 Instead, we take inspiration from the SAT solving community. One competitive approach to building a parallel SAT solver is to run a variety of SAT solvers in parallel across multiple cores \cite{BSS15,MSSS13,XHHL08}. The portfolio SAT solver \tool{CSHCpar} \cite{MSSS13} won the open parallel track in the 2013 SAT Competition with this technique, and such portfolio solvers are now banned from most tracks of the SAT Competition due to their effectiveness relative to their ease of implementation. Similar parallel portfolios are thus promising for integration into the planning phase.
 
@@ -13,7 +13,7 @@ While Theorem \ref{thm:factorable-tree} lets us integrate tree-decomposition sol
 Let $N$ be a tensor network of tree-factorable tensors s.t. $|\tnfree{N}| \leq 3$ and $G=\struct{N}$ has a branch decomposition $T$ of width $w \geq 1$. Then we can construct in polynomial time a tensor network $M$ and a contraction tree $S$ for $M$ s.t. $S$ has max rank no larger than $\ceil{4w/3}$ and $N$ is a partial contraction of $M$.
 \end{theorem}
 \begin{proof}
-This proof differs from the proof of Theorem \ref{thm:factorable-tree} in \cite{DDV19} only in Part 1 and Part 4 (and in the definition of $\rho$ in Part 3).
+This proof differs from the proof of Theorem \ref{thm:factorable-tree} in Chapter \ref{ch:tensors} only in Part 1 and Part 4 (and in the definition of $\rho$ in Part 3).
 
 The proof proceeds in five steps: (1) compute the factored tensor network $M$, (2) construct a graph $H$ that is a simplified version of the structure graph of $M$, (3) construct a carving decomposition $S$ of $H$, (4) bound the width of $S$, and (5) use $S$ to find a contraction tree for $M$. Working with $H$ instead of directly working with the structure graph of $M$ allows us to cleanly handle tensor networks with free indices.
 

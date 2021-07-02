@@ -3,7 +3,7 @@ We presented a 3-phase algorithm to perform weighted model counting. First, in t
 We implemented our algorithm in \tool{TensorOrder}, a new tool for weighted model counting through tensor network contraction, and evaluated \tool{TensorOrder} empirically in the context of model counting.
 
 { \color{blue}
-The primary finding of this chapter is that tensor network approaches, including our \tool{TensorOrder} using the \textbf{LG} planner, outperform a variety of other counters on a set of unweighted model counting benchmarks.
+The primary finding of this chapter is that tensor-network approaches, including our \tool{TensorOrder} using the \textbf{LG} planner, outperform a variety of other counters on a set of unweighted model counting benchmarks.
 We further found that our new \textbf{FT} planner significantly outperforms existing planning approaches on exact inference benchmarks, where variables can appear many times, by finding contraction trees that have significantly smaller max-rank and so require significantly less memory to execute.
 The demonstrates the value of factoring for real-world benchmarks.
 Overall, \tool{TensorOrder} is able to solve many benchmarks solved by no other (exact) counter, and in particular \tool{TensorOrder} is the best tool on large benchmarks of limited carving width.

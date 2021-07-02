@@ -21,7 +21,7 @@ The key idea of \textbf{FT}, then, is to use a tree decomposition for the struct
 We state this new result as Theorem \ref{thm:factorable-tree}.
 { \color{blue}
 Note that there is no need to run \textbf{LG} independently after using \textbf{FT} to factor high-rank tensors.
-Instead, in Theorem \ref{thm:factorable-tree} we directly exactly a low-rank contraction tree for the factored network as part of the factoring process of \textbf{FT}.
+Instead, in Theorem \ref{thm:factorable-tree} we directly extract a low-rank contraction tree for the factored network as part of the factoring process of \textbf{FT}.
 } % diff
 
 Since not all tensors can be factored in the ways that we require for this theorem and for \textbf{FT}, we first characterize the required property: that every tensor is factorable as an arbitrary tree of tensors:
@@ -141,7 +141,7 @@ For many tensor networks the treewidth of the structure graph $G$ is much less t
 For example, let $\psi = \left(\lor_{i=1}^n x_i\right) \land \left(\lor_{i=1}^n \neg x_i\right)$ and let $N_\psi$ be the tensor network obtained from applying Theorem \ref{thm:wmc-reduction} with a constant weight function.
 Then $\struct{N_\psi}$ has treewidth $2$ and $\Line{\struct{N_\psi}}$ has treewidth $n-1$.
 Intuitively, this is because $N_\varphi$ has a rank $n$ tensor corresponding to each clause of $\psi$.
-Each rank $n$ tensor induces a clique of $n$ vertices in $\Line{\struct{N_\psi}}$ but only a degree $n$ vertex in $\struct{N_\psi}$.
+Each rank $n$ tensor induces a clique of $n$ vertices in $\Line{\struct{N_\psi}}$, but only a degree $n$ vertex in $\struct{N_\psi}$.
 }  % diff
 
 We show in Section \ref{sec:tensors:experiments:cachet} that this difference also holds for real-world benchmarks. 

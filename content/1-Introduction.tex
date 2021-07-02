@@ -2,10 +2,10 @@
 \label{ch:intro}
 Discrete integration is a fundamental problem in artificial intelligence, with applications in probabilistic reasoning, planning, inexact computing, engineering reliability, and statistical physics \cite{Bacchus2003,DH07,GSS08,naveh2007constraint}. In discrete integration, the task is to count the total weight, subject to a given weight function, of the solutions of given constraints \cite{GSS08}. 
 If the input constraints are given as a propositional formula over independent variables, the problem is called \emph{model counting}.
-If dependent variables (i.e., existential variables) are also allowed in the input constraints, the problem is called \emph{projected model counting}. This thesis primarily focuses on exact techniques for model counting and projected model counting, but other works have considered approximate techniques \cite{CMV21} or other classes of discrete integration problems (e.g., allowing constraints with alternating quantifiers \cite{stearns2002exploiting,KNR16}, or allowing continuous variables \cite{BPV15}).
+If dependent variables (i.e., existential variables) are also allowed in the input constraints, the problem is called \emph{projected model counting}. This dissertation primarily focuses on exact techniques for model counting and projected model counting, but other works have considered approximate techniques \cite{CMV21} or other classes of discrete-integration queries (e.g., allowing constraints with alternating quantifiers \cite{stearns2002exploiting,KNR16}, or allowing continuous variables \cite{BPV15}).
 
-As is common, we restrict our attention to discrete integration problems where the weight function is \emph{log-linear} (i.e., literal-weighted), which captures a wide variety of probabilistic distributions~\cite{KF09}.
-We call a discrete integration problem \emph{weighted} if the weight function is log-linear and \emph{unweighted} if the weight function is a constant function (and thus the task is simply to count the number of solutions to the input constraints).
+As is common, we restrict our attention to discrete-integration queries where the weight function is \emph{log-linear} (i.e., literal-weighted), which captures a wide variety of probabilistic distributions~\cite{KF09}.
+We call a discrete-integration query \emph{weighted} if the weight function is log-linear and \emph{unweighted} if the weight function is a constant function (and thus the task is simply to count the number of solutions to the input constraints).
 Note that unweighted discrete integration is a special case of weighted discrete integration.
 Unweighted model counting is also called \#SAT, while unweighted projected model counting is also called $\#\exists$SAT.
 
@@ -15,18 +15,18 @@ As a simple example, a propositional formula is satisfiable if and only if its u
 Weighted model counting (with rational, log-linear weights) is \#P-Complete as well, through a reduction to \#SAT that encodes the weights in additional variables \cite{CFMV15,DFM20}.
 But projected model counting is thought to be harder: $\#\exists$SAT is not contained in $\#$P unless the polynomial hierarchy collapses to $\Sigma_2^P$ \cite{zawadzki2013generalization}.
 
-Despite the theoretical difficulty of discrete integration, a variety of discrete integration tools (called \emph{counters}) exist that can handle large sets of constraints and so solve large, useful applied problems. The earliest counters, e.g. \tool{CDP} \cite{birnbaum1999good}, were based on search.
+Despite the theoretical difficulty of discrete integration, a variety of tools for discrete integration (called \emph{counters}) exist that can handle large sets of constraints and so solve large, useful applied problems. The earliest counters, e.g. \tool{CDP} \cite{birnbaum1999good}, were based on search.
 The key idea is to take an algorithm for exploring the entire solution space of a set of constraints (e.g. DPLL \cite{davis1960computing,davis1962machine}, and later CDCL \cite{biere2009conflict}) and augment it to enumerate the number of partial solutions encountered. 
 Modern solvers such as \tool{cachet} \cite{SBK05} and \tool{SharpSAT} \cite{Thurley2006} follow this approach.
-Another class of counters (e.g. \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) are based on knowledge compilation, where the idea is to compile the set of constraints into an alternative representation on which a discrete integration query may be answered in polynomial time.
+Another class of counters (e.g. \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}) are based on knowledge compilation, where the idea is to compile the set of constraints into an alternative representation on which a discrete-integration query may be answered in polynomial time.
 For example, the set of constraints may be compiled into a single binary decision diagram (BDD) \cite{akers1978binary} or a sentential decision diagram (SDD) \cite{darwiche2011sdd}.
 
 A third class of counters \cite{CW16,FHMW17,FHWZ18,FHZ19,DPV20,phan2019weighted,fichte2020exploiting} are based on dynamic programming.
 Dynamic programming is a powerful technique that has been applied across computer science \cite{bellman1966dynamic}, including to database-query optimization \cite{MPPV04}, satisfiability solving \cite{uribe1994ordered,aguirre2001random,pan2005symbolic}, and quantified Boolean formula (QBF) evaluation \cite{charwat2016bdd}.
 The key idea is to solve a sequence of smaller subproblems, formed by partitioning the input constraints, and then incrementally combine these solutions into the final result.
-The techniques developed in this thesis are all based on dynamic programming.
+The techniques developed in this dissertation are all based on dynamic programming.
 
-The key idea of this thesis is that dynamic-programming algorithms for discrete integration can be cleanly separated into two phases: a \emph{planning phase} of high-level reasoning to construct subproblems, followed by an \emph{execution phase} of low-level computation to solve subproblems.
+The key idea of this dissertation is that dynamic-programming algorithms for discrete integration can be cleanly separated into two phases: a \emph{planning phase} of high-level reasoning to construct subproblems, followed by an \emph{execution phase} of low-level computation to solve subproblems.
 Existing dynamic-programming-based counters perform both high-level reasoning and low-level planning, but in an intermixed way that is often tightly coupled to a single existing library.
 Explicitly separating planning and execution enables us to separately reason about, implement, and optimize each phase.
 Instead of building tightly on any particular library, we target APIs that can be fulfilled by multiple planning or execution implementations.
@@ -36,7 +36,7 @@ The resulting counters scale to large problem instances and run flexibly in a va
  
 % The requirements, challenges, and opportunities of each phase are often dramatically different, both at an algorithmic and an implementation level.  
 
-% This thesis argues that this separation enables the resulting counters to scale to large problem instances and run flexibly in a variety of hardware environments.
+% This dissertation argues that this separation enables the resulting counters to scale to large problem instances and run flexibly in a variety of hardware environments.
 
 
 % \tool{cachet} \cite{SBK05} and \tool{SharpSAT} \cite{Thurley2006} are modern solvers that are also based on search.
@@ -110,7 +110,7 @@ While \addmc{} also includes some high-level reasoning, it uses tightly-integrat
 
 \section{Contributions}
 
-The main contribution of this thesis is a clean separation of dynamic-programming algorithms for discrete integration into a planning phase of high-level reasoning, followed by an execution phase of low-level computation.
+The main contribution of this dissertation is a clean separation of dynamic-programming algorithms for discrete integration into a planning phase of high-level reasoning, followed by an execution phase of low-level computation.
 
 We first introduce this separation in a new model counter, \tool{TensorOrder}, which uses graph decompositions for planning and tensors for execution. This includes a new reduction from weighted model counting to tensor network contraction. We consider two planning algorithms-- \textbf{LG} and \textbf{FT}-- based on graph decompositions. While \textbf{LG} is based on existing tensor network (and constraint satisfaction) techniques, we contribute a new analysis that more closely matches the memory usage of existing tensor libraries. \textbf{FT} is a novel planning algorithm, tailored for constrained counting, that factors tensor networks based on tree decompositions. We evaluate \tool{TensorOrder} and show that \textbf{FT} dramatically outperforms \textbf{LG} on benchmarks from probabilistic inference. Overall, \tool{TensorOrder} is able to solve many benchmarks solved by no other (exact) counter.
 
@@ -123,14 +123,14 @@ Finally, we apply our separation into planning and execution to the problem of p
 We present a novel algorithm for performing projected model counting through a planning and execution phase using graded project-join trees. As part of this, we introduce a novel planning algorithm that builds graded project-join trees by using a planner for standard project-join trees as a black-box. The resulting tool \tool{ProCount} makes a significant contribution to a portfolio of exact weighted projected model counters.
 
 \section{Tools}
-The following open source tools have been developed as part of this thesis:
+The following open source tools have been developed as part of this dissertation:
 \begin{itemize}
     \item[] \tool{TensorOrder} and \tool{TensorOrder2}: \url{https://github.com/vardigroup/TensorOrder}
     \item[] \tool{DPMC} and \tool{ProCount}: \url{https://github.com/vardigroup/DPMC}
 \end{itemize}
 
 \section{Organization}
-The remainder of this thesis is organized as follows:
+The remainder of this dissertation is organized as follows:
 
 Chapter \ref{ch:background} presents notation and background on model counting, existing high-level planning tools (graph decompositions and heuristics from constraint satisfaction), and existing low-level computational tools (tensors and decision diagrams). 
 
@@ -142,4 +142,4 @@ Chapter \ref{ch:parallel} parallelizes the techniques from Chapter \ref{ch:tenso
 
 Chapter \ref{ch:procount} generalizes the techniques from Chapter \ref{ch:dpmc} to weighted projected model counting. Most results in this chapter appear in \cite{dudek2020procount}.
 
-Finally, Chapter \ref{ch:conclusion} summarizes the main contributions of this thesis and describes several possible future directions.
+Finally, Chapter \ref{ch:conclusion} summarizes the main contributions of this dissertation and describes several possible future directions.

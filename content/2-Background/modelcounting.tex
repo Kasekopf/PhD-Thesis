@@ -9,7 +9,7 @@ A pseudo-Boolean function $W: 2^X \rightarrow \mathbb{R}$ is \emph{literal-weigh
 Literal-weight functions are also called \emph{log-linear} functions and can be employed to capture a wide variety of probabilistic distributions that arise from graphical models, conditional random fields, skip-gram models, and the like~\cite{KF09}.
 $W_x(\{x\})$ indicates the weight of the positive literal $x$ in $W$ and $W_x(\emptyset)$ indicates the weight of the negative literal $\neg x$ in $W$.
 
-This thesis primarily focuses on two subclasses of discrete integration: model counting and projected model counting.
+This dissertation primarily focuses on two subclasses of discrete integration: model counting and projected model counting.
 
 \subsection{Model Counting}
 In (weighted) model counting, the input constraints are given as a propositional formula, typically in CNF. Formally:
@@ -20,14 +20,14 @@ In (weighted) model counting, the input constraints are given as a propositional
 
 The \emph{unweighted model count} of a Boolean formula $\varphi$ is the number of solutions of $\varphi$, i.e. the $W$-weighted model count of $\varphi$ where $W(\tau) = 1$ for all $\tau \in 2^X$.
 
-Many discrete integration queries can be phrased and solved as a weighted model counting instance \cite{GSS08}.
+Many discrete-integration queries can be phrased and solved as a weighted model counting instance \cite{GSS08}.
 This includes problems from probabilistic reasoning \cite{DH07,Bacchus2003}, verification \cite{naveh2007constraint}, and statistical physics \cite{jerrum1993polynomial}.
 
 Existing approaches to weighted model counting can be split broadly into three categories: \emph{search}, \emph{knowledge compilation}, and \emph{dynamic programming}. 
 In counters based on search (e.g., \tool{cachet}  \cite{SBK05} and \tool{SharpSAT} \cite{Thurley2006}), the idea is to take an algorithm for exploring the entire solution space of $\varphi$ (e.g. DPLL \cite{davis1960computing,davis1962machine}, and later CDCL \cite{biere2009conflict}) and augment it to enumerate the number of partial solutions encountered. 
 In counters based on knowledge compilation (e.g. \tool{miniC2D} \cite{OD15} and \tool{d4} \cite{LM17}), the idea is to compile $\varphi$ into an alternative representation on which counting is easy, for example into a single binary decision diagram (BDD) \cite{akers1978binary} or a sentential decision diagram (SDD) \cite{darwiche2011sdd}.
 In counters based on dynamic programming (e.g. \tool{ADDMC} \cite{DPV20} and \tool{gpuSAT2} \cite{FHWZ18,FHZ19}), the idea is to traverse the constraint structure of $\varphi$ and reason about subsets of constraints. 
-The techniques developed in this thesis are all based on dynamic programming.
+The techniques developed in this dissertation are all based on dynamic programming.
 
 \subsection{Projected Model Counting}
 In (weighted) projected model counting, the input constraints are given as a propositional formula, typically in CNF, together with a set of irrelevant, existential variables.
@@ -41,7 +41,7 @@ Formally:
 Variables in $X$ are called \emph{relevant} or \emph{additive}, and variables in $Y$ are called \emph{irrelevant} or \emph{disjunctive}. 
 Notice that model counting is a special case of projected model counting where all variables are relevant. Thus $W(\varphi) = \func{WPMC}(\phi, W, \emptyset)$ for all Boolean formulas $\varphi$ and weight functions $W: 2^{\vars(\varphi)} \rightarrow \mathbb{R}$. 
 
-Many discrete integration queries require projected variables and so are typically phrased and solved as a weighted projected model counting instance. 
+Many discrete-integration queries require projected variables and so are typically phrased and solved as a weighted projected model counting instance. 
 This includes problems from planning \cite{aziz2015projected}, formal verification \cite{klebanov2013sat}, and reliability estimation \cite{duenas2017counting}. 
 
 There are several recent tools for weighted projected model counting.

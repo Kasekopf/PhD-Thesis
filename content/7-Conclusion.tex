@@ -3,17 +3,17 @@
 Discrete integration is a fundamental problem in artificial intelligence, with applications in probabilistic reasoning, planning, inexact computing, engineering reliability, and statistical physics \cite{Bacchus2003,DH07,GSS08,naveh2007constraint}. In discrete integration, the task is to count the total weight, subject to a given weight function, of the set of solutions of input constraints \cite{GSS08}. 
 Although discrete integration is theoretically difficult \cite{Valiant79}, the development of tools to compute the total weight on large industrial formulas is an area of active research.
 
-In this thesis, we presented a series of dynamic-programming algorithms and tools for discrete integration based on a single conceptual framework.
+In this dissertation, we presented a series of dynamic-programming algorithms and tools for discrete integration based on a single conceptual framework.
 Our framework consisted of two cleanly separated phases: a \emph{planning phase} of high-level reasoning, followed by an \emph{execution phase} of low-level computation.
 % This explicit separation allowed us to separately reason about, implement, and optimize each phase.
 We showed how to leverage existing graph decomposition tools for the planning phase.
 Similarly, we showed how to leverage existing tensor libraries and ADD libraries for the execution phase.
-The resulting tools scale to large instances of discrete integration problems and run flexibly in a variety of hardware environments.
+The resulting tools scale to large discrete-integration queries and run flexibly in a variety of hardware environments.
 
 We introduced this framework in Chapter \ref{ch:tensors} with a new counter, \tool{TensorOrder}, which used graph decompositions for planning and tensor libraries for execution.
 To enable the use of tensor libraries, we presented a new reduction from weighted model counting to tensor network contraction. 
 We analyzed two planning techniques-- an existing approach \textbf{LG} and a new approach \textbf{FT}-- that use graph decompositions to find contraction trees of small max rank of tensor networks.
-\tool{TensorOrder}, when equipped with the \textbf{FT} planner, was the best tool on discrete integration benchmarks of small carving width.
+\tool{TensorOrder}, when equipped with the \textbf{FT} planner, was the best tool on discrete-integration queries of small carving width.
 
 We then applied this framework in Chapter \ref{ch:dpmc} to an existing model counter, \tool{ADDMC} \cite{DPV20,phan2019weighted}.
 We unified a variety of discrete-integration approaches, including \tool{ADDMC}, into a single conceptual framework the uses project-join trees to separate planning and execution.
@@ -36,20 +36,20 @@ The resulting tool \tool{ProCount} made a significant contribution to a portfoli
 Overall, we demonstrated that a clean separation of dynamic-programming algorithms for discrete integration into planning and execution phases is fruitful. The resulting algorithms and tools for discrete integration scale to large instances and run flexibly in a variety of configurations and hardware environments.
 
 \section{Future Work}
-The framework of planning and execution introduced in this thesis is just the next step towards developing practical tools for automated reasoning.
+The framework of planning and execution introduced in this dissertation is just the next step towards developing practical tools for automated reasoning.
 We end with a list of several open directions to improve this framework and to apply this framework in broader contexts.
 
 % \subsection{Understanding Performance and Limitations}
 % One direction for future work is to improve our understanding of the performance of our dynamic-programming-based methods.  
 
-% In this thesis, we focused on heuristic graph decomposition tools, which aim to find ``good-enough'' graph decompositions. It would be interesting in the future to analyze the types of benchmarks amenable to tensor-network methods, e.g. by computing lower bounds on carving width in addition to the upper bounds given by heuristic methods. 
+% In this dissertation, we focused on heuristic graph decomposition tools, which aim to find ``good-enough'' graph decompositions. It would be interesting in the future to analyze the types of benchmarks amenable to tensor-network methods, e.g. by computing lower bounds on carving width in addition to the upper bounds given by heuristic methods. 
 
 \subsection{Improving Planning}
-The planning approaches in this thesis were explicitly designed to take advantage of existing graph decomposition tools in an unmodified, black-box way.
+The planning approaches in this dissertation were explicitly designed to take advantage of existing graph decomposition tools in an unmodified, black-box way.
 Future improvements to graph decomposition tools, itself an active area of research, may allow us to scale to larger benchmarks.
 Moreover, developing customized graph decomposition tools for planning in discrete integration is a promising avenue for future work.
 
-While this thesis evaluated a subset of graph decomposition tools for planning, one avenue for improvement of our tools is to consider other graph decomposition tools.
+While this dissertation evaluated a subset of graph decomposition tools for planning, one avenue for improvement of our tools is to consider other graph decomposition tools.
 Integrating a diverse set of graph decomposition tools would especially benefit a portfolio of planners as in Chapter \ref{ch:parallel}.
 For example, there has been work on parallel branch decomposition tools that would be possible to integrate with our approach \cite{hicks2000branch}.
 It may also be possible to exploit other types of graph decompositions (e.g. hypertree decompositions \cite{AGG07}) for planning.
@@ -62,7 +62,7 @@ More broadly, this portfolio strategy could be useful to parallelize a variety o
 
 
 \subsection{Improving Execution}
-Similar to planning, the execution approaches in this thesis were explicitly designed to take advantage of existing tensor and ADD libraries in an unmodified, black-box way.
+Similar to planning, the execution approaches in this dissertation were explicitly designed to take advantage of existing tensor and ADD libraries in an unmodified, black-box way.
 Future improvements to these computational libraries, which is itself an extremely active area of independent research in high-performance computing, may allow us to scale to larger benchmarks in the future.
 Moreover, developing computational libraries that are specifically optimized for execution in discrete integration is a promising avenue for future work.
 A problem of particular interest is to re-engineer the XLA compiler when targeting a TPU in order to handle the high-dimensional tensors seen in model counting.
@@ -76,24 +76,24 @@ Moreover, we focused on contracting all tensor network slices in sequence on a s
 There are opportunities in future work to apply index slicing in more complex ways to leverage parallelism at a larger scale. 
 One potential approach is to run each slice computation in Algorithm \ref{alg:tn-sliced} in parallel on a separate CPU core, on a separate GPU, or even on entirely separate nodes in a computing cluster.
 For example, recent work in the tensor network community used index slicing to divide a single tensor network contraction across a computing cluster containing over 100k CPU cores running in parallel \cite{CZHNS18}.
-Such techniques would allow our framework to scale to leverage huge computational resources for difficult discrete integration instances.
+Such techniques would allow our framework to scale to leverage huge computational resources for difficult discrete-integration queries.
 
 
 \subsection{Beyond CNF Formulas}
-While we focused on discrete integration over CNF formulas, many of the techniques in this thesis easily extend to discrete integration over more general classes of constraints.
+While we focused on discrete integration over CNF formulas, many of the techniques in this dissertation easily extend to discrete integration over more general classes of constraints.
 For example, all techniques we introduced in this work would have similar performance when applied to formulas that mix CNF clauses (i.e., OR clauses) with XOR clauses and Exactly-One clauses. % (as such clauses can also be represented as tree-factorable tensors).
-The techniques from Chapter \ref{ch:dpmc} and \ref{ch:procount} require only that the discrete integration query is presented as the conjunction of constraints, but need no restriction on the type of each constraint. 
-In contrast, techniques for discrete integration based on search or knowledge compilation would require different reasoning techniques for each type of constraint (or requires the constraints to be encoded as a CNF formula, which may dramatically increase the size of of the constraints).
+The techniques from Chapter \ref{ch:dpmc} and \ref{ch:procount} require only that the discrete-integration query is presented as the conjunction of constraints, but need no restriction on the type of each constraint. 
+In contrast, techniques for discrete integration based on search or knowledge compilation would require different reasoning techniques for each type of constraint (or requires the constraints to be encoded as a CNF formula, which may dramatically increase the size of the constraints).
 Evaluating our techniques on a wider collection of constraints is an exciting direction for future work that may enable new applications of discrete integration.
 
 %  More generally, our algorithms for tensor-network contraction can be used to improve many other applications of tensor networks, e.g. quantum circuit simulation \cite{MS08}.
 
 \subsection{Beyond Discrete Integration}
-We focused in this thesis on processing a single discrete integration query in isolation. 
-In many applications, however, several discrete integration queries are made with an identical or similar set of constraints.
+We focused in this dissertation on processing a single discrete-integration query in isolation. 
+In many applications, however, several discrete-integration queries are made with an identical or similar set of constraints.
 Such repeated queries are handled well by counters based on knowledge compilation, where the same set of compiled constraints can be queried multiple times \cite{darwiche2002knowledge,koriche2013knowledge,LM17,darwiche2004new,OD15}.
 Exploring how our framework can be optimized to handle several queries is another promising research direction.
-For example, in some contexts one could reuse the same execution plan from the planning stage across multiple discrete integration queries.
+For example, in some contexts one could reuse the same execution plan from the planning stage across multiple discrete-integration queries.
 
 Our framework of planning and execution can be used as a guide and applied to other problems beyond discrete integration.
 For example, Tabajara and Vardi \cite{tabajara2017factored} described a dynamic-programming, decision-diagram-based framework for functional Boolean synthesis.

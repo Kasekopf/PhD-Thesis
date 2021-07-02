@@ -17,7 +17,7 @@ Similar concepts have been used in constraint programming (as join trees \cite{d
 Our original contributions include the unification of these concepts into project-join trees and the application of this unifying framework to model counting.
 
 We argue that project-join trees provide a natural formalism to describe \emph{execution plans} for dynamic-programming algorithms for model counting.
-In particular, considering project-join trees as execution plans enables us to decompose dynamic-programming algorithms for model counting such as the one in \tool{ADDMC} \cite{DPV20,phan2019weighted} into a 2-phase framework: a \emph{planning} phase, where a project-join tree is determined, and an \emph{execution} phase, where the the determined project-join tree is used to compute the model count.
+In particular, considering project-join trees as execution plans enables us to decompose dynamic-programming algorithms for model counting such as the one in \tool{ADDMC} \cite{DPV20,phan2019weighted} into a 2-phase framework: a \emph{planning} phase, where a project-join tree is determined, and an \emph{execution} phase, where the determined project-join tree is used to compute the model count.
 This framework mirrors the 3-phase framework for model counting through tensor-network contraction in Chapter \ref{ch:tensors}, although since we now attack model counting directly there is no need for a reduction phase.
 
 This breakdown enables us to study and compare different planning algorithms, different execution libraries, and the interplay between planning and execution.

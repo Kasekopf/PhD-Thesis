@@ -12,9 +12,7 @@ Second, the execution phase uses the project-join tree to guide the dynamic-prog
 We implemented an executor \Dmc{} based on ADDs \cite{DPV20,somenzi2015cudd} and an executor \Tensor{} based on tensors \cite{numpy}.
 We evaluated the resulting tool \Dpmc{} empirically in the context of model counting.
 
-{ \color{blue}
 The primary findings of this chapter are the comparisons between the planning and execution approaches enabled by our framework.
 We found in the planning phase that tree-decomposition tools tend to produce project-join trees of lower widths in shorter times than constraint-satisfaction heuristics.
 We found in the execution phase that sparse ADDs outperform dense tensors on single CPU cores.
 Overall, although no single model counter dominates, \Dpmc{} considerably improves a portfolio of existing state-of-the-art counters (\cachet{} \cite{sang2004combining}, \ctd{} \cite{darwiche2004new}, \df{} \cite{LM17}, and \minictd{} \cite{OD15}) and so is a valuable addition to the portfolio.
-} % diff

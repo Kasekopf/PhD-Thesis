@@ -28,11 +28,9 @@ The key idea is to consider project-join trees as \emph{execution plans} and dec
 % Notably, \dpmc{} subsumes \addmc{} \cite{DPV20}, which tied with \df{} \cite{LM17} for first place of the weighted track of the 2020 Model Counting Competition \cite{fichte2020model}.
 
 In this chapter, we adapt this framework for weighted projected model counting. 
-{ \color{blue} %diff
 The input in weighted projected model counting is a set of constraints, whose variables are divided into \emph{relevant variables} $X$ and \emph{irrelevant variables} $Y$.
 The goal is to compute the weighted number of assignments to $X$ that, together with some assignment to $Y$, satisfy the constraints.
 This enables us to handle applications of discrete integration that require projected counting, e.g. planning \cite{aziz2015projected}, formal verification \cite{klebanov2013sat}, and reliability estimation \cite{duenas2017counting}. 
-}
 
 The central challenge is that for projected model counting there are two kinds of variables: relevant and irrelevant. This contrasts with model counting, where all variables are relevant and so can be treated similarly. This challenge also occurs for other problems.
 For example, in Boolean functional synthesis \cite{tabajara2017factored}, some variables are \emph{free} and must not be projected out. 

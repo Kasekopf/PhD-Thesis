@@ -2,7 +2,6 @@
 \label{sec:tensors:preprocessing}
 Approaches to tensor-network contraction planning that do not modify the input tensor network (e.g., \textbf{LG}) are inherently limited by the ranks of the input tensors.
 If a tensor network $N$ has a rank $r$ tensor, then all contraction trees for $N$ will have max rank of at least $r$.
-% ;{ \color{blue} for example, within the planning method \textbf{LG} the graph $\Line{\struct{N}}$ will contain a clique of $r$ vertices and so will have treewidth at least $r-1$. } % diff
 This is a problem for tensor networks with high-rank tensors. 
 
 One example of tensor networks that may contain high-rank tensors are the networks obtained by the reduction from model counting. The tensor network produced from a formula $\varphi$ contains a tensor representing each variable $x$, where the rank of this tensor is the number of appearances of $x$ in $\varphi$ (e.g., the rank $4$ tensor for $y$ in Figure \ref{fig:wmc-example}). For many benchmarks, where a single variable might appear tens or even hundreds of times, this reduction will therefore produce tensor networks containing tensors of infeasibly-high rank. Reductions exist from model counting on arbitrary formulas to model counting on formulas where the number of appearances of each variables is small (e.g. \cite{tovey1984simplified} gives a parsimonious reduction from 3-SAT to satisfiability of formulas where every variable appears at most 3 times). However, existing reductions do not consider the carving width of the resulting incidence graph and so often do not significantly improve the max rank of available contraction trees. 
@@ -10,19 +9,15 @@ One example of tensor networks that may contain high-rank tensors are the networ
 We introduce here a novel planning method \textbf{Factor-Tree} that avoids this barrier by preprocessing the input tensor network. Our insight is that a tree decomposition for the incidence graph of $\varphi$ can be used as a guide to introduce new variables in a principled way, so that the resulting tensor network has good contraction trees. 
 In the language of tensors, introducing new variables corresponds to \emph{factoring}: replacing each high-rank tensor $A$ with a tensor network $N_A$ of low-rank tensors that contracts to $A$.
 
-{ \color{blue}
 One way to see intuitively the impact of factoring is to consider running \textbf{LG} before and after factoring a rank $r$ tensor $A$ in a tensor network $N$.
 Before factoring, $\tdim{A}$ is a clique of $r$ vertices in $\Line{\struct{N}}$ and thus $\Line{\struct{N}}$ will have treewidth at least $r-1$.
 After factoring and replacing $A$ by $N_A$, this clique is replaced with $\Line{\istruct{N_A}}$.
 This new graph has a significantly sparser set of edges and so may have a lower treewidth.
-} % diff
 
 The key idea of \textbf{FT}, then, is to use a tree decomposition for the structure graph to factor high-rank tensors.
 We state this new result as Theorem \ref{thm:factorable-tree}.
-{ \color{blue}
 Note that there is no need to run \textbf{LG} independently after using \textbf{FT} to factor high-rank tensors.
 Instead, in Theorem \ref{thm:factorable-tree} we directly extract a low-rank contraction tree for the factored network as part of the factoring process of \textbf{FT}.
-} % diff
 
 Since not all tensors can be factored in the ways that we require for this theorem and for \textbf{FT}, we first characterize the required property: that every tensor is factorable as an arbitrary tree of tensors:
 
@@ -134,7 +129,6 @@ The general idea of using a tree decomposition of a graph to split high-degree n
 The construction of Theorem \ref{thm:factorable-tree} gives us the \textbf{Factor-Tree} planner, which uses tree decompositions of the structure graph to preprocess the tensor network and factor high-rank tensors. See Figure \ref{fig:factor-example} for an example of the preprocessing. 
 Since $M$ contracts to $\tntensor{N}$ in Theorem \ref{thm:factorable-tree}, the \textbf{Factor-Tree} planner satisfies Assumption 2 in Theorem \ref{thm:alg-correctness}.
 
-{ \color{blue}
 We emphasize that the \textbf{Factor-Tree} planner (and Theorem \ref{thm:factorable-tree}) takes as input a tree decomposition of the structure graph $G$ directly, while the \textbf{Line-Graph} planner (and Theorem \ref{thm:carving-equiv-tree}) takes as input a tree decomposition of the line graph of $G$.
 For many tensor networks the treewidth of the structure graph $G$ is much less than the treewidth of $\Line{G}$.
 
@@ -142,7 +136,6 @@ For example, let $\psi = \left(\lor_{i=1}^n x_i\right) \land \left(\lor_{i=1}^n 
 Then $\struct{N_\psi}$ has treewidth $2$ and $\Line{\struct{N_\psi}}$ has treewidth $n-1$.
 Intuitively, this is because $N_\varphi$ has a rank $n$ tensor corresponding to each clause of $\psi$.
 Each rank $n$ tensor induces a clique of $n$ vertices in $\Line{\struct{N_\psi}}$, but only a degree $n$ vertex in $\struct{N_\psi}$.
-}  % diff
 
 We show in Section \ref{sec:tensors:experiments:cachet} that this difference also holds for real-world benchmarks. 
 That is, \textbf{FT} can significantly improve the quality of the contraction tree on real-world benchmarks with high-rank tensors.

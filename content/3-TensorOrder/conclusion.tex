@@ -2,13 +2,12 @@
 We presented a 3-phase algorithm to perform weighted model counting. First, in the reduction phase, a weighted model counting instance is reduced to a tensor-network problem using a novel reduction. Second, in the planning phase, an order to contract tensors in the network is determined. We presented two planning techniques, \textbf{LG} and \textbf{FT}, for using graph decompositions to find contraction trees of small max rank of tensor networks. \textbf{LG} is a general-purpose method for finding contraction orders. \textbf{FT} is a novel method tailored for constrained counting to handle high-rank, highly-structured tensors. Finally, in the execution phase, tensors in the network are contracted with state-of-the-art tensor libraries using the determined order.
 We implemented our algorithm in \tool{TensorOrder}, a new tool for weighted model counting through tensor network contraction, and evaluated \tool{TensorOrder} empirically in the context of model counting.
 
-{ \color{blue}
 The primary finding of this chapter is that tensor-network approaches, including our \tool{TensorOrder} using the \textbf{LG} planner, outperform a variety of other counters on a set of unweighted model counting benchmarks.
 We further found that our new \textbf{FT} planner significantly outperforms existing planning approaches on exact inference benchmarks, where variables can appear many times, by finding contraction trees that have significantly smaller max-rank and so require significantly less memory to execute.
 The demonstrates the value of factoring for real-world benchmarks.
 Overall, \tool{TensorOrder} is able to solve many benchmarks solved by no other (exact) counter, and in particular \tool{TensorOrder} is the best tool on large benchmarks of limited carving width.
 Thus \tool{TensorOrder} is useful as part of a portfolio of weighted model counters.
-} % diff
+
 % We proved in Corollary \ref{cor:planar-carving} that contraction trees of minimal max rank can be found in cubic time for planar tensor networks. One direction for future work is to implement and evaluate this algorithm in practice on benchmarks of planar tensor networks.
 
 % Projected model counting 

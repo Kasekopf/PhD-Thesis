@@ -27,8 +27,23 @@
 \begin{document}
   \begin{frontmatter}
    \pagenumbering{roman}
-   %\makecover
+   
+   % Cover page signatures
+   \begin{textblock}{80}(104,115)
+   	\includegraphics[page=1,clip,trim=110mm 152.8mm 10mm 115mm]{coverpage.pdf}
+   \end{textblock}
+   \begin{textblock}{80}(104,149)
+   	\includegraphics[page=1,clip,trim=110mm 119mm 10mm 149mm]{coverpage.pdf}
+   \end{textblock}
+   \begin{textblock}{80}(104,180)
+   	\includegraphics[page=1,clip,trim=110mm 88.4mm 10mm 180mm]{coverpage.pdf}
+   \end{textblock}
+   \begin{textblock}{80}(104,210)
+   	\includegraphics[page=1,clip,trim=110mm 58.7mm 10mm 210mm]{coverpage.pdf}
+   \end{textblock}
+   
    \maketitle
+   
    \include{content/0-abstract}
    %\include{ack}
    \tableofcontents
@@ -38,7 +53,6 @@
 \pagenumbering{arabic}
 
 \linespacing{1.5} % Was 1.7; must be >= 1.5 in final version
- 
 
 \include{content/1-Introduction}
 \include{content/2-Background/main}

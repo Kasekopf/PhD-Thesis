@@ -19,6 +19,7 @@ packages:
 	tlmgr install ifoddpage
 	tlmgr install relsize
 	tlmgr install multirow
+	tlmgr install textpos
 
 clean:
 	rm -f *.aux sty/*.aux content/*.aux content/*/*.aux

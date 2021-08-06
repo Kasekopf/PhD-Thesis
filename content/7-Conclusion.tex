@@ -13,25 +13,25 @@ The resulting tools scale to large discrete-integration queries and run flexibly
 We introduced this framework in Chapter \ref{ch:tensors} with a new counter, \tool{TensorOrder}, which used graph decompositions for planning and tensor libraries for execution.
 To enable the use of tensor libraries, we presented a new reduction from weighted model counting to tensor network contraction. 
 We analyzed two planning techniques-- an existing approach \textbf{LG} and a new approach \textbf{FT}-- that use graph decompositions to find contraction trees of small max rank of tensor networks.
-\tool{TensorOrder}, when equipped with the \textbf{FT} planner, was the best tool on discrete-integration queries of small carving width.
+\tool{TensorOrder}, when equipped with the \textbf{FT} planner, was the best tool on discrete-integration queries with incidence graphs of small ($< 30$) treewidth.
 
 We then applied this framework in Chapter \ref{ch:dpmc} to an existing model counter, \tool{ADDMC} \cite{DPV20,phan2019weighted}.
 We unified a variety of discrete-integration approaches, including \tool{ADDMC}, into a single conceptual framework the uses project-join trees to separate planning and execution.
 We showed that replacing the existing constraint-satisfaction planner in \tool{ADDMC} with \textbf{LG} (a planner based on graph decompositions) led to a faster model counter. 
 Moreover, we compared (dense) tensors with (sparse) algebraic decision diagrams in the execution phase and found that algebraic decision diagrams outperform tensors on single CPU cores.
-The resulting tool \tool{DPMC} was the fastest solver on a significant number of benchmarks and thus is valuable as part of a portfolio of counters.
+The resulting tool \tool{DPMC} was the fastest solver on a significant number of benchmarks, especially on those whose primal graphs had small to medium ($< 100$) treewidth, and thus is valuable as part of a portfolio of counters.
 
 Next, in Chapter \ref{ch:parallel} we exploited our framework to develop a parallel model counter by separately parallelizing the planning and execution phases in \tool{TensorOrder}.
 We showed that the planning phase may be parallelized by using an algorithmic portfolio \cite{XHHL08} of planners.
 Further, we showed that the execution phase may be parallelized through parallel tensor libraries.
 In order to handle limited-memory environments (e.g., on a GPU), we introduced index slicing to divide the computation of a single tensor network contraction.
 Although we showed that index slicing also allows for efficient tensor network contraction on a TPU theoretically, in practice we found that current tensor libraries fail to compile tensor computations with high-dimensional tensors to a TPU.
-The resulting tool \tool{TensorOrder2} was the fastest parallel model counter on a significant number of benchmarks.
+The resulting tool \tool{TensorOrder2} was the fastest parallel model counter on a significant number of benchmarks, especially those with incidence graphs of small ($< 30$) treewidth.
 
 Finally, in Chapter \ref{ch:procount} we applied our framework to projected model counting by extending the approach in Chapter \ref{ch:dpmc}.
 We presented a novel algorithm for performing projected model counting through a planning and execution phase using graded project-join trees.
 Our key theoretical contribution was a novel algorithm to construct graded project-join trees from standard project-join trees.
-The resulting tool \tool{ProCount} made a significant contribution to a portfolio of exact weighted projected model counters.
+The resulting tool \tool{ProCount} made a significant contribution to a portfolio of exact weighted projected model counters, especially on benchmarks with small to medium ($< 100$) graded primal treewidth.
 
 Overall, we demonstrated that a clean separation of dynamic-programming algorithms for discrete integration into planning and execution phases is fruitful. The resulting algorithms and tools for discrete integration scale to large instances and run flexibly in a variety of configurations and hardware environments.
 

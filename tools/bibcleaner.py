@@ -9,6 +9,7 @@ class BibFile:
 
         with open(self.__filename) as bib_file:
             self.__entries = bibtexparser.load(bib_file).entries
+
         self.__replacements = {}
 
     def save(self):
@@ -53,6 +54,12 @@ class BibFile:
         print("   " + old_id + " => " + new_id)
         self.__replacements[old_id] = new_id
 
+    def booktitles(self):
+        return {e["booktitle"] for e in self.__entries if "booktitle" in e}
+
+    def journals(self):
+        return {e["journal"] for e in self.__entries if "journal" in e}
+
     def dedup_titles(self):
         """
         Remove all entries with duplicate titles, keeping only the first instance.
@@ -78,6 +85,9 @@ def do():
     bib = BibFile("../main.bib", "../content")
     bib.dedup_titles()
     bib.save()
+
+    for e in bib.booktitles():
+        print(e)
 
 
 do()

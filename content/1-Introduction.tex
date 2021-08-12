@@ -110,7 +110,7 @@ While \addmc{} also includes some high-level reasoning, it uses tightly-integrat
 
 \section{Contributions}
 
-The main contribution of this dissertation is a clean separation of dynamic-programming algorithms for discrete integration into a planning phase of high-level reasoning, followed by an execution phase of low-level computation.
+The main contribution of this dissertation is a separation of dynamic-programming algorithms for discrete integration into a planning phase of high-level reasoning, followed by an execution phase of low-level computation.
 
 We first introduce this separation in a new model counter, \tool{TensorOrder}, which uses graph decompositions for planning and tensors for execution. This includes a new reduction from weighted model counting to tensor network contraction. We consider two planning algorithms-- \textbf{LG} and \textbf{FT}-- based on graph decompositions. While \textbf{LG} is based on existing tensor network (and constraint satisfaction) techniques, we contribute a new analysis that more closely matches the memory usage of existing tensor libraries. \textbf{FT} is a novel planning algorithm, tailored for constrained counting, that factors tensor networks based on tree decompositions. We evaluate \tool{TensorOrder} and show that \textbf{FT} dramatically outperforms \textbf{LG} on benchmarks from probabilistic inference. Overall, \tool{TensorOrder} is able to solve many benchmarks solved by no other (exact) counter.
 
